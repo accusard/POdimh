@@ -1,0 +1,8 @@
+**/xcuserdata
+contents.xcworkspacedata
+.DS_Store
+Binaries
+Intermediate
+Saved
+Build
+DerivedDataCache
