@@ -1,4 +1,4 @@
-// Copyright 2017-2018 Vanny Sou. All Rights Reserved.
+// Copyright 2017-2021 Vanny Sou. All Rights Reserved.
 
 #include "CannonComponent.h"
 
@@ -8,7 +8,7 @@ void UCannonComponent::Elevate(float RelativeSpd)
     // move barrel the right amount
     RelativeSpd = FMath::Clamp<float>(RelativeSpd, -1.f, +1.f);
     float ElevationChange = RelativeSpd * MaxDegreesPerSecond * GetWorld()->GetDeltaSeconds();
-    float RawElevation = RelativeRotation.Pitch + ElevationChange;
+    float RawElevation = GetRelativeRotation().Pitch + ElevationChange;
     auto Elevation = FMath::ClampAngle(RawElevation, MinElevationDegrees, MaxElevationDegrees);
     
     // rotate pitch only

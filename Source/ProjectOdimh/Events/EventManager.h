@@ -1,4 +1,4 @@
-// Copyright 2017-2018 Vanny Sou. All Rights Reserved.
+// Copyright 2017-2021 Vanny Sou. All Rights Reserved.
 
 #pragma once
 
@@ -60,7 +60,7 @@ public:
     
     void AddEvent(UBaseEvent* Event);
     
-    UFUNCTION(BlueprintCallable)
+    UFUNCTION(BlueprintCallable, Category="EventManager")
     void ClearEventQueue();
     
     const int32 GetNumEventsInQueue() const;
