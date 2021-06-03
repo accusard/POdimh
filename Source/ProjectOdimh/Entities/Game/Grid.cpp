@@ -48,7 +48,7 @@ void AGrid::NotifySave(USaveGame* SaveData)
         // save the tile types
         for(ATile* Tile : UpdateTileList())
         {
-            if(Tile->DoesLogic())
+            if(Tile->DoesLogic() && bSaveTerminalCoords)
                 Data->SavedGrid.TerminalLocations.Add(GetGridLocation(Tile));
             
             // for each tile, assign types to save data

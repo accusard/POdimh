@@ -175,9 +175,16 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 SizeY;
     
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Terminals")
+    uint8 bSaveTerminalCoords : 1 ;
+    
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Terminals")
+    uint8 bDefaultTerminalCoordOnBeginPlay : 1 ;
+    
 private:
     /** A state in which there are no matching tiles (2 or less occurences) available */
     uint8 bNoMatchingTiles : 1;
+    
     
 
 
