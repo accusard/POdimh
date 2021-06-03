@@ -59,7 +59,7 @@ public:
     TArray<int> TileTypes;
     
     UPROPERTY(BlueprintReadOnly)
-    TArray<FVector2D> NodeLocations;
+    TArray<FVector2D> TerminalLocations;
     
     /** The data for game score */
     UPROPERTY()
@@ -114,7 +114,7 @@ public:
     
     /** The state of the board as well as the current score is kept here */
     UPROPERTY(BlueprintReadOnly)
-    FBoardSaveData Board;
+    FBoardSaveData SavedGrid;
     
     /** The list of mechs contained in a given game */
     UPROPERTY()

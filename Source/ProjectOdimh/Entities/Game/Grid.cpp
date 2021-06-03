@@ -49,10 +49,10 @@ void AGrid::NotifySave(USaveGame* SaveData)
         for(ATile* Tile : UpdateTileList())
         {
             if(Tile->DoesLogic())
-                Data->Board.NodeLocations.Add(GetGridLocation(Tile));
+                Data->SavedGrid.TerminalLocations.Add(GetGridLocation(Tile));
             
             // for each tile, assign types to save data
-            Data->Board.AddTile(Tile->ID_Type);
+            Data->SavedGrid.AddTile(Tile->ID_Type);
         }
         TileList.Empty();
     }
@@ -72,7 +72,7 @@ const bool AGrid::NotifyLoad(USaveGame* LoadData)
         InitTiles(Params);
         UpdateTileList();
         
-        if(ensure(TileList.Num() == Data->Board.GetNumberOfTiles()))
+        if(ensure(TileList.Num() == Data->SavedGrid.GetNumberOfTiles()))
             bSuccess = true;
 
         TileList.Empty();

@@ -30,7 +30,7 @@ void AMatch3GameMode::NotifySave(USaveGame* DataPtr)
 {
     // save current score
     if(UPOdimhSaveGame* Data = Cast<UPOdimhSaveGame>(DataPtr))
-        Data->Board.GameScore = GetCurrentScore();
+        Data->SavedGrid.GameScore = GetCurrentScore();
     
     if(Participants.Num() == 0) return;
     
@@ -40,7 +40,7 @@ void AMatch3GameMode::NotifySave(USaveGame* DataPtr)
 const bool AMatch3GameMode::NotifyLoad(USaveGame* DataPtr)
 {
     if(UPOdimhSaveGame* Data = Cast<UPOdimhSaveGame>(DataPtr))
-        SetCurrentScore(Data->Board.GameScore);
+        SetCurrentScore(Data->SavedGrid.GameScore);
     
     return LoadParticipants(DataPtr);
 }
