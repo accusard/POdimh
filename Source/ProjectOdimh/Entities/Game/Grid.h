@@ -163,7 +163,7 @@ protected:
     TArray<int> NextTileToSpawn;
     
     /** The required number of consecutive row or column for the game to consider it a successful tile match */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Tiles")
     int TilesNeededForMatch;
     
     UPROPERTY(BlueprintReadWrite)
@@ -175,11 +175,11 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 SizeY;
     
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Terminals")
-    uint8 bSaveTerminalCoords : 1 ;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Tiles")
+    uint8 bSaveTerminalCoords : 1;
     
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Terminals")
-    uint8 bDefaultTerminalCoordOnBeginPlay : 1 ;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Tiles")
+    uint8 bDefaultTerminalCoordOnBeginPlay :1 ;
     
 private:
     /** A state in which there are no matching tiles (2 or less occurences) available */
