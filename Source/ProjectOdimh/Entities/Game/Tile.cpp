@@ -32,11 +32,11 @@ void ATile::EndPlay(const EEndPlayReason::Type EndPlayReason)
     
     if(EndPlayReason == EEndPlayReason::Destroyed)
     {
-        OnTileBreak();
+        OnTileBurst();
     }
 }
 
-void ATile::OnTileBreak_Implementation()
+void ATile::OnTileBurst_Implementation()
 {
     
 }

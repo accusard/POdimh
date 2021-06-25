@@ -37,7 +37,7 @@ public:
     
     /** An event when the tile breaks */
     UFUNCTION(BlueprintNativeEvent)
-    void OnTileBreak();
+    void OnTileBurst();
     
     /** Set the tile type */
     UFUNCTION(BlueprintNativeEvent)
