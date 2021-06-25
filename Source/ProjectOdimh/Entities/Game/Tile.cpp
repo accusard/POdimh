@@ -41,9 +41,9 @@ void ATile::OnTileBurst_Implementation()
     
 }
 
-void ATile::SetTileType_Implementation(const int Type)
+void ATile::SetMatchType_Implementation(const int Type)
 {
-    ID_Type = Type;
+    Id = Type;
 }
 
 // Called when the game starts or when spawned

@@ -52,7 +52,7 @@ void AGrid::NotifySave(USaveGame* SaveData)
                 Data->SavedGrid.TerminalLocations.Add(GetGridLocation(Tile));
             
             // for each tile, assign types to save data
-            Data->SavedGrid.AddTile(Tile->ID_Type);
+            Data->SavedGrid.AddTile(Tile->Id);
         }
         TileList.Empty();
     }
@@ -110,7 +110,7 @@ const TArray<FTileData> AGrid::CountTileTypes()
             
             for(FTileData& CurrData : GridData)
             {
-                if(CurrData.Type == Tile->ID_Type)
+                if(CurrData.Type == Tile->Id)
                 {
                     CurrData.TotalNum++;
                     bDataTypeFound = true;
@@ -122,7 +122,7 @@ const TArray<FTileData> AGrid::CountTileTypes()
             if(!bDataTypeFound)
             {
                 FTileData NewData;
-                NewData.Type = Tile->ID_Type;
+                NewData.Type = Tile->Id;
                 NewData.TotalNum++;
                 GridData.Add(NewData);
             }
@@ -249,7 +249,7 @@ ATile* AGrid::SpawnTile(TSubclassOf<ATile> BlueprintClass, const FTransform& Tra
 {
     ATile* SpawnedTile = GetWorld()->SpawnActor<ATile>(BlueprintClass, Transform);
     
-    if(SpawnedTile) SpawnedTile->SetTileType(Type);
+    if(SpawnedTile) SpawnedTile->SetMatchType(Type);
 
     return SpawnedTile;
 }

@@ -41,18 +41,18 @@ public:
     
     /** Set the tile type */
     UFUNCTION(BlueprintNativeEvent)
-    void SetTileType(const int Type);
+    void SetMatchType(const int Type);
     
-    /** Load the tile sprite based on its ID_Type. Function is implemented in blueprint */
+    /** Load the tile sprite based on its Id. Function is implemented in blueprint */
     UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
     void LoadTileSprite();
     
     UFUNCTION(BlueprintPure)
     static FVector2D GetSourceSize(UPaperSprite* Sprite);
     
-    /** The enumeration of a tile type are defined in blueprint */
+    /** A unique ID for the tile. When testing for matches, use enumeration defined in blueprint */
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta=(ExposeOnSpawn="true"))
-    int ID_Type;
+    int Id;
     
     UPROPERTY(BlueprintReadWrite)
     FVector2D OldLocation;
