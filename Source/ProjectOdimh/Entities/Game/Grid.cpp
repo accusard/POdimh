@@ -249,7 +249,7 @@ ATile* AGrid::SpawnTile(TSubclassOf<ATile> BlueprintClass, const FTransform& Tra
 {
     ATile* SpawnedTile = GetWorld()->SpawnActor<ATile>(BlueprintClass, Transform);
     
-    if(SpawnedTile) SpawnedTile->SetMatchType(Type);
+    if(SpawnedTile) SpawnedTile->SetId(Type);
 
     return SpawnedTile;
 }

@@ -41,7 +41,7 @@ void ATile::OnTileBurst_Implementation()
     
 }
 
-void ATile::SetMatchType_Implementation(const int Type)
+void ATile::SetId_Implementation(const int Type)
 {
     Id = Type;
 }

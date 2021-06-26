@@ -41,11 +41,11 @@ public:
     
     /** Set the tile type */
     UFUNCTION(BlueprintNativeEvent)
-    void SetMatchType(const int Type);
+    void SetId(const int Type);
     
     /** Load the tile sprite based on its Id. Function is implemented in blueprint */
     UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-    void LoadTileSprite();
+    void LoadSprite();
     
     UFUNCTION(BlueprintPure)
     static FVector2D GetSourceSize(UPaperSprite* Sprite);
