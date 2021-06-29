@@ -61,7 +61,6 @@ public:
     FVector2D SpriteSize;
     
     void SetPlayerControlled(const bool bPlayerControlled = true);
-    const bool IsControlledByPlayer() const;
     
     UFUNCTION(BlueprintImplementableEvent, BlueprintPure)
     const bool DoesLogic() const;
