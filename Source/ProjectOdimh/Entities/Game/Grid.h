@@ -151,7 +151,7 @@ protected:
     void OnEventBurstEnd(AMatch3GameMode* Mode);
     
     UFUNCTION(BlueprintCallable)
-    void HandleTilesSwapped(ATile* DynamicTile, ATile* StaticTile);
+    void HandleTilesSwapped(AController* GridController, ATile* DynamicTile, ATile* StaticTile);
     
     /** The arrays of gems that was retrieved from blueprint */
     UPROPERTY(BlueprintReadWrite)

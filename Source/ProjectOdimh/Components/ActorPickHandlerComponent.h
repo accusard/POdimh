@@ -29,12 +29,14 @@ public:
     
     virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
     
-    void NotifyActorPicked();
+    void NotifyActorPicked(const bool bMakeNewHandledList = true);
     void NotifyReleasePickedActor();
     
-    void SetPlayerControlled(const bool bIsControlledByPlayer = true);
-    const bool IsActorPickedPlayerControlled() const;
+    const bool ActorsHandledByPlayer() const;
     
+    void AddHandledActor(AActor* Actor);
+    TArray<AActor*> &GetAllActorsHandledByThisComp();
+    void ClearActorsHandledByThisComp();
     
 protected:
     
@@ -43,4 +45,7 @@ private:
     AActor* ActorLastPicked;
     AActor* ActorPicked;
     bool bPickedIsControlledByPlayer;
+    
+    UPROPERTY()
+    TArray<AActor*> HandledActors;
 };

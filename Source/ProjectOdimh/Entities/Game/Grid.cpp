@@ -8,6 +8,7 @@
 #include "Entities/Game/Match3GameMode.h"
 #include "Entities/Game/Tile.h"
 #include "Entities/States/State.h"
+#include "ClassInterface/PickHandlerInterface.h"
 #include "Components/ActionTurnBasedComponent.h"
 #include "Components/ActorPickHandlerComponent.h"
 #include "POdimhGameInstance.h"
@@ -222,9 +223,15 @@ void AGrid::OnEventBurstEnd_Implementation(AMatch3GameMode* Mode)
     Mode->ReceiveRequestToEndTurn();
 }
 
-void AGrid::HandleTilesSwapped(ATile* DynamicTile, ATile* StaticTile)
+void AGrid::HandleTilesSwapped(AController* GridController, ATile* DynamicTile, ATile* StaticTile)
 {
+    UActorPickHandlerComponent* Handler = Cast<IPickHandlerInterface>(GridController)->GetPickHandler();
     
+    if(Handler)
+    {
+        Handler->AddHandledActor(DynamicTile);
+        Handler->AddHandledActor(StaticTile);
+    }
 }
 
 // Called when the game starts or when spawned

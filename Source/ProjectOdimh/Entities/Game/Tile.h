@@ -60,8 +60,6 @@ public:
     UPROPERTY(BlueprintReadWrite)
     FVector2D SpriteSize;
     
-    void SetPlayerControlled(const bool bPlayerControlled = true);
-    
     UFUNCTION(BlueprintImplementableEvent, BlueprintPure)
     const bool DoesLogic() const;
     

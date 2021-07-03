@@ -42,7 +42,7 @@ UActorPickHandlerComponent* AGridPlayerController::GetPickHandler()
 
 void AGridPlayerController::HandlePick(AActor* PickedTile)
 {
-    GetPickHandler()->SetPlayerControlled();
+    GetPickHandler()->AddHandledActor(PickedTile);
 }
 
 void AGridPlayerController::SetupInputComponent()

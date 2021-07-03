@@ -25,27 +25,44 @@ void UActorPickHandlerComponent::TickComponent(float DeltaTime, enum ELevelTick 
         
 }
 
-const bool UActorPickHandlerComponent::IsActorPickedPlayerControlled() const
+const bool UActorPickHandlerComponent::ActorsHandledByPlayer() const
 {
-    if(!ActorPicked)
+    if(HandledActors.Num() > 0 && Cast<APlayerController>(GetOwner()))
+        return true;
+    else
         return false;
-    
-    return bPickedIsControlledByPlayer;
 }
 
-void UActorPickHandlerComponent::NotifyActorPicked()
+void UActorPickHandlerComponent::NotifyActorPicked(const bool bMakeNewHandledList)
 {
+    if(bMakeNewHandledList)
+        ClearActorsHandledByThisComp();
+    
     Cast<UPOdimhGameInstance>(GetOwner()->GetGameInstance())->EventManager->OnActorPicked.Broadcast(ActorPicked);
 }
 
 void UActorPickHandlerComponent::NotifyReleasePickedActor()
 {
     Cast<UPOdimhGameInstance>(GetOwner()->GetGameInstance())->EventManager->OnActorReleased.Broadcast(ActorPicked);
-    SetPlayerControlled(false);
     ActorPicked = nullptr;
+    
+    for(auto i : GetAllActorsHandledByThisComp())
+    {
+        UE_LOG(LogTemp, Warning, TEXT("Handled: %s"), *i->GetName());
+    }
 }
 
-void UActorPickHandlerComponent::SetPlayerControlled(const bool bIsControlledByPlayer /* = true */)
+void UActorPickHandlerComponent::AddHandledActor(AActor* Actor)
 {
-    bPickedIsControlledByPlayer = bIsControlledByPlayer;
+    HandledActors.AddUnique(Actor);
+}
+
+TArray<AActor*> &UActorPickHandlerComponent::GetAllActorsHandledByThisComp()
+{
+    return HandledActors;
+}
+
+void UActorPickHandlerComponent::ClearActorsHandledByThisComp()
+{
+    HandledActors.Empty();
 }
