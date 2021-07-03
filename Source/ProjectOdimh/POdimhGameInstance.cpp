@@ -38,7 +38,7 @@ void UPOdimhGameInstance::SaveGameToSlot(USaveGame* Data, const FString& SlotNam
 
 void UPOdimhGameInstance::ResetGame(const int32 PlayerIndex)
 {
-    const bool bNotNewGame = false;
+    const bool bNotNewGame = true;
     LoadGame(RESET_GAME_SLOT,PlayerIndex);
     SaveGame(CONTINUE_GAME_SLOT,PlayerIndex, bNotNewGame);
 }

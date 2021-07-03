@@ -71,7 +71,7 @@ const bool AGrid::NotifyLoad(USaveGame* LoadData)
         FGridSpawningParameters Params;
         Params.bRandomTileType = false;
         Params.bLoadSprites = true;
-        Params.SaveSlotName = CONTINUE_GAME_SLOT;
+        Params.SaveSlotName = Data->SaveSlotName;
         
         InitTiles(Params);
         UpdateTileList();

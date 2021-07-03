@@ -45,6 +45,47 @@ const bool AMatch3GameMode::NotifyLoad(USaveGame* DataPtr)
     return LoadParticipants(DataPtr);
 }
 
+const bool AMatch3GameMode::LoadParticipants(USaveGame* Data)
+{
+    // load from save
+    if(UPOdimhSaveGame* SaveData = Cast<UPOdimhSaveGame>(Data))
+    {
+        PGameState->ParticipantIndex = SaveData->CurrentParticipantIndex;
+        
+        if(Participants.Num() > 0)
+            return true;
+        
+        if(SaveData->ParticipantsRegistry.Num() != 0)
+        {
+            for(int32 i = 0; i < SaveData->ParticipantsRegistry.Num(); ++i)
+            {
+                FActorSpawnParameters Params;
+                
+                Params.Name = FName(*SaveData->ParticipantsRegistry[i].Name);
+                Params.Owner = this;
+                
+                uint32 TurnNum = SaveData->ParticipantsRegistry[i].PositionInQueue;
+                
+#if !UE_BUILD_SHIPPING
+                UE_LOG(LogTemp,Warning,TEXT("Loading Participant: %s, Turn: %i"),*Params.Name.ToString(), TurnNum);
+#endif
+                AParticipantTurn* NewEntity = NewParticipant(Params);
+                Participants.Add(TurnNum, NewEntity);
+            }
+            return true;
+        }
+    }
+    return false;
+}
+
+AParticipantTurn* AMatch3GameMode::NewParticipant(const FActorSpawnParameters& Params)
+{
+    AParticipantTurn* NewEntity = GetWorld()->SpawnActor<AParticipantTurn>(AParticipantTurn::StaticClass(), Params);
+    NewEntity->Init(*Params.Name.ToString());
+    
+    return NewEntity;
+}
+
 TMap<uint32, AParticipantTurn*>& AMatch3GameMode::GetParticipants()
 {
     return Participants;
@@ -164,35 +205,6 @@ const bool AMatch3GameMode::LoadParticipantsFromBlueprint()
     }
         
     return true;
-}
-
-const bool AMatch3GameMode::LoadParticipants(USaveGame* Data)
-{
-    // load from save
-    if(UPOdimhSaveGame* SaveData = Cast<UPOdimhSaveGame>(Data))
-    {
-        PGameState->ParticipantIndex = SaveData->CurrentParticipantIndex;
-        if(SaveData->ParticipantsRegistry.Num() != 0)
-        {
-            for(int32 i = 0; i < SaveData->ParticipantsRegistry.Num(); ++i)
-            {
-                FActorSpawnParameters Params;
-                
-                Params.Name = FName(*SaveData->ParticipantsRegistry[i].Name);
-                Params.Owner = this;
-                
-                uint32 TurnNum = SaveData->ParticipantsRegistry[i].PositionInQueue;
-                
-#if !UE_BUILD_SHIPPING
-                UE_LOG(LogTemp,Warning,TEXT("Loading Participant: %s, Turn: %i"),*Params.Name.ToString(), TurnNum);
-#endif
-                AParticipantTurn* NewEntity = NewParticipant(Params);
-                Participants.Add(TurnNum, NewEntity);
-            }
-            return true;
-        }
-    }
-    return false;
 }
 
 void AMatch3GameMode::SaveParticipants(USaveGame* DataPtr)
@@ -321,14 +333,6 @@ void AMatch3GameMode::ReceiveRequestToEndTurn(ATile* LastTileGrabbed)
 AParticipantTurn* AMatch3GameMode::GetCurrentParticipant() const
 {
     return Cast<AParticipantTurn>(ActiveTurn->GetOwner());
-}
-
-AParticipantTurn* AMatch3GameMode::NewParticipant(const FActorSpawnParameters& Params)
-{
-    AParticipantTurn* NewEntity = GetWorld()->SpawnActor<AParticipantTurn>(AParticipantTurn::StaticClass(), Params);
-    NewEntity->Init(*Params.Name.ToString());
-    
-    return NewEntity;
 }
 
 void AMatch3GameMode::Give(AActor* Controller, const FMatch3GameAction& Action, const bool bExecuteNow)
