@@ -37,16 +37,16 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
+    /** Spawn this when the component is destroyed. Can be assigned in Blueprint */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Spawning Properties")
+    TSubclassOf<AActor> SpawnOnDestroy;
+    
 private:
     UPROPERTY(EditAnywhere, Category="Spawning Properties")
     uint16 bUseOwnerTransformWhenSpawning : 1;
     
     UPROPERTY(EditAnywhere, Category="Spawning Properties")
     uint16 bSpawnFromContainerWhenOwnerDestroyed : 1;
-
-    /** Spawn this when the component is destroyed. Can be assigned in Blueprint */
-    UPROPERTY(EditAnywhere, Category="Spawning Properties")
-    TSubclassOf<AActor> ActorToSpawn;
 
     FTransform SpawnTransform;
 };
