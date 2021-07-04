@@ -46,7 +46,7 @@ private:
 
     /** Spawn this when the component is destroyed. Can be assigned in Blueprint */
     UPROPERTY(EditAnywhere, Category="Spawning Properties")
-    TSubclassOf<AActor> Container;
+    TSubclassOf<AActor> ActorToSpawn;
 
     FTransform SpawnTransform;
 };

@@ -37,13 +37,13 @@ void USpawnContainer::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 
 void USpawnContainer::SetContainer(TSubclassOf<AActor> SpawningActor, const FTransform &Transform)
 {
-    Container = SpawningActor;
+    ActorToSpawn = SpawningActor;
     SpawnTransform = Transform;
 }
 
 void USpawnContainer::OnOwnerDestroyed(AActor* DestroyedActor)
 {
-    if(bSpawnFromContainerWhenOwnerDestroyed && DestroyedActor == GetOwner() && Container)
+    if(bSpawnFromContainerWhenOwnerDestroyed && DestroyedActor == GetOwner() && ActorToSpawn)
     {
         if(bUseOwnerTransformWhenSpawning)
             SpawnTransform = DestroyedActor->GetTransform();
@@ -53,7 +53,7 @@ void USpawnContainer::OnOwnerDestroyed(AActor* DestroyedActor)
             if(DestroyedActor)
             {
                 GameInstance->EventManager->NewEvent<UGridEvent>(GetWorld(), "Grid Event", true);
-                GameInstance->EventManager->OnSpawnFromComponent.Broadcast(Spawn(Container, SpawnTransform), this);
+                GameInstance->EventManager->OnSpawnFromComponent.Broadcast(Spawn(ActorToSpawn, SpawnTransform), this);
             }
         }
     }
