@@ -12,7 +12,7 @@ class ATile;
 class USoundCue;
 
 USTRUCT()
-struct FTileData
+struct FTileCount
 {
     GENERATED_USTRUCT_BODY()
     
@@ -70,7 +70,7 @@ public:
     const FVector2D GetGridLocation(const uint32 TileIndex);
     
     /** Collect data on the number of type occurences that is currently on the grid */
-    const TArray<FTileData> CountTileTypes();
+    const TArray<FTileCount> CountTileTypes();
     
     /** Find the number of occurences based on a tile type */
     UFUNCTION(BlueprintCallable)
@@ -78,7 +78,7 @@ public:
     
     /** Check the grid if there are available matching tiles */
     UFUNCTION(BlueprintCallable)
-    const bool MatchingTilesAvailable();
+    const bool MatchingTilesAvailable(int NumOfTileTypes);
     
     /** Score is calculated based on number of tiles, the tile value and a multiplier */
     UFUNCTION(BlueprintCallable)

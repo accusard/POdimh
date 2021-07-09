@@ -104,7 +104,7 @@ protected:
     UPROPERTY(EditAnywhere)
     TMap<uint32, TSubclassOf<AParticipantTurn>> ParticipantsBlueprint;
     
-    UPROPERTY(EditAnywhere)
+    UPROPERTY(EditAnywhere, BlueprintReadOnly)
     TSubclassOf<AActor> TileRelayLineBlueprintClass;
     
     UPROPERTY(BlueprintReadWrite)

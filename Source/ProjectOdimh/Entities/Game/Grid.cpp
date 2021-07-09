@@ -102,9 +102,9 @@ const FVector2D AGrid::GetGridLocation(const uint32 TileIndex)
     return FVector2D(TileIndex % SizeX, TileIndex / SizeX);
 }
 
-const TArray<FTileData> AGrid::CountTileTypes()
+const TArray<FTileCount> AGrid::CountTileTypes()
 {
-    TArray<FTileData> GridData;
+    TArray<FTileCount> TotalCount;
     
     for(auto* Tile: UpdateTileList())
     {
@@ -112,11 +112,12 @@ const TArray<FTileData> AGrid::CountTileTypes()
         {
             bool bDataTypeFound = false;
             
-            for(FTileData& CurrData : GridData)
+            // count each tile type
+            for(FTileCount& CurrTileCount : TotalCount)
             {
-                if(CurrData.Type == Tile->Id)
+                if(CurrTileCount.Type == Tile->Id)
                 {
-                    CurrData.TotalNum++;
+                    CurrTileCount.TotalNum++;
                     bDataTypeFound = true;
                     break;
                 }
@@ -125,22 +126,22 @@ const TArray<FTileData> AGrid::CountTileTypes()
             // create new data only if a certain type doesn't exist
             if(!bDataTypeFound)
             {
-                FTileData NewData;
-                NewData.Type = Tile->Id;
-                NewData.TotalNum++;
-                GridData.Add(NewData);
+                FTileCount NewCount;
+                NewCount.Type = Tile->Id;
+                NewCount.TotalNum++;
+                TotalCount.Add(NewCount);
             }
         }
     }
     TileList.Empty();
-    return GridData;
+    return TotalCount;
 }
 
 const int AGrid::GetNumOfOccurences(const int Type)
 {
     int Count = 0;
     
-    for(const FTileData& CurrTileData : CountTileTypes())
+    for(const FTileCount& CurrTileData : CountTileTypes())
     {
         if(CurrTileData.Type == Type)
         {
@@ -151,14 +152,14 @@ const int AGrid::GetNumOfOccurences(const int Type)
     return Count;
 }
 
-const bool AGrid::MatchingTilesAvailable()
+const bool AGrid::MatchingTilesAvailable(int NumOfTileTypes)
 {
-    for(int type = 0; type < NUMBER_OF_TILE_TYPES; type++ )
+    for(int type = 0; type < NumOfTileTypes; type++ )
     {
         // TODO: note that function GetNumOfOccurences() is calling CountTileTypes() in a loop
         int TileCount = GetNumOfOccurences(type);
         
-        // return true if there are available matches
+        // return true if there are at least 1 available matches
         if(TileCount >= TilesNeededForMatch)
         {
             return true;
