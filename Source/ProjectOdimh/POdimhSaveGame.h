@@ -58,9 +58,6 @@ public:
     UPROPERTY(BlueprintReadOnly)
     TArray<int> TileTypes;
     
-    UPROPERTY(BlueprintReadOnly)
-    TArray<FVector2D> TerminalLocations;
-    
     /** The data for game score */
     UPROPERTY()
     int32 GameScore;
