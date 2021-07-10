@@ -17,6 +17,7 @@ DECLARE_DELEGATE_RetVal_TwoParams(const bool, FResolveTileCollisions, ATile*, AT
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FGlobalWidgetDelegate);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPickHandler, AActor*, HandleActor);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FCreateFromComponentDelegate, AActor*, Spawner, UActorComponent*, Comp);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FActorEventDelegate, AActor*, Actor, UBaseEvent*, Event);
 
 /**
  * Contains delegates used for multicasting
@@ -79,6 +80,9 @@ public:
     FPickHandler OnActorReleased;
     UPROPERTY()
     FPickHandler OnActorPicked;
+    
+    UPROPERTY()
+    FActorEventDelegate OnActorEvent;
     
     FResolveTileCollisions TilesSwapped;
     

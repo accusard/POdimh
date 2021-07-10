@@ -100,6 +100,9 @@ public:
     /** Get the distance between two Tile objects. */
     const float GetDistanceBetween(ATile* TileA, ATile* TileB);
     
+    UFUNCTION(BlueprintCallable)
+    void OnInitialTilesSpawned();
+    
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     USoundCue* StateChangeCue;
     
