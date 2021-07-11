@@ -18,9 +18,12 @@ class PROJECTODIMH_API UGridEvent : public UBaseEvent
 {
 	GENERATED_BODY()
 	
+    friend class AGrid;
+    
 public:
     
     
 protected:
-    
+    UPROPERTY(BlueprintReadOnly, Category="Grid Assets")
+    TArray<class ATile*> PtrToTiles;
 };

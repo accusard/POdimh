@@ -2,6 +2,7 @@
 
 
 #include "RelayLine.h"
+#include "POdimhGameInstance.h"
 
 // Sets default values
 ARelayLine::ARelayLine()
@@ -16,6 +17,7 @@ void ARelayLine::BeginPlay()
 {
 	Super::BeginPlay();
 	
+    Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager->OnActorEvent.AddDynamic(this, &ARelayLine::InitOnFinished);
 }
 
 // Called every frame
@@ -24,4 +26,5 @@ void ARelayLine::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 }
+
 

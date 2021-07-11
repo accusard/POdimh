@@ -18,14 +18,15 @@ public:
     // Called every frame
     virtual void Tick(float DeltaTime) override;
     
-
+    UFUNCTION(BlueprintImplementableEvent)
+    void InitOnFinished(AActor* Actor, class UBaseEvent* Evt);
     
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    TArray<FVector2D> Coordscoocoo;
+    TArray<FVector2D> Coords;
     
 
 };

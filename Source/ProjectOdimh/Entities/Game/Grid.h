@@ -101,7 +101,7 @@ public:
     const float GetDistanceBetween(ATile* TileA, ATile* TileB);
     
     UFUNCTION(BlueprintCallable)
-    void OnInitialTilesSpawned();
+    void OnInitialTilesSpawned(TArray<ATile*> NonMatchTiles);
     
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     USoundCue* StateChangeCue;
