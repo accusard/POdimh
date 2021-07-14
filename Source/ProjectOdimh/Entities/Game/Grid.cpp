@@ -99,15 +99,15 @@ const FVector2D AGrid::GetGridLocation(const uint32 TileIndex)
     return FVector2D(TileIndex % SizeX, TileIndex / SizeX);
 }
 
-const TArray<FTileCount> AGrid::CountTileTypes()
+const TArray<FTileCount> AGrid::TallyAllTileTypes()
 {
     TArray<FTileCount> TotalCount;
     
-    for(auto* Tile: UpdateTileList())
+    for(auto* Tile : UpdateTileList())
     {
         if(Tile)
         {
-            bool bDataTypeFound = false;
+            bool bCreateNewTally = true;
             
             // count each tile type
             for(FTileCount& CurrTileCount : TotalCount)
@@ -115,13 +115,13 @@ const TArray<FTileCount> AGrid::CountTileTypes()
                 if(CurrTileCount.Type == Tile->Id)
                 {
                     CurrTileCount.TotalNum++;
-                    bDataTypeFound = true;
+                    bCreateNewTally = false;
                     break;
                 }
             }
             
             // create new data only if a certain type doesn't exist
-            if(!bDataTypeFound)
+            if(bCreateNewTally)
             {
                 FTileCount NewCount;
                 NewCount.Type = Tile->Id;
@@ -138,7 +138,7 @@ const int AGrid::GetNumOfOccurences(const int Type)
 {
     int Count = 0;
     
-    for(const FTileCount& CurrTileData : CountTileTypes())
+    for(const FTileCount& CurrTileData : TallyAllTileTypes())
     {
         if(CurrTileData.Type == Type)
         {
@@ -153,7 +153,6 @@ const bool AGrid::MatchingTilesAvailable(int NumOfTileTypes)
 {
     for(int type = 0; type < NumOfTileTypes; type++ )
     {
-        // TODO: note that function GetNumOfOccurences() is calling CountTileTypes() in a loop
         int TileCount = GetNumOfOccurences(type);
         
         // return true if there are at least 1 available matches

@@ -70,7 +70,7 @@ public:
     const FVector2D GetGridLocation(const uint32 TileIndex);
     
     /** Collect data on the number of type occurences that is currently on the grid */
-    const TArray<FTileCount> CountTileTypes();
+    const TArray<FTileCount> TallyAllTileTypes();
     
     /** Find the number of occurences based on a tile type */
     UFUNCTION(BlueprintCallable)
