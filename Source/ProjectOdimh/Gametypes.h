@@ -48,3 +48,15 @@ public:
     uint32 Num;
     class AMatch3GameMode* GameMode;
 };
+
+USTRUCT(BlueprintType)
+struct F2DVectorLine
+{
+    GENERATED_USTRUCT_BODY()
+    
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+    FVector2D Start;
+    
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+    FVector2D End;
+};

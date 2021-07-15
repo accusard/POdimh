@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "GameTypes.h"
 #include "RelayLine.generated.h"
 
 UCLASS()
@@ -25,8 +26,11 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    TArray<FVector2D> Coords;
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+    F2DVectorLine LineCoords;
+    
+    UPROPERTY(BlueprintReadWrite)
+    TArray<FVector2D> ReservedCoords;
     
 
 };
