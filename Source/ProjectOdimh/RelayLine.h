@@ -27,10 +27,10 @@ protected:
 	virtual void BeginPlay() override;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-    F2DVectorLine LineCoords;
+    FIntPointLine LineCoords;
     
     UPROPERTY(BlueprintReadWrite)
-    TArray<FVector2D> ReservedCoords;
+    TArray<FIntPoint> ReservedGridCoords;
     
 
 };

@@ -50,13 +50,13 @@ public:
 };
 
 USTRUCT(BlueprintType)
-struct F2DVectorLine
+struct FIntPointLine
 {
     GENERATED_USTRUCT_BODY()
     
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-    FVector2D Start;
+    FIntPoint Start{2,0};
     
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-    FVector2D End;
+    FIntPoint End{2,5};
 };

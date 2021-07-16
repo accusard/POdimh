@@ -59,8 +59,3 @@ void ATile::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-FVector2D ATile::GetSourceSize(UPaperSprite* Sprite)
-{
-    return Sprite->GetSourceSize();
-}
-

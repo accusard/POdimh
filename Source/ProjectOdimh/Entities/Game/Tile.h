@@ -46,18 +46,12 @@ public:
     UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
     void LoadSprite();
     
-    UFUNCTION(BlueprintPure)
-    static FVector2D GetSourceSize(UPaperSprite* Sprite);
-    
     /** A unique ID for the tile. When testing for matches, use enumeration defined in blueprint */
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta=(ExposeOnSpawn="true"))
     int Id;
     
     UPROPERTY(BlueprintReadWrite)
     FVector2D OldLocation;
-    
-    UPROPERTY(BlueprintReadWrite)
-    FVector2D SpriteSize;
     
     UFUNCTION(BlueprintImplementableEvent, BlueprintPure)
     const bool DoesLogic() const;
@@ -67,7 +61,7 @@ protected:
 	virtual void BeginPlay() override;
     
 private:
-    /** The value of this tile that will be tallied up into a total score when this tile is part of a match */
+    /** Tally up value to total score when this tile is part of a match */
     UPROPERTY(EditDefaultsOnly)
     uint32 Value;
     
