@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Gametypes.h"
+#include "Data/Gametypes.h"
 #include "Kismet/GameplayStatics.h"
 #include "POdimhGameInstance.h"
 #include "GameplayTagAssetInterface.h"

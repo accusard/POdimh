@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 
+/* deprecate */
 class AActor;
 class APowerup;
 

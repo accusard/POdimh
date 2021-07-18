@@ -1,7 +1,7 @@
 // Copyright 2017-2018 Vanny Sou. All Rights Reserved.
 
 #include "FGameStats.h"
-#include "Gametypes.h"
+#include "Data/Gametypes.h"
 
 FGameStats::FGameStats()
 {

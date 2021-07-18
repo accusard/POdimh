@@ -3,10 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "POdimhSaveGame.h"
+#include "Data/POdimhSaveGame.h"
 #include "Engine/GameInstance.h"
 #include "Events/EventManager.h"
-#include "DebuggerInfo.h"
+#include "Utilities/DebuggerInfo.h"
 #include "POdimhGameInstance.generated.h"
 
 class USaveGame;

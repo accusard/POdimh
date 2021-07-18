@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "GameTypes.h"
+#include "Data/GameTypes.h"
 #include "RelayLine.generated.h"
 
 UCLASS()

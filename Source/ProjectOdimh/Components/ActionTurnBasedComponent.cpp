@@ -1,7 +1,7 @@
 // Copyright 2017-2019 Vanny Sou. All Rights Reserved.
 
 #include "ActionTurnBasedComponent.h"
-#include "GameTypes.h"
+#include "Data/GameTypes.h"
 #include "Entities/Game/ParticipantTurn.h"
 
 

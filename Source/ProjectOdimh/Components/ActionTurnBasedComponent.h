@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameTypes.h"
+#include "Data/GameTypes.h"
 #include "Components/ActorComponent.h"
 #include "Utilities/FGameStats.h"
 #include "ActionTurnBasedComponent.generated.h"

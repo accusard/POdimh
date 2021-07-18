@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "ThoughtBubble.generated.h"
 
+/* deprecate */
 UCLASS()
 class PROJECTODIMH_API AThoughtBubble : public AActor
 {

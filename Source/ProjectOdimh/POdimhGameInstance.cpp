@@ -1,9 +1,9 @@
 // Copyright 2017-2018 Vanny Sou. All Rights Reserved.
 
 #include "POdimhGameInstance.h"
-#include "POdimhSaveGame.h"
 #include "EngineUtils.h"
-#include "Gametypes.h"
+#include "Data/Gametypes.h"
+#include "Data/POdimhSaveGame.h"
 #include "Events/GridEvent.h"
 #include "Events/PlayerInputEvent.h"
 #include "ClassInterface/DataSaveInterface.h"

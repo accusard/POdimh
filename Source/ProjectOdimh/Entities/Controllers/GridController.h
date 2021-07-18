@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Controller.h"
-#include "GameTypes.h"
+#include "Data/GameTypes.h"
 #include "ClassInterface/PickHandlerInterface.h"
 #include "GridController.generated.h"
 

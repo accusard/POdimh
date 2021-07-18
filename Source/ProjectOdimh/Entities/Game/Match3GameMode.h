@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameMode.h"
-#include "Gametypes.h"
+#include "Data/Gametypes.h"
 #include "ClassInterface/DataSaveInterface.h"
 #include "Match3GameMode.generated.h"
 
