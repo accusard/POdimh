@@ -207,12 +207,12 @@ const float GetDistanceBetween(ATile* TileA, ATile* TileB)
     return FVector::Distance(TileA->GetActorLocation(), TileB->GetActorLocation());
 }
 
-void AGrid::OnInitialTilesSpawned(TArray<ATile*> NonMatchTiles)
+void AGrid::OnInitialTilesSpawned(TArray<ATile*> SpecialTiles)
 {
     UEventManager* EvtMgr = Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager;
-    UGridEvent* Event = EvtMgr->NewEvent<UGridEvent>(this, "Initial Tiles Spawned", true);
+    UGridEvent* Event = EvtMgr->NewEvent<UGridEvent>(this, "Special Tiles", true);
     
-    for(ATile* Tile : NonMatchTiles)
+    for(ATile* Tile : SpecialTiles)
         Event->PtrToTiles.Add(Tile);
     
     EvtMgr->OnActorEvent.Broadcast(this, Event);
