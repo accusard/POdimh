@@ -250,14 +250,13 @@ void AGrid::HandleTilesSwapped(AController* GridController, ATile* DynamicTile, 
     }
 }
 
-void AGrid::RandomizeNewTiles(TArray<class ATile*> List)
+void AGrid::RandomizeNewTiles(TArray<class ATile*> Old)
 {
-    for(ATile* Tile : List)
+    for(ATile* T : Old)
     {
-        FVector2D GridCoord = Tile->GetCoord();
-        ATile* NewTile = SpawnTile(MatchPieceBlueprintClass, Tile->GetActorTransform(), GetRandomMatchType());
+        ATile* NewTile = SpawnTile(MatchPieceBlueprintClass, T->GetActorTransform(), GetRandomMatchType());
         NewTile->LoadSprite();
-        RegisterPosition(NewTile, GridCoord);
+        RegisterPosition(NewTile, T->GetCoord());
     }
 }
 

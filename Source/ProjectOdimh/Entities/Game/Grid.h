@@ -159,7 +159,7 @@ protected:
     void HandleTilesSwapped(AController* GridController, ATile* DynamicTile, ATile* StaticTile);
     
     UFUNCTION(BlueprintCallable)
-    void RandomizeNewTiles(TArray<class ATile*> Tiles);
+    void RandomizeNewTiles(TArray<class ATile*> OldTiles);
     
     UFUNCTION(BlueprintImplementableEvent)
     const int GetRandomMatchType() const;
