@@ -46,6 +46,9 @@ public:
     UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
     void LoadSprite();
     
+    UFUNCTION(BlueprintImplementableEvent)
+    const FString GetIdString() const;
+    
     /** A unique ID for the tile. When testing for matches, use enumeration defined in blueprint */
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta=(ExposeOnSpawn="true"))
     int Id;
@@ -55,6 +58,9 @@ public:
     
     UFUNCTION(BlueprintImplementableEvent, BlueprintPure)
     const bool DoesLogic() const;
+    
+    UFUNCTION(BlueprintImplementableEvent)
+    const FVector2D GetCoord() const;
     
 protected:
 	// Called when the game starts or when spawned

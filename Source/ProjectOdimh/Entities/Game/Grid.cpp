@@ -41,6 +41,15 @@ AGrid::AGrid()
     
 }
 
+// Called when the game starts or when spawned
+void AGrid::BeginPlay()
+{
+    Super::BeginPlay();
+    
+    Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager->OnActorPicked.AddDynamic(this, &AGrid::SetOldLocation);
+    Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager->OnActorReleased.AddDynamic(this, &AGrid::CheckState);
+}
+
 void AGrid::NotifySave(USaveGame* SaveData)
 {
     if(UPOdimhSaveGame* Data = Cast<UPOdimhSaveGame>(SaveData))
@@ -80,7 +89,7 @@ const bool AGrid::NotifyLoad(USaveGame* LoadData)
     return bSuccess;
 }
 
-const FVector2D& AGrid::GetGridLocation(const FVector& Location)
+const FVector2D& AGrid::GetTileCoords(const FVector& Location)
 {
     // call the blueprint library function to retrieve the data
     OnRetreiveGridLocation(Location);
@@ -88,12 +97,12 @@ const FVector2D& AGrid::GetGridLocation(const FVector& Location)
     return GridLocation;
 }
 
-const FVector2D& AGrid::GetGridLocation(ATile* Tile)
+const FVector2D& AGrid::GetTileCoords(ATile* Tile)
 {
-    return GetGridLocation(Tile->GetActorLocation());
+    return GetTileCoords(Tile->GetActorLocation());
 }
 
-const FVector2D AGrid::GetGridLocation(const uint32 TileIndex)
+const FVector2D AGrid::GetTileCoords(const uint32 TileIndex)
 {
     return FVector2D(TileIndex % SizeX, TileIndex / SizeX);
 }
@@ -168,7 +177,7 @@ const bool AGrid::HasTilePositionChanged(ATile* Tile)
 {
     if(Tile)
     {
-        const FVector2D TileCurrLocation = GetGridLocation(Tile);
+        const FVector2D TileCurrLocation = GetTileCoords(Tile);
         const FVector2D TileOldLocation = Tile->OldLocation;
         
         if(TileCurrLocation != TileOldLocation)
@@ -193,7 +202,7 @@ void AGrid::CheckState(AActor* Actor)
 void AGrid::SetOldLocation(AActor* Actor)
 {
     if(ATile* Tile = Cast<ATile>(Actor))
-        Tile->OldLocation = GetGridLocation(Tile);
+        Tile->OldLocation = GetTileCoords(Tile);
 }
 
 const float AGrid::GetDistanceBetween(ATile* Tile, FVector2D OtherPosition)
@@ -241,13 +250,15 @@ void AGrid::HandleTilesSwapped(AController* GridController, ATile* DynamicTile, 
     }
 }
 
-// Called when the game starts or when spawned
-void AGrid::BeginPlay()
+void AGrid::RandomizeNewTiles(TArray<class ATile*> List)
 {
-	Super::BeginPlay();
-    
-    Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager->OnActorPicked.AddDynamic(this, &AGrid::SetOldLocation);
-    Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager->OnActorReleased.AddDynamic(this, &AGrid::CheckState);
+    for(ATile* Tile : List)
+    {
+        FVector2D GridCoord = Tile->GetCoord();
+        ATile* NewTile = SpawnTile(MatchPieceBlueprintClass, Tile->GetActorTransform(), GetRandomMatchType());
+        NewTile->LoadSprite();
+        RegisterPosition(NewTile, GridCoord);
+    }
 }
 
 void AGrid::NewGrid()

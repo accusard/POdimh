@@ -3,6 +3,7 @@
 
 #include "RelayLine.h"
 #include "POdimhGameInstance.h"
+#include "Entities/Game/Grid.h"
 
 // Sets default values
 ARelayLine::ARelayLine()
@@ -27,4 +28,17 @@ void ARelayLine::Tick(float DeltaTime)
 
 }
 
+
+TArray<ATile*> ARelayLine::GetUnusedTiles(AGrid* Grid)
+{
+    TArray<ATile*> UnusedTiles;
+    for(FIntPoint Coord : ReservedGridCoords)
+    {
+        if(ATile* Tile = Grid->GetTile(Coord))
+            if(Tile->GetIdString() == "Reserved")
+                UnusedTiles.Add(Tile);
+    }
+    
+    return UnusedTiles;
+}
 

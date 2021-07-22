@@ -22,6 +22,9 @@ public:
     UFUNCTION(BlueprintImplementableEvent)
     void InitOnFinished(AActor* Actor, class UBaseEvent* Evt);
     
+    UFUNCTION(BlueprintPure)
+    TArray<ATile*> GetUnusedTiles(class AGrid* Grid);
+    
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

@@ -65,9 +65,11 @@ public:
     // Called every frame
     virtual void Tick(float DeltaTime) override;
 
-    const FVector2D& GetGridLocation(const FVector& Location);
-    const FVector2D& GetGridLocation(ATile* Tile);
-    const FVector2D GetGridLocation(const uint32 TileIndex);
+    const FVector2D& GetTileCoords(const FVector& Location);
+    const FVector2D& GetTileCoords(ATile* Tile);
+    const FVector2D GetTileCoords(const uint32 TileIndex);
+    UFUNCTION(BlueprintImplementableEvent)
+    class ATile* GetTile(const FIntPoint& Coord) const;
     
     /** Collect data on the number of type occurences that is currently on the grid */
     const TArray<FTileCount> TallyAllTileTypes();
@@ -156,6 +158,15 @@ protected:
     UFUNCTION(BlueprintCallable)
     void HandleTilesSwapped(AController* GridController, ATile* DynamicTile, ATile* StaticTile);
     
+    UFUNCTION(BlueprintCallable)
+    void RandomizeNewTiles(TArray<class ATile*> Tiles);
+    
+    UFUNCTION(BlueprintImplementableEvent)
+    const int GetRandomMatchType() const;
+    
+    UFUNCTION(BlueprintImplementableEvent)
+    void RegisterPosition(ATile* Tile, const FVector2D& Coord);
+    
     /** The arrays of gems that was retrieved from blueprint */
     UPROPERTY(BlueprintReadWrite)
     TArray<ATile*> TileList;
@@ -167,6 +178,9 @@ protected:
     /** Tracks a list of tile types to spawn next */
     UPROPERTY(BlueprintReadWrite)
     TArray<int> NextTileToSpawn;
+    
+    UPROPERTY(EditAnywhere)
+    TSubclassOf<ATile> MatchPieceBlueprintClass;
     
     /** The required number of consecutive row or column for the game to consider it a successful tile match */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Tiles")
