@@ -150,7 +150,7 @@ protected:
     
     /** Spawn an actor directly to grid. Only possible if that grid's space is empty. Can notify GameMode of a grid state change after spawning. */
     UFUNCTION(BlueprintNativeEvent)
-    void SpawnTileToGrid(ATile* Tile, const bool bNotifyStateChange);
+    void SpawnTileToEmptyGrid(ATile* Tile, const bool bNotifyStateChange);
     
     UFUNCTION(BlueprintNativeEvent, BlueprintCallable, DisplayName="BurstEnd")
     void OnEventBurstEnd(AMatch3GameMode* Mode);
@@ -159,7 +159,7 @@ protected:
     void HandleTilesSwapped(AController* GridController, ATile* DynamicTile, ATile* StaticTile);
     
     UFUNCTION(BlueprintCallable)
-    void RandomizeNewTiles(TArray<class ATile*> OldTiles);
+    void RandomizeNewTiles(TArray<class ATile*> OldTiles, TSubclassOf<ATile> Class);
     
     UFUNCTION(BlueprintImplementableEvent)
     const int GetRandomMatchType() const;
@@ -178,9 +178,6 @@ protected:
     /** Tracks a list of tile types to spawn next */
     UPROPERTY(BlueprintReadWrite)
     TArray<int> NextTileToSpawn;
-    
-    UPROPERTY(EditAnywhere)
-    TSubclassOf<ATile> MatchPieceBlueprintClass;
     
     /** The required number of consecutive row or column for the game to consider it a successful tile match */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Tiles")

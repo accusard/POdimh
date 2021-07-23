@@ -250,13 +250,16 @@ void AGrid::HandleTilesSwapped(AController* GridController, ATile* DynamicTile, 
     }
 }
 
-void AGrid::RandomizeNewTiles(TArray<class ATile*> Old)
+void AGrid::RandomizeNewTiles(TArray<ATile*> Old, TSubclassOf<ATile> Class)
 {
+    
     for(ATile* T : Old)
     {
-        ATile* NewTile = SpawnTile(MatchPieceBlueprintClass, T->GetActorTransform(), GetRandomMatchType());
+        ATile* NewTile = SpawnTile(Class, T->GetActorTransform(), GetRandomMatchType());
         NewTile->LoadSprite();
         RegisterPosition(NewTile, T->GetCoord());
+        T->Destroy();
+        
     }
 }
 
@@ -266,7 +269,7 @@ void AGrid::NewGrid()
     InitTiles(Params);
 }
 
-void AGrid::SpawnTileToGrid_Implementation(ATile* Tile, const bool bNotifyStateChange)
+void AGrid::SpawnTileToEmptyGrid_Implementation(ATile* Tile, const bool bNotifyStateChange)
 {
     if(bNotifyStateChange)
         Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager->NewEvent<UGridEvent>(this, "Grid State Change", true);
