@@ -13,6 +13,16 @@ ARelayLine::ARelayLine()
 
 }
 
+void ARelayLine::NotifySave(USaveGame* Data)
+{
+    OnSaveFromBlueprint(Data);
+}
+
+const bool ARelayLine::NotifyLoad(USaveGame* Data)
+{
+    return OnLoadFromBlueprint(Data);
+}
+
 // Called when the game starts or when spawned
 void ARelayLine::BeginPlay()
 {

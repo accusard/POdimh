@@ -5,10 +5,11 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Data/GameTypes.h"
+#include "ClassInterface/DataSaveInterface.h"
 #include "RelayLine.generated.h"
 
 UCLASS()
-class PROJECTODIMH_API ARelayLine : public AActor
+class PROJECTODIMH_API ARelayLine : public AActor, public IDataSaveInterface
 {
 	GENERATED_BODY()
 	
@@ -16,6 +17,14 @@ public:
 	// Sets default values for this actor's properties
 	ARelayLine();
 
+    virtual void NotifySave(USaveGame* Data) override;
+    virtual const bool NotifyLoad(USaveGame* Data) override;
+    
+    UFUNCTION(BlueprintImplementableEvent)
+    void OnSaveFromBlueprint(USaveGame* Data) const;
+    UFUNCTION(BlueprintImplementableEvent)
+    const bool OnLoadFromBlueprint(USaveGame* Data) const;
+    
     // Called every frame
     virtual void Tick(float DeltaTime) override;
     
