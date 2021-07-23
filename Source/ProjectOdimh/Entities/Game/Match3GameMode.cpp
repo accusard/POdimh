@@ -126,7 +126,8 @@ void AMatch3GameMode::StartPlay()
     
     
     if(!TryLoadGame(CONTINUE_GAME_SLOT, Player1))
-        bIsNewGame = StartNewGame();
+        if(!TryLoadGame(LAST_SUCCESSFUL_SLOT, Player1))
+            bIsNewGame = StartNewGame();
     
     if(Participants.Num() != 0)
     {
@@ -135,8 +136,10 @@ void AMatch3GameMode::StartPlay()
         StartNextParticipant(NextParticipant);
         if(bIsNewGame)
         {
-            GetGameInstance<UPOdimhGameInstance>()->SaveGame(RESET_GAME_SLOT, Player1, bIsNewGame);
-            GetGameInstance<UPOdimhGameInstance>()->SaveGame(CONTINUE_GAME_SLOT, Player1, bIsNewGame);
+            UPOdimhGameInstance* Instance = GetGameInstance<UPOdimhGameInstance>();
+            Instance->SaveGame(RESET_GAME_SLOT, Player1, bIsNewGame);
+            Instance->SaveGame(CONTINUE_GAME_SLOT, Player1, bIsNewGame);
+            Instance->SaveGame(LAST_SUCCESSFUL_SLOT, Player1, bIsNewGame);
         }
     }
     else
@@ -246,8 +249,7 @@ const bool AMatch3GameMode::TryLoadGame(const FString &SlotName, const int32 Pla
 {
     if(UGameplayStatics::DoesSaveGameExist(SlotName, PlayerIndex))
     {
-        GetGameInstance<UPOdimhGameInstance>()->LoadGame(SlotName, PlayerIndex);
-        return true;
+        return GetGameInstance<UPOdimhGameInstance>()->LoadGame(SlotName, PlayerIndex);
     }
     
     return false;
@@ -292,8 +294,11 @@ void AMatch3GameMode::ReceiveRequestToEndTurn()
             GridController->UnPossess();
     }
     
-    GetGameInstance<UPOdimhGameInstance>()->SaveGame(CONTINUE_GAME_SLOT, (int32)EPlayer::One, false);
-    GetGameInstance<UPOdimhGameInstance>()->EventManager->ClearEventQueue();
+    const bool bIsNewGame = true;
+    UPOdimhGameInstance* Instance = GetGameInstance<UPOdimhGameInstance>();
+    Instance->SaveGame(CONTINUE_GAME_SLOT, (int32)EPlayer::One, !bIsNewGame);
+    Instance->SaveGame(LAST_SUCCESSFUL_SLOT, (int32)EPlayer::One, !bIsNewGame);
+    Instance->EventManager->ClearEventQueue();
     
     if(AParticipantTurn* ActiveParticipant = GetCurrentParticipant())
     {

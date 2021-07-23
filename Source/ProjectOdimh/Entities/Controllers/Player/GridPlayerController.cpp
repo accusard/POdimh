@@ -1,6 +1,7 @@
 // Copyright 2017-2018 Vanny Sou. All Rights Reserved.
 
 #include "GridPlayerController.h"
+#include "Kismet/GameplayStatics.h"
 #include "Data/GameTypes.h"
 #include "Sound/SoundCue.h"
 #include "UObject/ConstructorHelpers.h"
@@ -56,7 +57,7 @@ void AGridPlayerController::SetupInputComponent()
 
 void AGridPlayerController::BeginTouch(ETouchIndex::Type FingerIndex, FVector Location)
 {
-    if(GridPtr->IsPickState() && TileHandlerComponent)
+    if(!UGameplayStatics::IsGamePaused(this) && GridPtr->IsPickState() && TileHandlerComponent)
     {
         FHitResult Hit = FHitResult();
         NewInput("Player Input Event", false);

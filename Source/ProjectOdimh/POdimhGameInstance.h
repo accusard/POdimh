@@ -31,10 +31,10 @@ public:
     void ResetGame(const int32 PlayerIndex);
     UFUNCTION(BlueprintCallable)
     void SaveGame(const FString& SlotName, const int32 PlayerIndex, const bool bNewGameState);
-    void LoadGame(const FString& SlotName, const int32 PlayerIndex);
+    const bool LoadGame(const FString& SlotName, const int32 PlayerIndex);
     const bool SafeToSave(const bool bBypassGridState) const;
     
-    void LoadActor(AActor* Actor, USaveGame* Data);
+    const bool LoadActor(AActor* Actor, USaveGame* Data);
     void LoadComponents(AActor* Actor, USaveGame* Data);
     
     UPROPERTY(BlueprintReadOnly)

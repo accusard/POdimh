@@ -70,7 +70,7 @@ void AGrid::NotifySave(USaveGame* SaveData)
 const bool AGrid::NotifyLoad(USaveGame* LoadData)
 {
     bool bSuccess = false;
-    
+    // load save and ensure there are (SizeX * SizeY) tiles, if not load last successful save
     if(UPOdimhSaveGame* Data = Cast<UPOdimhSaveGame>(LoadData))
     {
         FGridSpawningParameters Params;
@@ -81,11 +81,12 @@ const bool AGrid::NotifyLoad(USaveGame* LoadData)
         InitTiles(Params);
         UpdateTileList();
         
-        if(ensure(TileList.Num() == Data->SavedGrid.GetNumberOfTiles()))
+        if(TileList.Num() == Data->SavedGrid.GetNumberOfTiles())
             bSuccess = true;
 
         TileList.Empty();
     }
+    
     return bSuccess;
 }
 

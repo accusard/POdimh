@@ -38,9 +38,11 @@ void UPOdimhGameInstance::SaveGameToSlot(USaveGame* Data, const FString& SlotNam
 
 void UPOdimhGameInstance::ResetGame(const int32 PlayerIndex)
 {
-    const bool bNotNewGame = true;
+    const bool bIsNewGame = true;
+    UGameplayStatics::SetGamePaused(this, false);
     LoadGame(RESET_GAME_SLOT,PlayerIndex);
-    SaveGame(CONTINUE_GAME_SLOT,PlayerIndex, bNotNewGame);
+    SaveGame(CONTINUE_GAME_SLOT,PlayerIndex, bIsNewGame);
+    SaveGame(LAST_SUCCESSFUL_SLOT,PlayerIndex,bIsNewGame);
 }
 
 void UPOdimhGameInstance::SaveGame(const FString& SlotName, const int32 PlayerIndex, const bool bNewGameState)
@@ -63,10 +65,10 @@ void UPOdimhGameInstance::SaveGame(const FString& SlotName, const int32 PlayerIn
     UE_LOG(LogTemp,Warning,TEXT("Saved to slot - %s"), *Data->SaveSlotName);
 }
 
-void UPOdimhGameInstance::LoadGame(const FString& SlotName, const int32 PlayerIndex)
+const bool UPOdimhGameInstance::LoadGame(const FString& SlotName, const int32 PlayerIndex)
 {
     if(!UGameplayStatics::DoesSaveGameExist(SlotName, PlayerIndex))
-        return;
+        return false;
     
     // init a new save game object
     UPOdimhSaveGame* Data = CreateSaveGameObject();
@@ -76,9 +78,11 @@ void UPOdimhGameInstance::LoadGame(const FString& SlotName, const int32 PlayerIn
     
     for(TActorIterator<AActor> ActorItr(GetWorld()); ActorItr; ++ActorItr)
     {
-        LoadActor(*ActorItr, Data);
+        if(!LoadActor(*ActorItr, Data))
+            return false;
         LoadComponents(*ActorItr, Data);
-     }
+    }
+    return true;
 }
 
 const bool UPOdimhGameInstance::SafeToSave(const bool bNewGameState) const
@@ -100,15 +104,17 @@ const bool UPOdimhGameInstance::SafeToSave(const bool bNewGameState) const
     return (bGameStateSafe && bNoPendingInput);
 }
 
-void UPOdimhGameInstance::LoadActor(AActor* Actor, USaveGame* Data)
+const bool UPOdimhGameInstance::LoadActor(AActor* Actor, USaveGame* Data)
 {
     if(IDataSaveInterface* ActorSaveInterface = Cast<IDataSaveInterface>(Actor))
     {
         if(ActorSaveInterface->NotifyLoad(Data))
         {
             UE_LOG(LogTemp, Warning, TEXT("LoadActor: %s data loaded successfully.."), *ActorSaveInterface->_getUObject()->GetName());
+            return true;
         }
     }
+    return false;
 }
 
 void UPOdimhGameInstance::LoadComponents(AActor* Actor, USaveGame* Data)

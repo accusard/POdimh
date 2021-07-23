@@ -10,6 +10,7 @@
 const FString DEFAULT_SAVE_SLOT = "DefaultSlotName";
 const FString RESET_GAME_SLOT = "ResetLevel";
 const FString CONTINUE_GAME_SLOT = "ContinueGame";
+const FString LAST_SUCCESSFUL_SLOT = "LastSuccessfulSlot";
 
 USTRUCT()
 struct FBaseSaveData
@@ -108,6 +109,8 @@ public:
     FString RESET;
     UPROPERTY(BlueprintReadOnly)
     FString CONTINUE;
+    UPROPERTY(BlueprintReadOnly)
+    FString PREVIOUS;
     
 public:
     // default constructor
