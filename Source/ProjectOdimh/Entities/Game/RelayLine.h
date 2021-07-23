@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Data/GameTypes.h"
+#include "Data/POdimhSaveGame.h"
 #include "ClassInterface/DataSaveInterface.h"
 #include "RelayLine.generated.h"
 
@@ -21,7 +22,7 @@ public:
     virtual const bool NotifyLoad(USaveGame* Data) override;
     
     UFUNCTION(BlueprintImplementableEvent)
-    void OnSaveFromBlueprint(USaveGame* Data) const;
+    const TArray<FCustomIntData> OnSaveFromBlueprint() const;
     UFUNCTION(BlueprintImplementableEvent)
     const bool OnLoadFromBlueprint(USaveGame* Data) const;
     

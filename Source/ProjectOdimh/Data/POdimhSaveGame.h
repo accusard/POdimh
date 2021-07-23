@@ -81,6 +81,18 @@ public:
     uint32 PositionInQueue;
 };
 
+USTRUCT(BlueprintType)
+struct FCustomIntData
+{
+    GENERATED_USTRUCT_BODY()
+public:
+    UPROPERTY(BlueprintReadWrite)
+    FString Id;
+    
+    UPROPERTY(BlueprintReadWrite)
+    int Value;
+};
+
 /**
  * An object that contains the save data of the game
  */
@@ -123,6 +135,13 @@ public:
     
     UPROPERTY()
     uint32 CurrentParticipantIndex;
+    
+    UPROPERTY()
+    TMap<FString, uint32> CustomInt;
+    
+    UPROPERTY()
+    TMap<FString, FIntPoint> CustomIntPoint;
+
 };
 
 

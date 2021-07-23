@@ -15,11 +15,25 @@ ARelayLine::ARelayLine()
 
 void ARelayLine::NotifySave(USaveGame* Data)
 {
-    OnSaveFromBlueprint(Data);
+    if(UPOdimhSaveGame* POdimhData = Cast<UPOdimhSaveGame>(Data))
+    {
+        for(const FCustomIntData& BPData : OnSaveFromBlueprint())
+        {
+            POdimhData->CustomInt.Add(*BPData.Id, BPData.Value);
+        }
+        
+        POdimhData->CustomIntPoint.Add(TEXT("LineCoords.Start"), LineCoords.Start);
+        POdimhData->CustomIntPoint.Add(TEXT("LineCoords.End"), LineCoords.End);
+    }
 }
 
 const bool ARelayLine::NotifyLoad(USaveGame* Data)
 {
+    if(UPOdimhSaveGame* POdimhData = Cast<UPOdimhSaveGame>(Data))
+    {
+        LineCoords.Start = POdimhData->CustomIntPoint[TEXT("LineCoords.Start")];
+        LineCoords.End = POdimhData->CustomIntPoint[TEXT("LineCoords.End")];
+    }
     return OnLoadFromBlueprint(Data);
 }
 
