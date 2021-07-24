@@ -106,15 +106,22 @@ const bool UPOdimhGameInstance::SafeToSave(const bool bNewGameState) const
 
 const bool UPOdimhGameInstance::LoadActor(AActor* Actor, USaveGame* Data)
 {
+    const bool bNoErrorLoading = true;
     if(IDataSaveInterface* ActorSaveInterface = Cast<IDataSaveInterface>(Actor))
     {
         if(ActorSaveInterface->NotifyLoad(Data))
         {
-            UE_LOG(LogTemp, Warning, TEXT("LoadActor: %s data loaded successfully.."), *ActorSaveInterface->_getUObject()->GetName());
+            UE_LOG(LogTemp, Warning, TEXT("LoadActor: %s success!"), *ActorSaveInterface->_getUObject()->GetName());
             return true;
         }
+        else
+        {
+            UE_LOG(LogTemp, Warning, TEXT("LoadActor: %s failed!"), *ActorSaveInterface->_getUObject()->GetName());
+            return false;
+        }
     }
-    return false;
+    
+    return bNoErrorLoading;
 }
 
 void UPOdimhGameInstance::LoadComponents(AActor* Actor, USaveGame* Data)

@@ -126,8 +126,10 @@ void AMatch3GameMode::StartPlay()
     
     
     if(!TryLoadGame(CONTINUE_GAME_SLOT, Player1))
+    {
         if(!TryLoadGame(LAST_SUCCESSFUL_SLOT, Player1))
             bIsNewGame = StartNewGame();
+    }
     
     if(Participants.Num() != 0)
     {
