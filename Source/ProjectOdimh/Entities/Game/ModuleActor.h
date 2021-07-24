@@ -8,6 +8,7 @@
 
 
 /**
+ * Deprecated
  * A containter for actor components associated with an ID type and tag name. Assign tags in blueprints. Actor
  * components that are created or copied through this object will be grouped by this object's tag name.
  */

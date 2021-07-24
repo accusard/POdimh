@@ -4,11 +4,6 @@
 
 
 
-FMechSaveData::FMechSaveData()
-{
-    bReset = 0;
-}
-
 void FBoardSaveData::AddTile(int Type)
 {
     TileTypes.Add(Type);

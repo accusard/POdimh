@@ -24,19 +24,6 @@ public:
 };
 
 /**
- * The struct that contain the save data of the mech
- */
-USTRUCT()
-struct FMechSaveData : public FBaseSaveData
-{
-    GENERATED_USTRUCT_BODY()
-    
-public:
-    FMechSaveData();
-    FVector Position;
-};
-
-/**
  * The struct that contain the save data of the combat board
  */
 USTRUCT(BlueprintType)
@@ -127,10 +114,6 @@ public:
     /** The state of the board as well as the current score is kept here */
     UPROPERTY(BlueprintReadOnly)
     FBoardSaveData SavedGrid;
-    
-    /** The list of mechs contained in a given game */
-    UPROPERTY()
-    TArray<FMechSaveData> MechList;
     
     /** Data for the turn queue */
     UPROPERTY()
