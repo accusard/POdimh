@@ -24,7 +24,7 @@ public:
     UFUNCTION(BlueprintImplementableEvent)
     const TArray<FCustomIntData> OnSaveFromBlueprint() const;
     UFUNCTION(BlueprintImplementableEvent)
-    const bool OnLoadFromBlueprint(USaveGame* Data) const;
+    const bool OnLoadFromBlueprint(const TArray<FCustomIntData>& Data);
     
     // Called every frame
     virtual void Tick(float DeltaTime) override;

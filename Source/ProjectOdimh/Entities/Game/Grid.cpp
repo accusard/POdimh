@@ -256,9 +256,7 @@ void AGrid::RandomizeNewTiles(TArray<ATile*> Old, TSubclassOf<ATile> Class)
     
     for(ATile* T : Old)
     {
-        ATile* NewTile = SpawnTile(Class, T->GetActorTransform(), GetRandomMatchType());
-        NewTile->LoadSprite();
-        RegisterPosition(NewTile, T->GetCoord());
+        SpawnTile(Class, T->GetActorTransform(), GetRandomMatchType());
         T->Destroy();
         
     }
@@ -278,11 +276,16 @@ void AGrid::SpawnTileToEmptyGrid_Implementation(ATile* Tile, const bool bNotifyS
 
 ATile* AGrid::SpawnTile(TSubclassOf<ATile> BlueprintClass, const FTransform& Transform, const int Type /* = -1 */)
 {
-    ATile* SpawnedTile = GetWorld()->SpawnActor<ATile>(BlueprintClass, Transform);
+    ATile* NewTile = GetWorld()->SpawnActor<ATile>(BlueprintClass, Transform);
     
-    if(SpawnedTile) SpawnedTile->SetId(Type);
-
-    return SpawnedTile;
+    if(NewTile)
+    {
+        NewTile->SetId(Type);
+        NewTile->LoadSprite();
+        RegisterPosition(NewTile, GetTileCoords(Transform.GetLocation()));
+    }
+    
+    return NewTile;
 }
 
 // Called every frame

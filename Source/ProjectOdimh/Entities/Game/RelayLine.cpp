@@ -33,8 +33,22 @@ const bool ARelayLine::NotifyLoad(USaveGame* Data)
     {
         LineCoords.Start = POdimhData->CustomIntPoint[TEXT("LineCoords.Start")];
         LineCoords.End = POdimhData->CustomIntPoint[TEXT("LineCoords.End")];
+        
+        TArray<FCustomIntData> CustomDataArray;
+        
+        for(const TPair<FString, int>& Elem : POdimhData->CustomInt)
+        {
+            FCustomIntData Loaded;
+            Loaded.Id = *Elem.Key;
+            Loaded.Value = Elem.Value;
+            
+            CustomDataArray.Add(Loaded);
+        }
+        return OnLoadFromBlueprint(CustomDataArray);
     }
-    return OnLoadFromBlueprint(Data);
+    
+    
+    return false;
 }
 
 // Called when the game starts or when spawned
