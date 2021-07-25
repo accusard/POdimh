@@ -9,7 +9,7 @@
 ARelayLine::ARelayLine()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 }
 
@@ -51,6 +51,11 @@ const bool ARelayLine::NotifyLoad(USaveGame* Data)
     return false;
 }
 
+void ARelayLine::Run()
+{
+    
+}
+
 // Called when the game starts or when spawned
 void ARelayLine::BeginPlay()
 {
@@ -58,14 +63,6 @@ void ARelayLine::BeginPlay()
 	
     Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager->OnActorEvent.AddDynamic(this, &ARelayLine::InitOnFinished);
 }
-
-// Called every frame
-void ARelayLine::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
-
 
 TArray<ATile*> ARelayLine::GetUnusedTiles(AGrid* Grid)
 {

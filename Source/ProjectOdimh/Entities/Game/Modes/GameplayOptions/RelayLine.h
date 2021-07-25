@@ -7,10 +7,11 @@
 #include "Data/GameTypes.h"
 #include "Data/POdimhSaveGame.h"
 #include "ClassInterface/DataSaveInterface.h"
+#include "ClassInterface/GameplayOptionsInterface.h"
 #include "RelayLine.generated.h"
 
 UCLASS()
-class PROJECTODIMH_API ARelayLine : public AActor, public IDataSaveInterface
+class PROJECTODIMH_API ARelayLine : public AActor, public IDataSaveInterface, public IGameplayOptionsInterface
 {
 	GENERATED_BODY()
 	
@@ -21,13 +22,12 @@ public:
     virtual void NotifySave(USaveGame* Data) override;
     virtual const bool NotifyLoad(USaveGame* Data) override;
     
+    virtual void Run() override;
+    
     UFUNCTION(BlueprintImplementableEvent)
     const TArray<FCustomIntData> OnSaveFromBlueprint() const;
     UFUNCTION(BlueprintImplementableEvent)
     const bool OnLoadFromBlueprint(const TArray<FCustomIntData>& Data);
-    
-    // Called every frame
-    virtual void Tick(float DeltaTime) override;
     
     UFUNCTION(BlueprintImplementableEvent)
     void InitOnFinished(AActor* Actor, class UBaseEvent* Evt);

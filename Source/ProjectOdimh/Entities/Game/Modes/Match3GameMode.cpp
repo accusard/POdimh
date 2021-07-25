@@ -113,6 +113,11 @@ void AMatch3GameMode::BeginPlay()
     Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager->OnActorPicked.AddUniqueDynamic(this, &AMatch3GameMode::ReceiveActorPickedNotification);
     
     Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager->OnActorReleased.AddUniqueDynamic(this, &AMatch3GameMode::ReceiveActorReleasedNotification);
+    
+    for(TSubclassOf<AActor> Class : GameplayOptionsClass)
+    {
+        GameplayOptions.Add(GetWorld()->SpawnActor<AActor>(Class));
+    }
 }
 
 void AMatch3GameMode::StartPlay()
@@ -302,6 +307,7 @@ void AMatch3GameMode::ReceiveRequestToEndTurn()
     Instance->SaveGame(LAST_SUCCESSFUL_SLOT, (int32)EPlayer::One, !bIsNewGame);
     Instance->EventManager->ClearEventQueue();
     
+    // start next turn
     if(AParticipantTurn* ActiveParticipant = GetCurrentParticipant())
     {
         OnReceivedEndTurn(ActiveParticipant);
