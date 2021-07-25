@@ -2,7 +2,7 @@
 
 #include "Match3GameMode.h"
 #include "POdimhGameInstance.h"
-#include "POdimhGameState.h"
+#include "Entities/Game/POdimhGameState.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
 #include "Entities/Game/ParticipantTurn.h"

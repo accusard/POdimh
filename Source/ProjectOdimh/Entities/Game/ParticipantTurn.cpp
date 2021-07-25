@@ -4,7 +4,7 @@
 #include "POdimhGameInstance.h"
 #include "POdimhGameState.h"
 #include "Kismet/GameplayStatics.h"
-#include "Entities/Game/Match3GameMode.h"
+#include "Entities/Game/Modes/Match3GameMode.h"
 #include "Entities/Controllers/Player/GridPlayerController.h"
 #include "Components/ActionTurnBasedComponent.h"
 #include "Events/GameEvent.h"

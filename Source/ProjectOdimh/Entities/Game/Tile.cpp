@@ -8,7 +8,7 @@
 #include "UObject/ConstructorHelpers.h"
 #include "Events/BaseEvent.h"
 #include "Entities/Game/Grid.h"
-#include "Entities/Game/Match3GameMode.h"
+#include "Entities/Game/Modes/Match3GameMode.h"
 #include "Entities/Controllers/Player/GridPlayerController.h"
 
 

@@ -5,7 +5,7 @@
 #include "UObject/ConstructorHelpers.h"
 #include "Events/BaseEvent.h"
 #include "ProjectOdimh.h"
-#include "Entities/Game/Match3GameMode.h"
+#include "Entities/Game/Modes/Match3GameMode.h"
 #include "Entities/Game/Tile.h"
 #include "ClassInterface/PickHandlerInterface.h"
 #include "Components/ActionTurnBasedComponent.h"
