@@ -4,11 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
-#include "GameplayOptionsInterface.generated.h"
+#include "LogicInterface.generated.h"
 
 // This class does not need to be modified.
 UINTERFACE(MinimalAPI)
-class UGameplayOptionsInterface : public UInterface
+class ULogicInterface : public UInterface
 {
 	GENERATED_BODY()
 };
@@ -16,13 +16,12 @@ class UGameplayOptionsInterface : public UInterface
 /**
  * 
  */
-class PROJECTODIMH_API IGameplayOptionsInterface
+class PROJECTODIMH_API ILogicInterface
 {
 	GENERATED_BODY()
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
-    
 public:
-    virtual void Run() = 0;
-    
+    virtual void OnStart();
+    virtual void Process();
 };
