@@ -25,4 +25,6 @@ class PROJECTODIMH_API IGameplayOptionsInterface
 public:
     virtual void Run() = 0;
     
+    UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+    void Receive(AActor* Actor, class UBaseEvent* Evt);
 };

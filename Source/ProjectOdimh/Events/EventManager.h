@@ -81,7 +81,7 @@ public:
     UPROPERTY()
     FPickHandler OnActorPicked;
     
-    UPROPERTY()
+    UPROPERTY(BlueprintAssignable)
     FActorEventDelegate OnActorEvent;
     
     FResolveTileCollisions TilesSwapped;

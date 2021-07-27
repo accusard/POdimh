@@ -3,6 +3,8 @@
 #include "Match3GameMode.h"
 #include "POdimhGameInstance.h"
 #include "Entities/Game/POdimhGameState.h"
+#include "Entities/Game/Modes/GameplayOptions/RelayLine.h"
+#include "ClassInterface/GameplayOptionsInterface.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
 #include "Entities/Game/ParticipantTurn.h"

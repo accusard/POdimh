@@ -62,6 +62,7 @@ void ARelayLine::BeginPlay()
 	Super::BeginPlay();
 	
     Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager->OnActorEvent.AddDynamic(this, &ARelayLine::InitOnFinished);
+    Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager->OnActorEvent.AddDynamic(this, &ARelayLine::Receive);
 }
 
 TArray<ATile*> ARelayLine::GetUnusedTiles(AGrid* Grid)

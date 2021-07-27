@@ -238,6 +238,10 @@ const int32 AGrid::CalculateTileValue(const int NumOfMatchingTiles, const int Ti
 void AGrid::OnEventBurstEnd_Implementation(AMatch3GameMode* Mode)
 {
     Mode->ReceiveRequestToEndTurn();
+    
+    UEventManager* EvtMgr = Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager;
+    UGridEvent* Event = EvtMgr->NewEvent<UGridEvent>(this, "Burst Ended", true);
+    Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager->OnActorEvent.Broadcast(this, Event);
 }
 
 void AGrid::HandleTilesSwapped(AController* GridController, ATile* DynamicTile, ATile* StaticTile)

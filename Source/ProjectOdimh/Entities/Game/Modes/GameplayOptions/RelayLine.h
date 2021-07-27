@@ -10,6 +10,8 @@
 #include "ClassInterface/GameplayOptionsInterface.h"
 #include "RelayLine.generated.h"
 
+class UBaseEvent;
+
 UCLASS()
 class PROJECTODIMH_API ARelayLine : public AActor, public IDataSaveInterface, public IGameplayOptionsInterface
 {
@@ -29,8 +31,8 @@ public:
     UFUNCTION(BlueprintImplementableEvent)
     const bool OnLoadFromBlueprint(const TArray<FCustomIntData>& Data);
     
-    UFUNCTION(BlueprintImplementableEvent)
-    void InitOnFinished(AActor* Actor, class UBaseEvent* Evt);
+    UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+    void InitOnFinished(AActor* Actor, UBaseEvent* Evt);
     
     UFUNCTION(BlueprintPure)
     TArray<ATile*> GetUnusedTiles(class AGrid* Grid);
