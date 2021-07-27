@@ -74,9 +74,6 @@ public:
     void ReceiveRequestToEndTurn();
     void ReceiveRequestToEndTurn(ATile* LastTileGrabbed);
     
-    UFUNCTION(BlueprintImplementableEvent)
-    void OnReceivedEndTurn(AParticipantTurn* Participant);
-    
     UFUNCTION(BlueprintCallable, Category="")
     AParticipantTurn* GetCurrentParticipant() const;
     
@@ -84,6 +81,7 @@ public:
     
     void Give(AActor* Controller, const FMatch3GameAction& Action, const bool bExecuteNow = true);
     
+    UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
     AGrid* GetGrid() const;
     
     const bool StartTurn(const uint32 Index, APawn* InPawn);
@@ -109,9 +107,6 @@ protected:
     
     UPROPERTY(BlueprintReadOnly)
     TArray<AActor*> GameplayOptions;
-    
-    UPROPERTY(BlueprintReadWrite)
-    AGrid* Grid;
     
     class APOdimhGameState* PGameState;
     

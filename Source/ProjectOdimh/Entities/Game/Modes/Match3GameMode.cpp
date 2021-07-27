@@ -269,7 +269,7 @@ const bool AMatch3GameMode::StartNewGame()
         PGameState->TurnCounter = 0;
         PGameState->RoundCounter = 0;
         PGameState->ParticipantIndex = 1;
-        Grid->NewGrid();
+        GetGrid()->NewGrid();
         return true;
     }
     return false;
@@ -292,7 +292,7 @@ AParticipantTurn* AMatch3GameMode::StartNextParticipant(const uint32 Participant
 
 void AMatch3GameMode::ReceiveRequestToEndTurn()
 {
-    if(Grid->IsTilesBursting() || IsTurnPending())
+    if(GetGrid()->IsTilesBursting() || IsTurnPending())
         return;
     
     if(AParticipantTurn* ActiveParticipant = GetCurrentParticipant())
@@ -310,8 +310,6 @@ void AMatch3GameMode::ReceiveRequestToEndTurn()
     // start next turn
     if(AParticipantTurn* ActiveParticipant = GetCurrentParticipant())
     {
-        OnReceivedEndTurn(ActiveParticipant);
-        
         // next turn
         for(uint32 i = ++PGameState->ParticipantIndex; i <= Participants.Num(); ++i)
         {
@@ -338,7 +336,7 @@ void AMatch3GameMode::ReceiveRequestToEndTurn(ATile* LastTileGrabbed)
 {
     if(AParticipantTurn* ActiveParticipant = GetCurrentParticipant())
     {
-        if(Grid->HasTilePositionChanged(LastTileGrabbed))
+        if(GetGrid()->HasTilePositionChanged(LastTileGrabbed))
             ReceiveRequestToEndTurn();
     }
 }
@@ -358,11 +356,6 @@ void AMatch3GameMode::Give(AActor* Controller, const FMatch3GameAction& Action, 
     }
     
     // TODO: give to pending action?
-}
-
-AGrid* AMatch3GameMode::GetGrid() const
-{
-    return Grid;
 }
 
 const bool AMatch3GameMode::StartTurn(const uint32 Index, APawn* InPawn)
