@@ -223,7 +223,7 @@ void AGrid::OnInitialTilesSpawned(TArray<ATile*> SpecialTiles)
     UGridEvent* Event = EvtMgr->NewEvent<UGridEvent>(this, "Special Tiles", true);
     
     for(ATile* Tile : SpecialTiles)
-        Event->PtrToTiles.Add(Tile);
+        Event->PtrToCustomTiles.Add(Tile);
     
     EvtMgr->OnActorEvent.Broadcast(this, Event);
 }
@@ -268,7 +268,7 @@ void AGrid::NewGrid()
     InitTiles(Params);
 }
 
-void AGrid::ChangeBoardState_Implementation(int NewState, UGridEvent* EvtRef)
+void AGrid::NotifyBoardStateChanged_Implementation(uint8 OldState, const TArray<ATile*>& CustomUserTiles, UGridEvent* EvtRef)
 {
     EvtRef->GlobalEventManager->OnActorEvent.Broadcast(this, EvtRef);
 }

@@ -136,7 +136,7 @@ public:
     void InitTiles(const FGridSpawningParameters& Param);
     
     UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-    void ChangeBoardState(int NewState, UGridEvent* EvtRef);
+    void NotifyBoardStateChanged(uint8 OldState, const TArray<ATile*>& CustomUserTiles, UGridEvent* EvtRef);
     
 protected:
 	// Called when the game starts or when spawned

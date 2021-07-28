@@ -10,6 +10,10 @@
 
 
 
-
+void UGridEvent::SetState(uint8 New, uint8 Last)
+{
+    NewState = New;
+    LastState = Last;
+}
 
 
