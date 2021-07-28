@@ -135,6 +135,9 @@ public:
     UFUNCTION(BlueprintImplementableEvent)
     void InitTiles(const FGridSpawningParameters& Param);
     
+    UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+    void ChangeBoardState(int NewState, UGridEvent* EvtRef);
+    
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

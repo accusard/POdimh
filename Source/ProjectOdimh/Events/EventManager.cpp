@@ -16,6 +16,18 @@ UEventManager::UEventManager()
     InitEventQueue();
 }
 
+UBaseEvent* UEventManager::NewEvent(TSubclassOf<UBaseEvent> Class, UObject* Outer, FName Description, const bool bStartNow)
+{
+    UBaseEvent* Event = NewObject<UBaseEvent>(Outer, Class, Description);
+    
+    Event->Init();
+    if(bStartNow) Event->Start();
+        
+    AddEvent(Event);
+    
+    return Event;
+}
+
 const int32 UEventManager::GetNumEventsInQueue() const
 {
     return EventQueue->GetNumObjects();

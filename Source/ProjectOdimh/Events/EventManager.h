@@ -22,7 +22,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FActorEventDelegate, AActor*, Actor
 /**
  * Contains delegates used for multicasting
  */
-UCLASS()
+UCLASS(Blueprintable)
 class PROJECTODIMH_API UEventManager : public UObject
 {
 	GENERATED_BODY()
@@ -54,6 +54,9 @@ public:
         }
     }
     
+    UFUNCTION(BlueprintPure, Category="POdimh Events")
+    UBaseEvent* NewEvent(TSubclassOf<UBaseEvent> Class, UObject* Outer, FName Description, const bool bStartNow);
+    
     /** Iterate through actors in the active UWorld and place in Event Handler list. */
     void InitEventHandlersList(UWorld* World);
     
@@ -81,7 +84,7 @@ public:
     UPROPERTY()
     FPickHandler OnActorPicked;
     
-    UPROPERTY(BlueprintAssignable)
+    UPROPERTY(BlueprintAssignable, BlueprintCallable)
     FActorEventDelegate OnActorEvent;
     
     FResolveTileCollisions TilesSwapped;
