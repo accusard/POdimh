@@ -55,7 +55,7 @@ void AGrid::NotifySave(USaveGame* SaveData)
     if(UPOdimhSaveGame* Data = Cast<UPOdimhSaveGame>(SaveData))
     {
         // save the tile types
-        for(ATile* Tile : UpdateTileList())
+        for(ATile* Tile : GetTiles())
         {
             if(Tile)
             {
@@ -63,7 +63,6 @@ void AGrid::NotifySave(USaveGame* SaveData)
                 Data->SavedGrid.AddTile(Tile->Id);
             }
         }
-        TileList.Empty();
     }
 }
 
@@ -79,12 +78,9 @@ const bool AGrid::NotifyLoad(USaveGame* LoadData)
         Params.SaveSlotName = Data->SaveSlotName;
         
         InitTiles(Params);
-        UpdateTileList();
         
-        if(TileList.Num() == Data->SavedGrid.GetNumberOfTiles())
+        if(GetTiles().Num() == Data->SavedGrid.GetNumberOfTiles())
             bSuccess = true;
-        
-        TileList.Empty();
     }
     
     return bSuccess;
@@ -112,7 +108,7 @@ const TArray<FTileCount> AGrid::TallyAllTileTypes()
 {
     TArray<FTileCount> TotalCount;
     
-    for(auto* Tile : UpdateTileList())
+    for(auto* Tile : GetTiles())
     {
         if(Tile)
         {
@@ -139,7 +135,7 @@ const TArray<FTileCount> AGrid::TallyAllTileTypes()
             }
         }
     }
-    TileList.Empty();
+    
     return TotalCount;
 }
 

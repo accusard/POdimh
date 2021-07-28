@@ -6,6 +6,7 @@
 #include "UObject/ConstructorHelpers.h"
 #include "Entities/Game/Grid.h"
 #include "Components/ActorPickHandlerComponent.h"
+#include "Components/ActionTurnBasedComponent.h"
 
 
 
@@ -57,7 +58,7 @@ EDirection AGridController::GetRandomDirection()
 
 ATile* AGridController::PickRandomTile(AGrid* Grid)
 {
-    TArray<ATile*> Tiles = Grid->UpdateTileList();
+    TArray<ATile*> Tiles = Grid->GetTiles();
     uint32 RandomNum = FMath::RandRange(0, Tiles.Num() - 1);
     AActor* RandomTile = Tiles[RandomNum];
     

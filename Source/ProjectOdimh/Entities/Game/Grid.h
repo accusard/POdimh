@@ -126,9 +126,8 @@ public:
     UFUNCTION(BlueprintImplementableEvent)
     const bool IsPickState() const;
     
-    /** Return TileList after tile data has been copied from blueprint */
     UFUNCTION(BlueprintImplementableEvent)
-    TArray<ATile*> UpdateTileList();
+    TArray<ATile*> GetTiles();
     
     void NewGrid();
     
@@ -169,10 +168,6 @@ protected:
     
     UFUNCTION(BlueprintImplementableEvent)
     void RegisterPosition(ATile* Tile, const FVector2D& Coord);
-    
-    /** The arrays of gems that was retrieved from blueprint */
-    UPROPERTY(BlueprintReadWrite)
-    TArray<ATile*> TileList;
     
     /** The grid coordinates that was last retrieved from blueprint */
     UPROPERTY(BlueprintReadWrite)
