@@ -21,19 +21,19 @@ class PROJECTODIMH_API UGridEvent : public UBaseEvent
     friend class AGrid;
     
 public:
-    UFUNCTION(BlueprintCallable, Category="Grid Event States")
+    UFUNCTION(BlueprintCallable, Category="Grid States")
     void SetState(uint8 New, uint8 Last);
     
 protected:
-    UPROPERTY(BlueprintReadWrite, Category="Grid Event Tile Data")
+    UPROPERTY(BlueprintReadWrite, Category="Tile Data")
     TArray<ATile*> PtrToCustomTiles;
     
-    UPROPERTY(BlueprintReadWrite, Category="Grid Event Tile Data")
+    UPROPERTY(BlueprintReadWrite, Category="Tile Data")
     TArray<ATile*> TilesToBurst;
     
-    UPROPERTY(BlueprintReadOnly, Category="Grid Event States")
+    UPROPERTY(BlueprintReadOnly, Category="Grid States")
     uint8 NewState;
     
-    UPROPERTY(BlueprintReadOnly, Category="Grid Event States")
+    UPROPERTY(BlueprintReadOnly, Category="Grid States")
     uint8 LastState;
 };

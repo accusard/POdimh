@@ -10,7 +10,7 @@ UBaseEvent::UBaseEvent()
 {
     bPendingFinish = true;
     bStarted = false;
-    UE_LOG(LogTemp,Warning,TEXT("Creating Event %s"), *GetName());
+    UE_LOG(LogTemp,Warning,TEXT("Creating Event (%s)"), *GetName());
 }
 
 UBaseEvent::~UBaseEvent()

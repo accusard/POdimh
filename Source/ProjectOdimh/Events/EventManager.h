@@ -54,7 +54,7 @@ public:
         }
     }
     
-    UFUNCTION(BlueprintPure, Category="POdimh Events")
+    UFUNCTION(BlueprintCallable, Category="POdimh Events")
     UBaseEvent* NewEvent(TSubclassOf<UBaseEvent> Class, UObject* Outer, FName Description, const bool bStartNow);
     
     /** Iterate through actors in the active UWorld and place in Event Handler list. */
