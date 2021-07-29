@@ -148,9 +148,12 @@ protected:
     UFUNCTION(BlueprintImplementableEvent)
     void OnRetreiveGridLocation(const FVector& Location);
     
-    /** Spawn a tile on the grid based on a transform and tile type. Tile type of -1 is a random spawn. */
+    /** Spawn a tile on the grid based on a transform and tile type. */
     UFUNCTION(BlueprintCallable)
     ATile* SpawnTile(TSubclassOf<ATile> Class, const FTransform& Transform, const int Type, const bool bRegisterPos);
+    
+    UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+    ATile* SpawnTileToGrid(TSubclassOf<ATile> Class, const FVector2D& GridCoord, const int Type, const bool bRegisterPos);
     
     /** Spawn an actor directly to grid. Only possible if that grid's space is empty. Can notify GameMode of a grid state change after spawning. */
     UFUNCTION(BlueprintNativeEvent)
