@@ -252,7 +252,8 @@ void AGrid::RandomizeNewTiles(TArray<ATile*> Old, TSubclassOf<ATile> Class)
     
     for(ATile* T : Old)
     {
-        SpawnTile(Class, T->GetActorTransform(), GetRandomMatchType());
+        const bool bRegisterNewPos = true;
+        SpawnTile(Class, T->GetActorTransform(), GetRandomMatchType(), bRegisterNewPos);
         T->Destroy();
         
     }
@@ -269,13 +270,18 @@ void AGrid::NotifyBoardStateChanged_Implementation(uint8 OldState, const TArray<
     EvtRef->GlobalEventManager->OnActorEvent.Broadcast(this, EvtRef);
 }
 
+void AGrid::OnEventEnd()
+{
+    WaitBeforeSwitchBoardState = 0;
+}
+
 void AGrid::SpawnTileToEmptyGrid_Implementation(ATile* Tile, const bool bNotifyStateChange)
 {
     if(bNotifyStateChange)
         Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager->NewEvent<UGridEvent>(this, "Grid State Change", true);
 }
 
-ATile* AGrid::SpawnTile(TSubclassOf<ATile> BlueprintClass, const FTransform& Transform, const int Type /* = -1 */)
+ATile* AGrid::SpawnTile(TSubclassOf<ATile> BlueprintClass, const FTransform& Transform, const int Type, const bool bRegisterPos)
 {
     ATile* NewTile = GetWorld()->SpawnActor<ATile>(BlueprintClass, Transform);
     
@@ -283,7 +289,8 @@ ATile* AGrid::SpawnTile(TSubclassOf<ATile> BlueprintClass, const FTransform& Tra
     {
         NewTile->SetId(Type);
         NewTile->LoadSprite();
-        RegisterPosition(NewTile, GetTileCoords(Transform.GetLocation()));
+        if(bRegisterPos)
+            RegisterPosition(NewTile, GetTileCoords(Transform.GetLocation()));
     }
     
     return NewTile;

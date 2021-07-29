@@ -21,8 +21,11 @@ class PROJECTODIMH_API UGridEvent : public UBaseEvent
     friend class AGrid;
     
 public:
+    virtual void OnEventEnd() override;
+    
     UFUNCTION(BlueprintCallable, Category="Grid States")
-    void SetState(uint8 New, uint8 Last);
+    void SetState(const uint8 New, const uint8 Last);
+    
     
 protected:
     UPROPERTY(BlueprintReadWrite, Category="Tile Data")

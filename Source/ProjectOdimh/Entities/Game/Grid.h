@@ -137,6 +137,8 @@ public:
     UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
     void NotifyBoardStateChanged(uint8 OldState, const TArray<ATile*>& CustomUserTiles, UGridEvent* EvtRef);
     
+    void OnEventEnd();
+    
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -148,7 +150,7 @@ protected:
     
     /** Spawn a tile on the grid based on a transform and tile type. Tile type of -1 is a random spawn. */
     UFUNCTION(BlueprintCallable)
-    ATile* SpawnTile(TSubclassOf<ATile> Class, const FTransform& Transform, const int Type = -1);
+    ATile* SpawnTile(TSubclassOf<ATile> Class, const FTransform& Transform, const int Type, const bool bRegisterPos);
     
     /** Spawn an actor directly to grid. Only possible if that grid's space is empty. Can notify GameMode of a grid state change after spawning. */
     UFUNCTION(BlueprintNativeEvent)
@@ -194,7 +196,10 @@ protected:
     uint8 bSaveTerminalCoords : 1;
     
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Tiles")
-    uint8 bDefaultTerminalCoordOnBeginPlay :1 ;
+    uint8 bDefaultTerminalCoordOnBeginPlay :1;
+    
+    UPROPERTY(BlueprintReadWrite)
+    float WaitBeforeSwitchBoardState = 0;
     
 private:
     /** A state in which there are no matching tiles (2 or less occurences) available */

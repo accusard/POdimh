@@ -10,10 +10,15 @@
 
 
 
-void UGridEvent::SetState(uint8 New, uint8 Last)
+void UGridEvent::SetState(const uint8 New, const uint8 Last)
 {
     NewState = New;
     LastState = Last;
+    
 }
 
 
+void UGridEvent::OnEventEnd()
+{
+    Cast<AGrid>(GetOuter())->OnEventEnd();
+}
