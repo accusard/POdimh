@@ -40,7 +40,7 @@ public:
 
     AActor* GetLastTouched();
     
-    void NewInput(const FName& Name, const bool bStartNow);
+    void NewInput(const FName& Name, const bool bStartNow, ETouchIndex::Type FingerIndex, FVector Location);
     
     void ForceRelease();
     

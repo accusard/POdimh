@@ -60,7 +60,7 @@ void AGridPlayerController::BeginTouch(ETouchIndex::Type FingerIndex, FVector Lo
     if(!UGameplayStatics::IsGamePaused(this) && GridPtr->IsPickState() && TileHandlerComponent)
     {
         FHitResult Hit = FHitResult();
-        NewInput("Player Input Event", false);
+        NewInput("Player Input Event", false, FingerIndex, Location);
         
         if(GetHitResultUnderFinger(FingerIndex, ECollisionChannel::ECC_WorldDynamic, false, Hit))
         {
@@ -82,7 +82,7 @@ AActor* AGridPlayerController::GetLastTouched()
     return LastTouched;
 }
 
-void AGridPlayerController::NewInput(const FName& Name, const bool bStartNow)
+void AGridPlayerController::NewInput(const FName& Name, const bool bStartNow, ETouchIndex::Type FIndex, FVector Loc)
 {
     if(InputEvent && !InputEvent->IsPendingKill())
     {
@@ -90,6 +90,8 @@ void AGridPlayerController::NewInput(const FName& Name, const bool bStartNow)
         InputEvent->MarkPendingKill();
     }
     InputEvent = Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager->NewEvent<UPlayerInputEvent>(this, Name, bStartNow);
+    InputEvent->FingerIndex = FIndex;
+    InputEvent->Location = Loc;
 }
 
 void AGridPlayerController::ForceRelease()

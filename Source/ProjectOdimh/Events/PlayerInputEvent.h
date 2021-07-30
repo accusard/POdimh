@@ -20,6 +20,7 @@ class PROJECTODIMH_API UPlayerInputEvent : public UBaseEvent
 	GENERATED_BODY()
 	
 public:
-    
+    ETouchIndex::Type FingerIndex;
+    FVector Location;
 
 };
