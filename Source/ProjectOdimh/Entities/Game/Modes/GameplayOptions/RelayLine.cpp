@@ -51,17 +51,12 @@ const bool ARelayLine::NotifyLoad(USaveGame* Data)
     return false;
 }
 
-void ARelayLine::Run()
-{
-    
-}
-
 // Called when the game starts or when spawned
 void ARelayLine::BeginPlay()
 {
 	Super::BeginPlay();
 	
-    Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager->OnActorEvent.AddDynamic(this, &ARelayLine::InitOnFinished);
+    Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager->OnActorEvent.AddDynamic(this, &ARelayLine::Init);
     Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager->OnActorEvent.AddDynamic(this, &ARelayLine::Receive);
 }
 
@@ -78,3 +73,7 @@ TArray<ATile*> ARelayLine::GetUnusedTiles(AGrid* Grid)
     return UnusedTiles;
 }
 
+void ARelayLine::Init_Implementation(AActor* Actor, UBaseEvent* EvtPtr)
+{
+    EvtPtr->Manager->OnActorEvent.RemoveDynamic(this, &ARelayLine::Init);
+}

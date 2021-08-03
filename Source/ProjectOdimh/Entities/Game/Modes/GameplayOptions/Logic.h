@@ -16,8 +16,6 @@ public:
 	// Sets default values for this actor's properties
 	ALogic();
     
-    virtual void Run() override;
-    
 protected:
 
 

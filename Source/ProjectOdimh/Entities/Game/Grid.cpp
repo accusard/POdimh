@@ -265,9 +265,9 @@ void AGrid::NewGrid()
     InitTiles(Params);
 }
 
-void AGrid::NotifyBoardStateChanged_Implementation(uint8 OldState, const TArray<ATile*>& CustomUserTiles, UGridEvent* EvtRef)
+void AGrid::NotifyBoardStateChanged_Implementation(uint8 OldState, const TArray<ATile*>& CustomUserTiles, UGridEvent* EvtPtr)
 {
-    EvtRef->GlobalEventManager->OnActorEvent.Broadcast(this, EvtRef);
+    EvtPtr->Manager->OnActorEvent.Broadcast(this, EvtPtr);
 }
 
 void AGrid::OnEventEnd()

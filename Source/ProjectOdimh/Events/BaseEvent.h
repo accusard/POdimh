@@ -39,7 +39,7 @@ public:
     const bool HasStarted() const;
     
     UPROPERTY(BlueprintReadOnly, Category="POdimh Events")
-    UEventManager* GlobalEventManager;
+    UEventManager* Manager;
 
     UPROPERTY(BlueprintReadOnly, Category="POdimh Events")
     UPOdimhGameInstance* GameInstance;

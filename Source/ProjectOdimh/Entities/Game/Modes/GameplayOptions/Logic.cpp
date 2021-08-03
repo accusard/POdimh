@@ -11,15 +11,3 @@ ALogic::ALogic()
 	PrimaryActorTick.bCanEverTick = false;
 
 }
-
-void ALogic::Run()
-{
-    for(AActor* Actor : Logic)
-    {
-        if(ILogicInterface* I = Cast<ILogicInterface>(Actor))
-        {
-            I->OnStart();
-            I->Process();
-        }
-    }
-}

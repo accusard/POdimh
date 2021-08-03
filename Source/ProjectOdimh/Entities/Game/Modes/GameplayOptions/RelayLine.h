@@ -24,15 +24,13 @@ public:
     virtual void NotifySave(USaveGame* Data) override;
     virtual const bool NotifyLoad(USaveGame* Data) override;
     
-    virtual void Run() override;
+    UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+    void Init(AActor* Actor, UBaseEvent* Evt);
     
     UFUNCTION(BlueprintImplementableEvent)
     const TArray<FCustomIntData> OnSaveFromBlueprint() const;
     UFUNCTION(BlueprintImplementableEvent)
     const bool OnLoadFromBlueprint(const TArray<FCustomIntData>& Data);
-    
-    UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-    void InitOnFinished(AActor* Actor, UBaseEvent* Evt);
     
     UFUNCTION(BlueprintPure)
     TArray<ATile*> GetUnusedTiles(class AGrid* Grid);
