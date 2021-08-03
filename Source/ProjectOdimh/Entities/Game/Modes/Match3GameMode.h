@@ -96,6 +96,9 @@ public:
     
     const bool IsTurnPending() const;
     
+    UFUNCTION()
+    void ActivateGameplayOption(AActor* Actor);
+    
 protected:
     virtual void BeginPlay() override;
     

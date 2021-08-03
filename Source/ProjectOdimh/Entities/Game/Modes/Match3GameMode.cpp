@@ -108,18 +108,35 @@ void AMatch3GameMode::SetCurrentScore(const int32 Score)
     PGameState->CurrentScore = Score;
 }
 
+void AMatch3GameMode::ActivateGameplayOption(AActor* Option)
+{
+    if(IGameplayOptionsInterface* ActiveGameplay = Cast<IGameplayOptionsInterface>(Option))
+    {
+//        AActor* Found = *(GameplayOptions.FindByPredicate([&](AActor* Actor) { return Actor->GetName() == Option->GetName(); }));
+//
+//        if(Found)
+            ActiveGameplay->Execute_Run(Option);
+    }
+}
+
+
 void AMatch3GameMode::BeginPlay()
 {
     Super::BeginPlay();
     
-    Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager->OnActorPicked.AddUniqueDynamic(this, &AMatch3GameMode::ReceiveActorPickedNotification);
+    UEventManager* EvtManager = Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager;
     
-    Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager->OnActorReleased.AddUniqueDynamic(this, &AMatch3GameMode::ReceiveActorReleasedNotification);
+    EvtManager->OnActorPicked.AddUniqueDynamic(this, &AMatch3GameMode::ReceiveActorPickedNotification);
+    EvtManager->OnActorReleased.AddUniqueDynamic(this, &AMatch3GameMode::ReceiveActorReleasedNotification);
+    
+    
     
     for(TSubclassOf<AActor> Class : GameplayOptionsClass)
     {
         GameplayOptions.Add(GetWorld()->SpawnActor<AActor>(Class));
     }
+    
+    EvtManager->GameplayTrigger.AddDynamic(this, &AMatch3GameMode::ActivateGameplayOption);
 }
 
 void AMatch3GameMode::StartPlay()

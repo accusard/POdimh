@@ -23,9 +23,12 @@ class PROJECTODIMH_API IGameplayOptionsInterface
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
     
 public:
+    UFUNCTION(BlueprintImplementableEvent)
+    void Run();
+    
     UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
     void Init(AActor* Actor, UBaseEvent* Evt);
     
-    UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+    UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
     void Receive(AActor* ReceiveFrom, class UBaseEvent* EventPtr);
 };
