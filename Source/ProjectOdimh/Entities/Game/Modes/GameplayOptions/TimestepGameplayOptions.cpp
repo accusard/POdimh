@@ -3,7 +3,8 @@
 
 #include "Entities/Game/Modes/GameplayOptions/TimestepGameplayOptions.h"
 #include "POdimhGameInstance.h"
-
+#include "Entities/Game/Modes/Match3GameMode.h"
+#include "Entities/Game/Modes/GameplayOptions/RelayLine.h"
 
 
 // Sets default values
@@ -53,14 +54,29 @@ void ATimestepGameplayOptions::Reset()
     TargetStep = 0;
 }
 
-void ATimestepGameplayOptions::Receive_Implementation(AActor* ReceiveFrom, UBaseEvent* EvtPtr)
+void ATimestepGameplayOptions::AddToGameplayTriggersOnCounter(AActor* Option)
 {
-    if(Counter >= TargetStep)
+    GameplayOptions.Add(Option);
+}
+
+void ATimestepGameplayOptions::Init_Implementation(AActor* FromActor, UBaseEvent* EvtPtr)
+{
+    AddToGameplayTriggersOnCounter(FromActor);
+}
+
+void ATimestepGameplayOptions::Receive_Implementation(AActor* FromActor, UBaseEvent* EvtPtr)
+{
+    if(Cast<ARelayLine>(FromActor))
+        Init(FromActor, EvtPtr);
+    
+    if(!EvtPtr->IsPendingFinish() && Counter >= TargetStep)
     {
         // broadcast
-        EvtPtr->Manager->GameplayTrigger.Broadcast(this);
+        for(AActor* It : GameplayOptions)
+            EvtPtr->Manager->GameplayTrigger.Broadcast(It);
         
         // reset
         Reset();
     }
+    
 }

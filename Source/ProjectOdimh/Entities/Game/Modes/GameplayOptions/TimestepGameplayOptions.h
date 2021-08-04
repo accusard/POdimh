@@ -25,9 +25,15 @@ public:
     UFUNCTION(BlueprintCallable)
     void Reset();
     
+    UFUNCTION(BlueprintCallable)
+    void AddToGameplayTriggersOnCounter(AActor* GameplayOption);
+    
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+    
+    UFUNCTION(BlueprintNativeEvent)
+    void Init(AActor* ReceiveFrom, class UBaseEvent* EvtPtr);
     
     UFUNCTION(BlueprintNativeEvent)
     void Receive(AActor* ReceiveFrom, class UBaseEvent* EvtPtr);
@@ -38,4 +44,7 @@ protected:
     UPROPERTY(BlueprintReadWrite)
     int TargetStep;
 
+private:
+    UPROPERTY()
+    TArray<AActor*> GameplayOptions;
 };

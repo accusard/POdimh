@@ -112,9 +112,9 @@ void AMatch3GameMode::ActivateGameplayOption(AActor* Option)
 {
     if(IGameplayOptionsInterface* ActiveGameplay = Cast<IGameplayOptionsInterface>(Option))
     {
-//        AActor* Found = *(GameplayOptions.FindByPredicate([&](AActor* Actor) { return Actor->GetName() == Option->GetName(); }));
-//
-//        if(Found)
+        AActor* Found = *(GameplayOptions.FindByPredicate([&](AActor* Actor) { return Actor->GetName() == Option->GetName(); }));
+
+        if(Found)
             ActiveGameplay->Execute_Run(Option);
     }
 }
@@ -128,15 +128,12 @@ void AMatch3GameMode::BeginPlay()
     
     EvtManager->OnActorPicked.AddUniqueDynamic(this, &AMatch3GameMode::ReceiveActorPickedNotification);
     EvtManager->OnActorReleased.AddUniqueDynamic(this, &AMatch3GameMode::ReceiveActorReleasedNotification);
-    
-    
+    EvtManager->GameplayTrigger.AddDynamic(this, &AMatch3GameMode::ActivateGameplayOption);
     
     for(TSubclassOf<AActor> Class : GameplayOptionsClass)
     {
         GameplayOptions.Add(GetWorld()->SpawnActor<AActor>(Class));
     }
-    
-    EvtManager->GameplayTrigger.AddDynamic(this, &AMatch3GameMode::ActivateGameplayOption);
 }
 
 void AMatch3GameMode::StartPlay()
@@ -326,7 +323,7 @@ void AMatch3GameMode::ReceiveRequestToEndTurn()
     Instance->SaveGame(LAST_SUCCESSFUL_SLOT, (int32)EPlayer::One, !bIsNewGame);
     Instance->EventManager->ClearEventQueue();
     
-    // start next turn
+    // Participants
     if(AParticipantTurn* ActiveParticipant = GetCurrentParticipant())
     {
         // next turn
@@ -344,7 +341,10 @@ void AMatch3GameMode::ReceiveRequestToEndTurn()
             if(AParticipantTurn* Participant = Cast<AParticipantTurn>(Participants[i]))
                 Participant->Reset();
         }
+        
         ActiveTurn->End();
+        Instance->EventManager->OnActorEvent.Broadcast(this, ActiveTurn);
+        
         OnRoundEnd();
         PGameState->ParticipantIndex = 1;
         StartTurn(PGameState->ParticipantIndex, nullptr);
