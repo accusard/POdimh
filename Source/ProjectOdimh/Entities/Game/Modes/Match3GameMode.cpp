@@ -159,7 +159,7 @@ void AMatch3GameMode::StartPlay()
 void AMatch3GameMode::NotifyGameplayOptionsTurnEnded()
 {
     for(AActor* It : GameplayOptions)
-        Instance->EventManager->TriggerGameplayOption.Broadcast(It);
+        Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager->TriggerGameplayOption.Broadcast(It);
 }
 
 void AMatch3GameMode::SaveAndQuit(const int32 PlayerIndex)

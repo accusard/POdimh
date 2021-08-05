@@ -18,7 +18,8 @@ void ATimestepGameplayOptions::NotifySave(USaveGame* Data)
 {
     if(UPOdimhSaveGame* POdimhData = Cast<UPOdimhSaveGame>(Data))
     {
-        POdimhData->CustomInt.Add(TEXT("StepTimer"), Counter);
+        for(auto& Map : GameplayTriggers)
+            POdimhData->CustomInt.Add(*Map.Key->GetName(), Map.Value);
     }
 }
 
@@ -26,11 +27,12 @@ const bool ATimestepGameplayOptions::NotifyLoad(USaveGame* Data)
 {
     if(UPOdimhSaveGame* POdimhData = Cast<UPOdimhSaveGame>(Data))
     {
-        if(POdimhData->CustomInt.Find(TEXT("StepTimer")))
+        for(auto& Map: GameplayTriggers)
         {
-            Counter = POdimhData->CustomInt[TEXT("StepTimer")];
-            return true;
+            const FString& Name = *Map.Key->GetName();
+            Map.Value = *POdimhData->CustomInt.Find(Name);
         }
+        return true;
     }
     
     
@@ -41,8 +43,6 @@ const bool ATimestepGameplayOptions::NotifyLoad(USaveGame* Data)
 void ATimestepGameplayOptions::BeginPlay()
 {
 	Super::BeginPlay();
-    
-    ResetTimer();
     
     UEventManager* EvtMgr = Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager;
     EvtMgr->TriggerGameplayOption.AddDynamic(this, &ATimestepGameplayOptions::TickStepTimer);
@@ -56,7 +56,7 @@ const int ATimestepGameplayOptions::GetStepTimer(AActor* GameplayOption)
     return StepTimer;
 }
 
-void ATimeStepGameplayOptions::AddActorToTrigger(AActor* Actor)
+void ATimestepGameplayOptions::AddActorToTrigger(AActor* Actor)
 {
     GameplayTriggers.Add(Actor, 0);
 }
@@ -66,25 +66,25 @@ void ATimestepGameplayOptions::ResetTimer(TArray<AActor*> AllActors)
     for(AActor* It : AllActors)
     {
         if(GameplayTriggers.Contains(It))
-            GameplayTrigger[It] = 0;
+            GameplayTriggers[It] = 0;
     }
 }
 
-void ATimeStepGameplayOptions::TickStepTimer(AActor* CheckActor)
+void ATimestepGameplayOptions::TickStepTimer(AActor* CheckActor)
 {
 
-    if(GameplayTriggers.Contain(CheckActor))
+    if(GameplayTriggers.Contains(CheckActor))
         GameplayTriggers[CheckActor]++;
 
     
-    for(AActor* It : ShouldTrigger())
+    for(AActor* It : ShouldTrigger(RunGameplayOnTargetCounter))
     {
-        if(IGameplayOptionsInterface* TimerTriggeredActor(It))
+        if(IGameplayOptionsInterface* TimerTriggeredActor= Cast<IGameplayOptionsInterface>(It))
             TimerTriggeredActor->Run(true);
     }
 }
 
-TArray<AActor*> ATimeStepGameplayOptions::ShouldTrigger(const int Check) const
+const TArray<AActor*> ATimestepGameplayOptions::ShouldTrigger(const int Check)
 {
     TArray<AActor*> CheckedActors;
     for(auto& Map : GameplayTriggers)

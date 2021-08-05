@@ -30,6 +30,8 @@ public:
     UFUNCTION()
     void TickStepTimer(AActor* Actor);
     
+    const TArray<AActor*> ShouldTrigger(const int Check);
+    
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
