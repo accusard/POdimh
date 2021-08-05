@@ -56,8 +56,10 @@ void ARelayLine::BeginPlay()
 {
 	Super::BeginPlay();
 	
-    Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager->OnActorEvent.AddDynamic(this, &ARelayLine::Init);
-    Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager->OnActorEvent.AddDynamic(this, &ARelayLine::Receive);
+    UEventManager* EvtMgr = Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager;
+    EvtMgr->OnActorEvent.AddDynamic(this, &ARelayLine::Init);
+    EvtMgr->OnActorEvent.AddDynamic(this, &ARelayLine::Receive);
+    EvtMgr->ShouldTrigger.AddDynamic(this, &ARelayLine::Run);
 }
 
 TArray<ATile*> ARelayLine::GetUnusedTiles(AGrid* Grid)
@@ -76,5 +78,4 @@ TArray<ATile*> ARelayLine::GetUnusedTiles(AGrid* Grid)
 void ARelayLine::Init_Implementation(AActor* Actor, UBaseEvent* EvtPtr)
 {
     EvtPtr->Manager->OnActorEvent.RemoveDynamic(this, &ARelayLine::Init);
-    EvtPtr->Manager->OnActorEvent.Broadcast(this, EvtPtr);
 }

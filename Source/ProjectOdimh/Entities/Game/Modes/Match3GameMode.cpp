@@ -108,18 +108,6 @@ void AMatch3GameMode::SetCurrentScore(const int32 Score)
     PGameState->CurrentScore = Score;
 }
 
-void AMatch3GameMode::ActivateGameplayOption(AActor* Option)
-{
-    if(IGameplayOptionsInterface* ActiveGameplay = Cast<IGameplayOptionsInterface>(Option))
-    {
-        AActor* Found = *(GameplayOptions.FindByPredicate([&](AActor* Actor) { return Actor->GetName() == Option->GetName(); }));
-
-        if(Found)
-            ActiveGameplay->Execute_Run(Option);
-    }
-}
-
-
 void AMatch3GameMode::BeginPlay()
 {
     Super::BeginPlay();
@@ -128,7 +116,6 @@ void AMatch3GameMode::BeginPlay()
     
     EvtManager->OnActorPicked.AddUniqueDynamic(this, &AMatch3GameMode::ReceiveActorPickedNotification);
     EvtManager->OnActorReleased.AddUniqueDynamic(this, &AMatch3GameMode::ReceiveActorReleasedNotification);
-    EvtManager->GameplayTrigger.AddDynamic(this, &AMatch3GameMode::ActivateGameplayOption);
     
     for(TSubclassOf<AActor> Class : GameplayOptionsClass)
     {

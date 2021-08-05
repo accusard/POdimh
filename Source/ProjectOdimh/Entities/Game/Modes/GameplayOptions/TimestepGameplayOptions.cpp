@@ -45,38 +45,27 @@ void ATimestepGameplayOptions::BeginPlay()
     
     Reset();
     
-    Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager->OnActorEvent.AddDynamic(this, &ATimestepGameplayOptions::Receive);
+    UEventManager* EvtMgr = Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager;
+    EvtMgr->OnActorEvent.AddDynamic(this, &ATimestepGameplayOptions::Receive);
 }
 
 void ATimestepGameplayOptions::Reset()
 {
     Counter = 0;
-    TargetStep = 0;
-}
-
-void ATimestepGameplayOptions::AddToGameplayTriggersOnCounter(AActor* Option)
-{
-    GameplayOptions.Add(Option);
-}
-
-void ATimestepGameplayOptions::Init_Implementation(AActor* FromActor, UBaseEvent* EvtPtr)
-{
-    AddToGameplayTriggersOnCounter(FromActor);
 }
 
 void ATimestepGameplayOptions::Receive_Implementation(AActor* FromActor, UBaseEvent* EvtPtr)
 {
-    if(Cast<ARelayLine>(FromActor))
-        Init(FromActor, EvtPtr);
-    
-    if(!EvtPtr->IsPendingFinish() && Counter >= TargetStep)
+    if(!EvtPtr->IsPendingFinish())
     {
-        // broadcast
-        for(AActor* It : GameplayOptions)
-            EvtPtr->Manager->GameplayTrigger.Broadcast(It);
-        
-        // reset
-        Reset();
+        Counter++;
+        if(Counter > CallDelegateOnTargetCounter)
+        {
+            EvtPtr->Manager->ShouldTrigger.Broadcast(true);
+            Reset();
+        }
+        else
+            EvtPtr->Manager->ShouldTrigger.Broadcast(false);
     }
     
 }
