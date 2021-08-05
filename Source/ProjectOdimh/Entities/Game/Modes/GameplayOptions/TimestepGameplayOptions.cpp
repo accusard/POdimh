@@ -3,8 +3,7 @@
 
 #include "Entities/Game/Modes/GameplayOptions/TimestepGameplayOptions.h"
 #include "POdimhGameInstance.h"
-#include "Entities/Game/Modes/Match3GameMode.h"
-#include "Entities/Game/Modes/GameplayOptions/RelayLine.h"
+#include "ClassInterface/GameplayOptionsInterface.h"
 
 
 // Sets default values
@@ -19,7 +18,7 @@ void ATimestepGameplayOptions::NotifySave(USaveGame* Data)
 {
     if(UPOdimhSaveGame* POdimhData = Cast<UPOdimhSaveGame>(Data))
     {
-        POdimhData->CustomInt.Add(TEXT("TimestepCounter"), Counter);
+        POdimhData->CustomInt.Add(TEXT("StepTimer"), Counter);
     }
 }
 
@@ -27,9 +26,9 @@ const bool ATimestepGameplayOptions::NotifyLoad(USaveGame* Data)
 {
     if(UPOdimhSaveGame* POdimhData = Cast<UPOdimhSaveGame>(Data))
     {
-        if(POdimhData->CustomInt.Find(TEXT("TimestepCounter")))
+        if(POdimhData->CustomInt.Find(TEXT("StepTimer")))
         {
-            Counter = POdimhData->CustomInt[TEXT("TimestepCounter")];
+            Counter = POdimhData->CustomInt[TEXT("StepTimer")];
             return true;
         }
     }
@@ -43,29 +42,58 @@ void ATimestepGameplayOptions::BeginPlay()
 {
 	Super::BeginPlay();
     
-    Reset();
+    ResetTimer();
     
     UEventManager* EvtMgr = Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager;
-    EvtMgr->OnActorEvent.AddDynamic(this, &ATimestepGameplayOptions::Receive);
+    EvtMgr->TriggerGameplayOption.AddDynamic(this, &ATimestepGameplayOptions::TickStepTimer);
 }
 
-void ATimestepGameplayOptions::Reset()
+const int ATimestepGameplayOptions::GetStepTimer(AActor* GameplayOption)
 {
-    Counter = 0;
+    int StepTimer = -1;
+    if(GameplayTriggers.Contains(GameplayOption))
+        StepTimer = GameplayTriggers[GameplayOption];
+    return StepTimer;
 }
 
-void ATimestepGameplayOptions::Receive_Implementation(AActor* FromActor, UBaseEvent* EvtPtr)
+void ATimeStepGameplayOptions::AddActorToTrigger(AActor* Actor)
 {
-    if(!EvtPtr->IsPendingFinish())
+    GameplayTriggers.Add(Actor, 0);
+}
+
+void ATimestepGameplayOptions::ResetTimer(TArray<AActor*> AllActors)
+{
+    for(AActor* It : AllActors)
     {
-        Counter++;
-        if(Counter > CallDelegateOnTargetCounter)
-        {
-            EvtPtr->Manager->ShouldTrigger.Broadcast(true);
-            Reset();
-        }
-        else
-            EvtPtr->Manager->ShouldTrigger.Broadcast(false);
+        if(GameplayTriggers.Contains(It))
+            GameplayTrigger[It] = 0;
+    }
+}
+
+void ATimeStepGameplayOptions::TickStepTimer(AActor* CheckActor)
+{
+
+    if(GameplayTriggers.Contain(CheckActor))
+        GameplayTriggers[CheckActor]++;
+
+    
+    for(AActor* It : ShouldTrigger())
+    {
+        if(IGameplayOptionsInterface* TimerTriggeredActor(It))
+            TimerTriggeredActor->Run(true);
+    }
+}
+
+TArray<AActor*> ATimeStepGameplayOptions::ShouldTrigger(const int Check) const
+{
+    TArray<AActor*> CheckedActors;
+    for(auto& Map : GameplayTriggers)
+    {
+        if(Map.Value > Check)
+            CheckedActors.Add(Map.Key);
     }
     
+    ResetTimer(CheckedActors);
+    
+    return CheckedActors;
 }

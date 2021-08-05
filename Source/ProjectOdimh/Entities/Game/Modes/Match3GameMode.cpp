@@ -156,6 +156,12 @@ void AMatch3GameMode::StartPlay()
         UE_LOG(LogTemp, Warning, TEXT("Error starting round. Participants contain 0 objects."));
 }
 
+void AMatch3GameMode::NotifyGameplayOptionsTurnEnded()
+{
+    for(AActor* It : GameplayOptions)
+        Instance->EventManager->TriggerGameplayOption.Broadcast(It);
+}
+
 void AMatch3GameMode::SaveAndQuit(const int32 PlayerIndex)
 {
     const bool bIgnorePlatformSpecificRestrictions = true;
@@ -330,8 +336,7 @@ void AMatch3GameMode::ReceiveRequestToEndTurn()
         }
         
         ActiveTurn->End();
-        Instance->EventManager->OnActorEvent.Broadcast(this, ActiveTurn);
-        
+        NotifyGameplayOptionsTurnEnded();
         OnRoundEnd();
         PGameState->ParticipantIndex = 1;
         StartTurn(PGameState->ParticipantIndex, nullptr);

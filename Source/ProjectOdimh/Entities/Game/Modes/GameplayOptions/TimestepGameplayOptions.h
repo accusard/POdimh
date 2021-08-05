@@ -20,22 +20,23 @@ public:
     virtual void NotifySave(USaveGame* Data) override;
     virtual const bool NotifyLoad(USaveGame* Data) override;
     
-    const int GetTimestepCounter() { return Counter; }
+    const int GetStepTimer(AActor* GameplayOption);
+    
+    void AddActorToTrigger(AActor* Actor);
     
     UFUNCTION(BlueprintCallable)
-    void Reset();
+    void ResetTimer(TArray<AActor*> ActorArray);
+    
+    UFUNCTION()
+    void TickStepTimer(AActor* Actor);
     
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
     
-    UFUNCTION(BlueprintNativeEvent)
-    void Receive(AActor* ReceiveFrom, class UBaseEvent* EvtPtr);
-    
-    UPROPERTY(BlueprintReadWrite)
-    int Counter;
-    
     UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
-    int CallDelegateOnTargetCounter;
+    int RunGameplayOnTargetCounter;
 
+    UPROPERTY()
+    TMap<AActor*, int> GameplayTriggers;
 };
