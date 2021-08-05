@@ -45,7 +45,7 @@ void ATimestepGameplayOptions::BeginPlay()
 	Super::BeginPlay();
     
     UEventManager* EvtMgr = Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager;
-    EvtMgr->TriggerGameplayOption.AddDynamic(this, &ATimestepGameplayOptions::TickStepTimer);
+    EvtMgr->CallBack.AddDynamic(this, &ATimestepGameplayOptions::TickStepTimer);
 }
 
 const int ATimestepGameplayOptions::GetStepTimer(AActor* GameplayOption)

@@ -16,7 +16,7 @@ class ATile;
 DECLARE_DELEGATE_RetVal_TwoParams(const bool, FResolveTileCollisions, ATile*, ATile*);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FGlobalWidgetDelegate);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPickHandler, AActor*, HandleActor);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FGameplayTriggerDelegate, AActor*, Trigger);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FActorCallBack, AActor*, Trigger);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FCreateFromComponentDelegate, AActor*, Spawner, UActorComponent*, Comp);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FActorEventDelegate, AActor*, Actor, UBaseEvent*, Event);
 
@@ -88,7 +88,7 @@ public:
     UPROPERTY(BlueprintAssignable, BlueprintCallable)
     FActorEventDelegate OnActorEvent;
     
-    FGameplayTriggerDelegate TriggerGameplayOption;
+    FActorCallBack CallBack;
     
     FResolveTileCollisions TilesSwapped;
     
