@@ -7,7 +7,7 @@
 
 AMechClass::AMechClass()
 {
-    Hitpoints = INIT_HIT_POINTS;
+    Hitpoints = 1;
 }
 
 const int32 AMechClass::GetHitPoints() const

@@ -14,6 +14,7 @@ class AGrid;
 class ATile;
 class UGameEvent;
 class AParticipantTurn;
+class ATimestepGameplayOptions;
 
 /**
  * The mode for a Match3 game. Tracks a turn-based puzzle game.
@@ -26,8 +27,7 @@ class PROJECTODIMH_API AMatch3GameMode : public AGameModeBase, public IDataSaveI
 public:
     // constructor
     AMatch3GameMode();
-    
-    virtual void Tick(float DeltaSeconds) override;
+
     virtual void StartPlay() override;
     virtual void NotifySave(USaveGame* Data) override;
     virtual const bool NotifyLoad(USaveGame* Data) override;
@@ -105,7 +105,13 @@ protected:
     TMap<uint32, TSubclassOf<AParticipantTurn>> ParticipantsBlueprint;
     
     UPROPERTY(EditAnywhere, Category="Additional Gameplay")
+    TSubclassOf<ATimestepGameplayOptions> TimerClass;
+    
+    UPROPERTY(EditAnywhere, Category="Additional Gameplay")
     TArray<TSubclassOf<AActor>> GameplayOptionsClass;
+    
+    UPROPERTY(BlueprintReadOnly)
+    ATimestepGameplayOptions* TimerPtr;
     
     UPROPERTY(BlueprintReadOnly)
     TArray<AActor*> GameplayOptions;

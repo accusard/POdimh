@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "FGameStats.generated.h"
 
-const int INIT_HIT_POINTS = 1;
+
 
 
 /**
@@ -24,5 +24,6 @@ struct FGameStats
 
     // constructors
     FGameStats();
+    FGameStats(const uint32 SetMax);
     FGameStats(const uint32 SetMax, const uint32 SetRemaining);
 };

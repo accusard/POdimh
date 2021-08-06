@@ -21,9 +21,9 @@ public:
     virtual void NotifySave(USaveGame* Data) override;
     virtual const bool NotifyLoad(USaveGame* Data) override;
     
-    const int GetStepTimer(AActor* Actor);
+    const int GetOnTickFrom(AActor* Actor);
     
-    void AddActorToTick(AActor* Actor);
+    void AddActorToTick(AActor* Actor, const FGameStats& Tick);
     
     UFUNCTION(BlueprintCallable)
     void ResetActorsTickCounter(TArray<AActor*> ActorArray);
@@ -31,12 +31,17 @@ public:
     UFUNCTION()
     void TickStepTimer(AActor* Actor, const int OnTick);
     
-    const TArray<AActor*> ShouldTick();
+    const TArray<AActor*> ShouldTick(const int OnTick);
+    
+    const uint32 GetDefaultStepsBeforeTick() const { return NumOfStepsBeforeTick; }
     
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
     UPROPERTY()
-    TMap<AActor*, int> TickingActors;
+    TMap<AActor*, FGameStats> TickingActors;
+    
+    UPROPERTY(EditDefaultsOnly)
+    uint32 NumOfStepsBeforeTick;
 };

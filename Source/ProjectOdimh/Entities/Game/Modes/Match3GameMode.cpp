@@ -3,7 +3,8 @@
 #include "Match3GameMode.h"
 #include "POdimhGameInstance.h"
 #include "Entities/Game/POdimhGameState.h"
-#include "Entities/Game/Modes/GameplayOptions/RelayLine.h"
+//#include "Entities/Game/Modes/GameplayOptions/RelayLine.h"
+#include "Entities/Game/Modes/GameplayOptions/TimestepGameplayOptions.h"
 #include "ClassInterface/GameplayOptionsInterface.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
@@ -17,15 +18,8 @@
 
 AMatch3GameMode::AMatch3GameMode()
 {
-    PrimaryActorTick.bCanEverTick = true;
+    PrimaryActorTick.bCanEverTick = false;
     
-}
-
-void AMatch3GameMode::Tick(float DeltaSeconds)
-{
-    Super::Tick(DeltaSeconds);
-    
-
 }
 
 void AMatch3GameMode::NotifySave(USaveGame* DataPtr)
@@ -117,6 +111,9 @@ void AMatch3GameMode::BeginPlay()
     EvtManager->OnActorPicked.AddUniqueDynamic(this, &AMatch3GameMode::ReceiveActorPickedNotification);
     EvtManager->OnActorReleased.AddUniqueDynamic(this, &AMatch3GameMode::ReceiveActorReleasedNotification);
     
+    if(TimerClass)
+           TimerPtr = GetWorld()->SpawnActor<ATimestepGameplayOptions>(TimerClass);
+    
     for(TSubclassOf<AActor> Class : GameplayOptionsClass)
     {
         GameplayOptions.Add(GetWorld()->SpawnActor<AActor>(Class));
@@ -128,6 +125,21 @@ void AMatch3GameMode::StartPlay()
     Super::StartPlay();
     
     // initialize
+    for(AActor* Option : GameplayOptions)
+    {
+        if(IGameplayOptionsInterface* ImplmentsGameplay = Cast<IGameplayOptionsInterface>(Option))
+        {
+            const uint32 StepsBeforeTick = TimerPtr->GetDefaultStepsBeforeTick();
+            const FGameStats Steps = FGameStats(StepsBeforeTick);
+            
+            TimerPtr->AddActorToTick(Option, Steps);
+            
+            UE_LOG(LogTemp,Warning,TEXT("--> %i"), StepsBeforeTick);
+            UE_LOG(LogTemp,Warning,TEXT("--> %i"), Steps.Original);
+            UE_LOG(LogTemp,Warning,TEXT("--> %i"), Steps.Current);
+        }
+    }
+    
     bool bIsNewGame = false;
     const int32 Player1 = (int32)EPlayer::One;
     PGameState = GetGameState<APOdimhGameState>();
@@ -159,7 +171,7 @@ void AMatch3GameMode::StartPlay()
 void AMatch3GameMode::NotifyGameplayOptionsTurnEnded(const int OnTick)
 {
     for(AActor* It : GameplayOptions)
-        Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager->CallBackWithCount.Broadcast(It, OnTick);
+        Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager->CallBackOnStepTick.Broadcast(It, OnTick);
 }
 
 void AMatch3GameMode::SaveAndQuit(const int32 PlayerIndex)

@@ -5,14 +5,18 @@
 
 FGameStats::FGameStats()
 {
-    Current = DEFAULT_MOVE_COST;
-    Original = DEFAULT_MOVE_COST;
+    Current = DEFAULT_ONE;
+    Original = DEFAULT_ONE;
 }
 
-FGameStats::FGameStats(const uint32 SetMax, const uint32 SetRemaining)
+FGameStats::FGameStats(const uint32 Max)
 {
-    // TODO: need to increase maximum value
-    Original = FMath::Clamp<uint32>(SetMax, DEFAULT_MOVE_COST, MAXIMUM_VALUE_1000);
-    Current = FMath::Clamp<uint32>(SetRemaining, 0, Original);
+    FGameStats(Max, Max);
+}
+
+FGameStats::FGameStats(const uint32 Max, const uint32 Remaining)
+{
+    Original = Max;
+    Current = Remaining;
 }
 

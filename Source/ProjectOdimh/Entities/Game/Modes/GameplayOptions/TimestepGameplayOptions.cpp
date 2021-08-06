@@ -19,7 +19,15 @@ void ATimestepGameplayOptions::NotifySave(USaveGame* Data)
     if(UPOdimhSaveGame* POdimhData = Cast<UPOdimhSaveGame>(Data))
     {
         for(auto& Map : TickingActors)
-            POdimhData->CustomInt.Add(*Map.Key->GetName(), Map.Value);
+        {
+            const FString& OrigValStr = *Map.Key->GetName() + FString(TEXT("Original"));
+            const FString& CurrValStr = *Map.Key->GetName() + FString(TEXT("Current"));
+            
+            POdimhData->CustomInt.Add(OrigValStr, Map.Value.Original);
+            POdimhData->CustomInt.Add(CurrValStr, Map.Value.Current);
+            
+            
+        }
     }
 }
 
@@ -29,12 +37,14 @@ const bool ATimestepGameplayOptions::NotifyLoad(USaveGame* Data)
     {
         for(auto& Map: TickingActors)
         {
-            const FString& Name = *Map.Key->GetName();
-            Map.Value = *POdimhData->CustomInt.Find(Name);
+            const FString& OrigValStr = *Map.Key->GetName() + FString(TEXT("Original"));
+            const FString& CurrValStr = *Map.Key->GetName() + FString(TEXT("Current"));
+            
+            Map.Value.Original = *POdimhData->CustomInt.Find(OrigValStr);
+            Map.Value.Current = *POdimhData->CustomInt.Find(CurrValStr);
         }
         return true;
     }
-    
     
     return false;
 }
@@ -45,20 +55,20 @@ void ATimestepGameplayOptions::BeginPlay()
 	Super::BeginPlay();
     
     UEventManager* EvtMgr = Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager;
-    EvtMgr->CallBackWithCount.AddDynamic(this, &ATimestepGameplayOptions::TickStepTimer);
+    EvtMgr->CallBackOnStepTick.AddDynamic(this, &ATimestepGameplayOptions::TickStepTimer);
 }
 
-const int ATimestepGameplayOptions::GetStepTimer(AActor* GameplayOption)
+const int ATimestepGameplayOptions::GetOnTickFrom(AActor* GameplayOption)
 {
-    int StepTimer = -1;
+    int OnTick = -1;
     if(TickingActors.Contains(GameplayOption))
-        StepTimer = TickingActors[GameplayOption];
-    return StepTimer;
+        OnTick = TickingActors[GameplayOption].Current;
+    return OnTick;
 }
 
-void ATimestepGameplayOptions::AddActorToTick(AActor* Actor)
+void ATimestepGameplayOptions::AddActorToTick(AActor* Actor, const FGameStats& TickOnCount)
 {
-    TickingActors.Add(Actor, 0);
+    TickingActors.Add(Actor, TickOnCount);
 }
 
 void ATimestepGameplayOptions::ResetActorsTickCounter(TArray<AActor*> AllActors)
@@ -66,17 +76,12 @@ void ATimestepGameplayOptions::ResetActorsTickCounter(TArray<AActor*> AllActors)
     for(AActor* It : AllActors)
     {
         if(TickingActors.Contains(It))
-            TickingActors[It] = 0;
+            TickingActors[It].Current = TickingActors[It].Original;
     }
 }
 
 void ATimestepGameplayOptions::TickStepTimer(AActor* CheckActor, const int OnTick)
 {
-
-    if(TickingActors.Contains(CheckActor))
-        TickingActors[CheckActor]++;
-
-    
     for(AActor* It : ShouldTick(OnTick))
     {
         if(IGameplayOptionsInterface* TimerTriggeredActor= Cast<IGameplayOptionsInterface>(It))
@@ -89,11 +94,9 @@ const TArray<AActor*> ATimestepGameplayOptions::ShouldTick(const int OnTick)
     TArray<AActor*> CheckTickedActors;
     for(auto& Map : TickingActors)
     {
-        if(Map.Value > OnTick)
+        if(OnTick % Map.Value.Current == 0)
             CheckTickedActors.Add(Map.Key);
     }
-    
-    ResetActorsTickCounter(CheckTickedActors);
     
     return CheckTickedActors;
 }
