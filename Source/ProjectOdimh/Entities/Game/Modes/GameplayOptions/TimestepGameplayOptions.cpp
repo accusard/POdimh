@@ -18,7 +18,7 @@ void ATimestepGameplayOptions::NotifySave(USaveGame* Data)
 {
     if(UPOdimhSaveGame* POdimhData = Cast<UPOdimhSaveGame>(Data))
     {
-        for(auto& Map : GameplayTriggers)
+        for(auto& Map : TickingActors)
             POdimhData->CustomInt.Add(*Map.Key->GetName(), Map.Value);
     }
 }
@@ -27,7 +27,7 @@ const bool ATimestepGameplayOptions::NotifyLoad(USaveGame* Data)
 {
     if(UPOdimhSaveGame* POdimhData = Cast<UPOdimhSaveGame>(Data))
     {
-        for(auto& Map: GameplayTriggers)
+        for(auto& Map: TickingActors)
         {
             const FString& Name = *Map.Key->GetName();
             Map.Value = *POdimhData->CustomInt.Find(Name);
@@ -45,55 +45,55 @@ void ATimestepGameplayOptions::BeginPlay()
 	Super::BeginPlay();
     
     UEventManager* EvtMgr = Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager;
-    EvtMgr->CallBack.AddDynamic(this, &ATimestepGameplayOptions::TickStepTimer);
+    EvtMgr->CallBackWithCount.AddDynamic(this, &ATimestepGameplayOptions::TickStepTimer);
 }
 
 const int ATimestepGameplayOptions::GetStepTimer(AActor* GameplayOption)
 {
     int StepTimer = -1;
-    if(GameplayTriggers.Contains(GameplayOption))
-        StepTimer = GameplayTriggers[GameplayOption];
+    if(TickingActors.Contains(GameplayOption))
+        StepTimer = TickingActors[GameplayOption];
     return StepTimer;
 }
 
-void ATimestepGameplayOptions::AddActorToTrigger(AActor* Actor)
+void ATimestepGameplayOptions::AddActorToTick(AActor* Actor)
 {
-    GameplayTriggers.Add(Actor, 0);
+    TickingActors.Add(Actor, 0);
 }
 
-void ATimestepGameplayOptions::ResetTimer(TArray<AActor*> AllActors)
+void ATimestepGameplayOptions::ResetActorsTickCounter(TArray<AActor*> AllActors)
 {
     for(AActor* It : AllActors)
     {
-        if(GameplayTriggers.Contains(It))
-            GameplayTriggers[It] = 0;
+        if(TickingActors.Contains(It))
+            TickingActors[It] = 0;
     }
 }
 
-void ATimestepGameplayOptions::TickStepTimer(AActor* CheckActor)
+void ATimestepGameplayOptions::TickStepTimer(AActor* CheckActor, const int OnTick)
 {
 
-    if(GameplayTriggers.Contains(CheckActor))
-        GameplayTriggers[CheckActor]++;
+    if(TickingActors.Contains(CheckActor))
+        TickingActors[CheckActor]++;
 
     
-    for(AActor* It : ShouldTrigger(RunGameplayOnTargetCounter))
+    for(AActor* It : ShouldTick(OnTick))
     {
         if(IGameplayOptionsInterface* TimerTriggeredActor= Cast<IGameplayOptionsInterface>(It))
             TimerTriggeredActor->Run(true);
     }
 }
 
-const TArray<AActor*> ATimestepGameplayOptions::ShouldTrigger(const int Check)
+const TArray<AActor*> ATimestepGameplayOptions::ShouldTick(const int OnTick)
 {
-    TArray<AActor*> CheckedActors;
-    for(auto& Map : GameplayTriggers)
+    TArray<AActor*> CheckTickedActors;
+    for(auto& Map : TickingActors)
     {
-        if(Map.Value > Check)
-            CheckedActors.Add(Map.Key);
+        if(Map.Value > OnTick)
+            CheckTickedActors.Add(Map.Key);
     }
     
-    ResetTimer(CheckedActors);
+    ResetActorsTickCounter(CheckTickedActors);
     
-    return CheckedActors;
+    return CheckTickedActors;
 }

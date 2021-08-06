@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "ClassInterface/GameplayOptionsInterface.h"
 #include "ClassInterface/DataSaveInterface.h"
+#include "Utilities/FGameStats.h"
 #include "TimestepGameplayOptions.generated.h"
 
 UCLASS()
@@ -20,25 +21,22 @@ public:
     virtual void NotifySave(USaveGame* Data) override;
     virtual const bool NotifyLoad(USaveGame* Data) override;
     
-    const int GetStepTimer(AActor* GameplayOption);
+    const int GetStepTimer(AActor* Actor);
     
-    void AddActorToTrigger(AActor* Actor);
+    void AddActorToTick(AActor* Actor);
     
     UFUNCTION(BlueprintCallable)
-    void ResetTimer(TArray<AActor*> ActorArray);
+    void ResetActorsTickCounter(TArray<AActor*> ActorArray);
     
     UFUNCTION()
-    void TickStepTimer(AActor* Actor);
+    void TickStepTimer(AActor* Actor, const int OnTick);
     
-    const TArray<AActor*> ShouldTrigger(const int Check);
+    const TArray<AActor*> ShouldTick();
     
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-    
-    UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
-    int RunGameplayOnTargetCounter;
 
     UPROPERTY()
-    TMap<AActor*, int> GameplayTriggers;
+    TMap<AActor*, int> TickingActors;
 };

@@ -32,7 +32,7 @@ public:
     virtual void NotifySave(USaveGame* Data) override;
     virtual const bool NotifyLoad(USaveGame* Data) override;
     
-    void NotifyGameplayOptionsTurnEnded();
+    void NotifyGameplayOptionsTurnEnded(const int TurnNum);
     
     /** Save the game and quit */
     UFUNCTION(BlueprintCallable)
