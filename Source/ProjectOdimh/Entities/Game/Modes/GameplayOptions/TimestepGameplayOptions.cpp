@@ -25,8 +25,6 @@ void ATimestepGameplayOptions::NotifySave(USaveGame* Data)
             
             POdimhData->CustomInt.Add(OrigValStr, Map.Value.Original);
             POdimhData->CustomInt.Add(CurrValStr, Map.Value.Current);
-            
-            
         }
     }
 }
@@ -80,12 +78,24 @@ void ATimestepGameplayOptions::ResetActorsTickCounter(TArray<AActor*> AllActors)
     }
 }
 
+void ATimestepGameplayOptions::SetActorToTickOn(AActor* SetActor, const int TickOn)
+{
+    if(TickingActors.Contains(SetActor))
+        TickingActors[SetActor].Current = TickOn;
+}
+
+void ATimestepGameplayOptions::ResetAllActorsTickDefault()
+{
+    for(auto& Map : TickingActors)
+        Map.Value = FGameStats(DefaultTick);
+}
+
 void ATimestepGameplayOptions::TickStepTimer(AActor* CheckActor, const int OnTick)
 {
     for(AActor* It : ShouldTick(OnTick))
     {
-        if(IGameplayOptionsInterface* TimerTriggeredActor= Cast<IGameplayOptionsInterface>(It))
-            TimerTriggeredActor->Run(true);
+        if(IGameplayOptionsInterface* TickActor= Cast<IGameplayOptionsInterface>(It))
+            TickActor->Run(true);
     }
 }
 
