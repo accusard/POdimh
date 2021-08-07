@@ -410,10 +410,10 @@ void AMatch3GameMode::StartTurn(AParticipantTurn* Participant, APawn* InPawn)
         else
             UE_LOG(LogTemp, Warning, TEXT("TODO: Need GridController and InPawn to possess."));
         
-        UE_LOG(LogTemp, Warning, TEXT("DebugTurn: Starting Turn: %s."), *Participant->GetDisplayName());
-        
         PGameState->TurnCounter++;
         OnTurnStart(*Participant->GetDisplayName());
+        
+        UE_LOG(LogTemp, Warning, TEXT("DebugTurn: Starting Turn %i: %s."), PGameState->TurnCounter, *Participant->GetDisplayName());
     }
 }
 

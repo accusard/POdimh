@@ -37,6 +37,10 @@ public:
     UFUNCTION()
     void TickStepTimer(AActor* Actor, const int OnTick);
     
+    UFUNCTION(BlueprintPure)
+    const int GetTickOnTurn(AActor* CheckActor, const int CurrentTurn);
+    
+    const bool ShouldTick(AActor* CheckActor, const int OnTick);
     const TArray<AActor*> ShouldTick(const int OnTick);
     
     const uint32 GetDefaultStepsBeforeTick() const { return DefaultTick; }

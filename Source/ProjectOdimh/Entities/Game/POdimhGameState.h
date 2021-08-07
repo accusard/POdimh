@@ -18,7 +18,9 @@ public:
     UPROPERTY(BlueprintReadOnly)
     int32 RoundCounter;
     
-    uint32 TurnCounter;
+    UPROPERTY(BlueprintReadOnly)
+    int32 TurnCounter;
+    
     uint32 ParticipantIndex;
     
     /** Tracks the current score of the game */

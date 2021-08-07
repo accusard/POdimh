@@ -41,6 +41,7 @@ const bool ATimestepGameplayOptions::NotifyLoad(USaveGame* Data)
             Map.Value.Original = *POdimhData->CustomInt.Find(OrigValStr);
             Map.Value.Current = *POdimhData->CustomInt.Find(CurrValStr);
         }
+        
         return true;
     }
     
@@ -56,11 +57,11 @@ void ATimestepGameplayOptions::BeginPlay()
     EvtMgr->CallBackOnStepTick.AddDynamic(this, &ATimestepGameplayOptions::TickStepTimer);
 }
 
-const int ATimestepGameplayOptions::GetOnTickFrom(AActor* GameplayOption)
+const int ATimestepGameplayOptions::GetOnTickFrom(AActor* Gameplay)
 {
     int OnTick = -1;
-    if(TickingActors.Contains(GameplayOption))
-        OnTick = TickingActors[GameplayOption].Current;
+    if(TickingActors.Contains(Gameplay))
+        OnTick = TickingActors[Gameplay].Current;
     return OnTick;
 }
 
@@ -90,13 +91,39 @@ void ATimestepGameplayOptions::ResetAllActorsTickDefault()
         Map.Value = FGameStats(DefaultTick);
 }
 
-void ATimestepGameplayOptions::TickStepTimer(AActor* CheckActor, const int OnTick)
+void ATimestepGameplayOptions::TickStepTimer(AActor* ActPtr, const int OnTick)
 {
-    for(AActor* It : ShouldTick(OnTick))
+    if(TickingActors.Num() > 0)
     {
-        if(IGameplayOptionsInterface* TickActor= Cast<IGameplayOptionsInterface>(It))
-            TickActor->Run(true);
+        if(ShouldTick(ActPtr, OnTick))
+        {
+            if(IGameplayOptionsInterface* TickActor = Cast<IGameplayOptionsInterface>(ActPtr))
+                TickActor->Execute_Run(ActPtr, true);
+        }
     }
+}
+
+const int ATimestepGameplayOptions::GetTickOnTurn(AActor* CheckActor, const int CurrTurn)
+{
+    const int TickOn = GetOnTickFrom(CheckActor);
+    
+    if(TickOn > 0)
+    {
+        int TurnsBeforeTick = CurrTurn;
+        while(TurnsBeforeTick % TickOn != 0)
+            TurnsBeforeTick++;
+        
+        return (TurnsBeforeTick - CurrTurn) + 1;
+    }
+    return TickOn;
+}
+
+const bool ATimestepGameplayOptions::ShouldTick(AActor* CheckActor, const int OnTick)
+{
+    if(TickingActors.Contains(CheckActor))
+        return TickingActors[CheckActor].Current == 0 || OnTick % TickingActors[CheckActor].Current == 0;
+    
+    return false;
 }
 
 const TArray<AActor*> ATimestepGameplayOptions::ShouldTick(const int OnTick)
@@ -104,7 +131,7 @@ const TArray<AActor*> ATimestepGameplayOptions::ShouldTick(const int OnTick)
     TArray<AActor*> CheckTickedActors;
     for(auto& Map : TickingActors)
     {
-        if(OnTick % Map.Value.Current == 0)
+        if(Map.Value.Current == 0 || OnTick % Map.Value.Current == 0)
             CheckTickedActors.Add(Map.Key);
     }
     
