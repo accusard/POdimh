@@ -217,7 +217,7 @@ const float GetDistanceBetween(ATile* TileA, ATile* TileB)
 void AGrid::OnInitialTilesSpawned(TArray<ATile*> SpecialTiles)
 {
     UEventManager* EvtMgr = Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager;
-    UGridEvent* Event = EvtMgr->NewEvent<UGridEvent>(this, "Special Tiles", true);
+    UGridEvent* Event = EvtMgr->NewEvent<UGridEvent>(this, "Initial Spawn", true);
     
     for(ATile* Tile : SpecialTiles)
         Event->PtrToCustomTiles.Add(Tile);

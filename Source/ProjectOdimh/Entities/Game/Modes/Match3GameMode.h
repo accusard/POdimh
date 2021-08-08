@@ -60,7 +60,10 @@ public:
     
     const bool TryLoadGame(const FString &SlotName, const int32 PlayerIndex);
     
-    const bool StartNewGame();
+    const bool NewGame();
+    
+    UFUNCTION(BlueprintCallable)
+    void StartGame(const bool bIsNewGame);
     
     AParticipantTurn* StartNextParticipant(const uint32 ParticipantTurnNum);
     
@@ -87,8 +90,6 @@ public:
     AGrid* GetGrid() const;
     
     const bool StartTurn(const uint32 Index, APawn* InPawn);
-    
-    void EndTurn();
     
     UFUNCTION()
     void ReceiveActorReleasedNotification(AActor* Actor);

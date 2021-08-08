@@ -29,5 +29,8 @@ public:
     /** Tracks the current score of the game */
     UPROPERTY()
     int32 CurrentScore;
+    
+    UPROPERTY()
+    uint8 bEnableScoring : 1;
 
 };

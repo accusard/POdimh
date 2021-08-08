@@ -89,7 +89,8 @@ TMap<uint32, AParticipantTurn*>& AMatch3GameMode::GetParticipants()
 
 void AMatch3GameMode::AddScore(const int32 Score)
 {
-    PGameState->CurrentScore += Score;
+    if(PGameState->bEnableScoring)
+        PGameState->CurrentScore += Score;
 }
 
 const int AMatch3GameMode::GetCurrentScore()
@@ -144,24 +145,8 @@ void AMatch3GameMode::StartPlay()
     if(!TryLoadGame(CONTINUE_GAME_SLOT, Player1))
     {
         if(!TryLoadGame(LAST_SUCCESSFUL_SLOT, Player1))
-            bIsNewGame = StartNewGame();
+            bIsNewGame = NewGame();
     }
-    
-    if(Participants.Num() != 0)
-    {
-        const uint32 NextParticipant = PGameState->ParticipantIndex;
-
-        StartNextParticipant(NextParticipant);
-        if(bIsNewGame)
-        {
-            UPOdimhGameInstance* Instance = GetGameInstance<UPOdimhGameInstance>();
-            Instance->SaveGame(RESET_GAME_SLOT, Player1, bIsNewGame);
-            Instance->SaveGame(CONTINUE_GAME_SLOT, Player1, bIsNewGame);
-            Instance->SaveGame(LAST_SUCCESSFUL_SLOT, Player1, bIsNewGame);
-        }
-    }
-    else
-        UE_LOG(LogTemp, Warning, TEXT("Error starting round. Participants contain 0 objects."));
 }
 
 void AMatch3GameMode::NotifyGameplayOptionsTurnEnded(const int OnTick)
@@ -279,10 +264,11 @@ const bool AMatch3GameMode::TryLoadGame(const FString &SlotName, const int32 Pla
     return false;
 }
 
-const bool AMatch3GameMode::StartNewGame()
+const bool AMatch3GameMode::NewGame()
 {
     if(ParticipantsBlueprintIsValid() && LoadParticipantsFromBlueprint())
     {
+        PGameState->bEnableScoring = false;
         PGameState->TurnCounter = 0;
         PGameState->RoundCounter = 0;
         PGameState->ParticipantIndex = 1;
@@ -290,6 +276,28 @@ const bool AMatch3GameMode::StartNewGame()
         return true;
     }
     return false;
+}
+
+void AMatch3GameMode::StartGame(const bool bIsNewGame)
+{
+    PGameState->bEnableScoring = true;
+    const int32 Player1 = (int32)EPlayer::One;
+    
+    if(Participants.Num() != 0)
+    {
+        const uint32 NextParticipant = PGameState->ParticipantIndex;
+
+        StartNextParticipant(NextParticipant);
+        if(bIsNewGame)
+        {
+            UPOdimhGameInstance* Instance = GetGameInstance<UPOdimhGameInstance>();
+            Instance->SaveGame(RESET_GAME_SLOT, Player1, bIsNewGame);
+            Instance->SaveGame(CONTINUE_GAME_SLOT, Player1, bIsNewGame);
+            Instance->SaveGame(LAST_SUCCESSFUL_SLOT, Player1, bIsNewGame);
+        }
+    }
+    else
+        UE_LOG(LogTemp, Warning, TEXT("Error starting round. Participants contain 0 objects."));
 }
 
 AParticipantTurn* AMatch3GameMode::StartNextParticipant(const uint32 ParticipantTurnNum)
@@ -344,13 +352,13 @@ void AMatch3GameMode::ReceiveRequestToEndTurn()
             if(AParticipantTurn* Participant = Cast<AParticipantTurn>(Participants[i]))
                 Participant->Reset();
         }
-        
-        ActiveTurn->End();
-        NotifyGameplayOptionsTurnEnded(EndedOnTurnNum);
-        OnRoundEnd();
-        PGameState->ParticipantIndex = 1;
-        StartTurn(PGameState->ParticipantIndex, nullptr);
     }
+    
+    ActiveTurn->End();
+    NotifyGameplayOptionsTurnEnded(EndedOnTurnNum);
+    OnRoundEnd();
+    PGameState->ParticipantIndex = 1;
+    StartTurn(PGameState->ParticipantIndex, nullptr);
 }
 
 void AMatch3GameMode::ReceiveRequestToEndTurn(ATile* LastTileGrabbed)
@@ -364,7 +372,9 @@ void AMatch3GameMode::ReceiveRequestToEndTurn(ATile* LastTileGrabbed)
 
 AParticipantTurn* AMatch3GameMode::GetCurrentParticipant() const
 {
-    return Cast<AParticipantTurn>(ActiveTurn->GetOwner());
+    if(ActiveTurn)
+        return Cast<AParticipantTurn>(ActiveTurn->GetOwner());
+    return nullptr;
 }
 
 void AMatch3GameMode::Give(AActor* Controller, const FMatch3GameAction& Action, const bool bExecuteNow)
@@ -440,11 +450,6 @@ void AMatch3GameMode::ReceiveActorReleasedNotification(AActor* ReleasedActor)
             ActiveTurn->End();
         }
     }
-}
-
-void AMatch3GameMode::EndTurn()
-{
-
 }
 
 const bool AMatch3GameMode::IsTurnPending() const
