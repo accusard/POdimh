@@ -24,7 +24,7 @@ class PROJECTODIMH_API IGameplayOptionsInterface
     
 public:
     UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-    void Run(const bool bTrigger);
+    void Run();
     
     UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
     void Init(AActor* Actor, UBaseEvent* Evt);

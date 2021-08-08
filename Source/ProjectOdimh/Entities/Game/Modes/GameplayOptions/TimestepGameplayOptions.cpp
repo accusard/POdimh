@@ -98,7 +98,7 @@ void ATimestepGameplayOptions::TickStepTimer(AActor* ActPtr, const int OnTick)
         if(ShouldTick(ActPtr, OnTick))
         {
             if(IGameplayOptionsInterface* TickActor = Cast<IGameplayOptionsInterface>(ActPtr))
-                TickActor->Execute_Run(ActPtr, true);
+                TickActor->Execute_Run(ActPtr);
         }
     }
 }
