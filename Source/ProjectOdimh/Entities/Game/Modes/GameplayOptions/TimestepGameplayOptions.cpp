@@ -14,7 +14,7 @@ ATimestepGameplayOptions::ATimestepGameplayOptions()
 
 }
 
-void ATimestepGameplayOptions::NotifySave(USaveGame* Data)
+void ATimestepGameplayOptions::Save(USaveGame* Data)
 {
     if(UPOdimhSaveGame* POdimhData = Cast<UPOdimhSaveGame>(Data))
     {
@@ -29,7 +29,7 @@ void ATimestepGameplayOptions::NotifySave(USaveGame* Data)
     }
 }
 
-const bool ATimestepGameplayOptions::NotifyLoad(USaveGame* Data)
+const bool ATimestepGameplayOptions::Load(USaveGame* Data)
 {
     if(UPOdimhSaveGame* POdimhData = Cast<UPOdimhSaveGame>(Data))
     {

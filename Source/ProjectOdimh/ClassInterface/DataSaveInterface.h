@@ -27,7 +27,7 @@ class PROJECTODIMH_API IDataSaveInterface
 public:
 
     /** Override functions to save and load data */
-    virtual void NotifySave(USaveGame* SaveGameData) = 0;
-    virtual const bool NotifyLoad(USaveGame* LoadGameData) = 0;
+    virtual void Save(USaveGame* SaveGameData) = 0;
+    virtual const bool Load(USaveGame* LoadGameData) = 0;
     
 };

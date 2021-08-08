@@ -13,7 +13,7 @@ ARelayLine::ARelayLine()
 
 }
 
-void ARelayLine::NotifySave(USaveGame* Data)
+void ARelayLine::Save(USaveGame* Data)
 {
     if(UPOdimhSaveGame* POdimhData = Cast<UPOdimhSaveGame>(Data))
     {
@@ -27,7 +27,7 @@ void ARelayLine::NotifySave(USaveGame* Data)
     }
 }
 
-const bool ARelayLine::NotifyLoad(USaveGame* Data)
+const bool ARelayLine::Load(USaveGame* Data)
 {
     if(UPOdimhSaveGame* POdimhData = Cast<UPOdimhSaveGame>(Data))
     {

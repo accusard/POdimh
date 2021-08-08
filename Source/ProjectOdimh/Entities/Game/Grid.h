@@ -59,8 +59,8 @@ public:
 	AGrid();
     
     // DataSave interface
-    virtual void NotifySave(USaveGame* Data) override;
-    virtual const bool NotifyLoad(USaveGame* Data) override;
+    virtual void Save(USaveGame* Data) override;
+    virtual const bool Load(USaveGame* Data) override;
     
     // Called every frame
     virtual void Tick(float DeltaTime) override;

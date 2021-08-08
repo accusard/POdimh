@@ -58,7 +58,7 @@ void UPOdimhGameInstance::SaveGame(const FString& SlotName, const int32 PlayerIn
     {
         if(IDataSaveInterface* ActorSaveInterface = Cast<IDataSaveInterface>(*ActorItr))
         {
-            ActorSaveInterface->NotifySave(Data);
+            ActorSaveInterface->Save(Data);
             UGameplayStatics::SaveGameToSlot(Data, Data->SaveSlotName, Data->UserIndex);
         }
     }
@@ -109,7 +109,7 @@ const bool UPOdimhGameInstance::LoadActor(AActor* Actor, USaveGame* Data)
     const bool bNoErrorLoading = true;
     if(IDataSaveInterface* ActorSaveInterface = Cast<IDataSaveInterface>(Actor))
     {
-        if(ActorSaveInterface->NotifyLoad(Data))
+        if(ActorSaveInterface->Load(Data))
         {
             UE_LOG(LogTemp, Warning, TEXT("LoadActor: %s success!"), *ActorSaveInterface->_getUObject()->GetName());
             return true;
@@ -133,7 +133,7 @@ void UPOdimhGameInstance::LoadComponents(AActor* Actor, USaveGame* Data)
     {
         if(IDataSaveInterface* LoadingInterface = Cast<IDataSaveInterface>(Comp))
         {
-            if(LoadingInterface->NotifyLoad(Data))
+            if(LoadingInterface->Load(Data))
             {
                 UE_LOG(LogTemp, Warning, TEXT("LoadComponent: %s data loaded successfully.."), *LoadingInterface->_getUObject()->GetName());
             }

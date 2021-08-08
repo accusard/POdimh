@@ -18,8 +18,8 @@ public:
 	// Sets default values for this actor's properties
 	ATimestepGameplayOptions();
 
-    virtual void NotifySave(USaveGame* Data) override;
-    virtual const bool NotifyLoad(USaveGame* Data) override;
+    virtual void Save(USaveGame* Data) override;
+    virtual const bool Load(USaveGame* Data) override;
     
     const int GetOnTickFrom(AActor* Actor);
     

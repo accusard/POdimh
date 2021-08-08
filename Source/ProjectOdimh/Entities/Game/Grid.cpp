@@ -51,7 +51,7 @@ void AGrid::BeginPlay()
     Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager->OnActorReleased.AddDynamic(this, &AGrid::CheckState);
 }
 
-void AGrid::NotifySave(USaveGame* SaveData)
+void AGrid::Save(USaveGame* SaveData)
 {
     if(UPOdimhSaveGame* Data = Cast<UPOdimhSaveGame>(SaveData))
     {
@@ -67,7 +67,7 @@ void AGrid::NotifySave(USaveGame* SaveData)
     }
 }
 
-const bool AGrid::NotifyLoad(USaveGame* LoadData)
+const bool AGrid::Load(USaveGame* LoadData)
 {
     bool bSuccess = false;
     
