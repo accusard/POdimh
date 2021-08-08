@@ -186,14 +186,14 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Tiles")
     int TilesNeededForMatch;
     
-    UPROPERTY(BlueprintReadWrite)
-    uint8 bGridStateChanged : 1;
-    
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 SizeX;
     
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 SizeY;
+    
+    UPROPERTY(BlueprintReadWrite)
+    float WaitBeforeSwitchBoardState = 0;
     
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Tiles")
     uint8 bSaveTerminalCoords : 1;
@@ -202,7 +202,10 @@ protected:
     uint8 bDefaultTerminalCoordOnBeginPlay :1;
     
     UPROPERTY(BlueprintReadWrite)
-    float WaitBeforeSwitchBoardState = 0;
+    uint8 bGridStateChanged : 1;
+    
+    UPROPERTY(BlueprintReadWrite)
+    uint8 bTilesHaveSwapped : 1;
     
 private:
     /** A state in which there are no matching tiles (2 or less occurences) available */

@@ -25,6 +25,7 @@ AGrid::AGrid()
 	PrimaryActorTick.bCanEverTick = true;
     
     TilesNeededForMatch = 3;
+    bTilesHaveSwapped = false;
     bNoMatchingTiles = false;
     bGridStateChanged = false;
 
@@ -233,11 +234,13 @@ const int32 AGrid::CalculateTileValue(const int NumOfMatchingTiles, const int Ti
 
 void AGrid::OnEventBurstEnd_Implementation(AMatch3GameMode* Mode)
 {
+    bTilesHaveSwapped = false;
     Mode->ReceiveRequestToEndTurn();
 }
 
 void AGrid::HandleTilesSwapped(AController* GridController, ATile* DynamicTile, ATile* StaticTile)
 {
+    bTilesHaveSwapped = true;
     UActorPickHandlerComponent* Handler = Cast<IPickHandlerInterface>(GridController)->GetPickHandler();
     
     if(Handler)
