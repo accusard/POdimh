@@ -3,7 +3,6 @@
 #include "Match3GameMode.h"
 #include "POdimhGameInstance.h"
 #include "Entities/Game/POdimhGameState.h"
-//#include "Entities/Game/Modes/GameplayOptions/RelayLine.h"
 #include "Entities/Game/Modes/GameplayOptions/TimestepGameplayOptions.h"
 #include "ClassInterface/GameplayOptionsInterface.h"
 #include "Kismet/GameplayStatics.h"
@@ -26,7 +25,7 @@ void AMatch3GameMode::Save(USaveGame* DataPtr)
 {
     // save current score
     if(UPOdimhSaveGame* Data = Cast<UPOdimhSaveGame>(DataPtr))
-        Data->SavedGrid.GameScore = GetCurrentScore();
+        Data->CustomInt.Add("GameScore", GetCurrentScore());
     
     if(Participants.Num() == 0) return;
     
@@ -36,7 +35,7 @@ void AMatch3GameMode::Save(USaveGame* DataPtr)
 const bool AMatch3GameMode::Load(USaveGame* DataPtr)
 {
     if(UPOdimhSaveGame* Data = Cast<UPOdimhSaveGame>(DataPtr))
-        SetCurrentScore(Data->SavedGrid.GameScore);
+        SetCurrentScore(Data->CustomInt["GameScore"]);
     
     return LoadParticipants(DataPtr);
 }
@@ -46,7 +45,7 @@ const bool AMatch3GameMode::LoadParticipants(USaveGame* Data)
     // load from save
     if(UPOdimhSaveGame* SaveData = Cast<UPOdimhSaveGame>(Data))
     {
-        PGameState->ParticipantIndex = SaveData->CurrentParticipantIndex;
+        PGameState->ParticipantIndex = SaveData->CustomInt["CurrentParticipantIndex"];
         
         if(Participants.Num() > 0)
             return true;
@@ -227,7 +226,7 @@ void AMatch3GameMode::SaveParticipants(USaveGame* DataPtr)
     if(UPOdimhSaveGame* SaveData = Cast<UPOdimhSaveGame>(DataPtr))
     {
         const int32 NumOfEntities = Participants.Num();
-        SaveData->CurrentParticipantIndex = PGameState->ParticipantIndex;
+        SaveData->CustomInt.Add("CurrentParticipantIndex", PGameState->ParticipantIndex);
         
         // loop and cycle through for each element
 //        for(int i = 0; i < Participants.Num(); i++)

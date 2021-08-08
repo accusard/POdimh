@@ -22,8 +22,8 @@ void ARelayLine::Save(USaveGame* Data)
             POdimhData->CustomInt.Add(*BPData.Id, BPData.Value);
         }
         
-        POdimhData->CustomIntPoint.Add(TEXT("LineCoords.Start"), LineCoords.Start);
-        POdimhData->CustomIntPoint.Add(TEXT("LineCoords.End"), LineCoords.End);
+        POdimhData->CustomIntPoint.Add("LineCoords.Start", LineCoords.Start);
+        POdimhData->CustomIntPoint.Add("LineCoords.End", LineCoords.End);
     }
 }
 
@@ -31,8 +31,8 @@ const bool ARelayLine::Load(USaveGame* Data)
 {
     if(UPOdimhSaveGame* POdimhData = Cast<UPOdimhSaveGame>(Data))
     {
-        LineCoords.Start = POdimhData->CustomIntPoint[TEXT("LineCoords.Start")];
-        LineCoords.End = POdimhData->CustomIntPoint[TEXT("LineCoords.End")];
+        LineCoords.Start = POdimhData->CustomIntPoint["LineCoords.Start"];
+        LineCoords.End = POdimhData->CustomIntPoint["LineCoords.End"];
         
         TArray<FCustomIntData> CustomDataArray;
         

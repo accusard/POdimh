@@ -61,7 +61,7 @@ void AGrid::Save(USaveGame* SaveData)
             if(Tile)
             {
                 // for each tile, assign types to save data
-                Data->SavedGrid.AddTile(Tile->Id);
+                Data->AddTile(Tile->Id);
             }
         }
     }

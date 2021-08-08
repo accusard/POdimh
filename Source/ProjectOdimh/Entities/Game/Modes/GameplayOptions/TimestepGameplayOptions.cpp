@@ -20,8 +20,8 @@ void ATimestepGameplayOptions::Save(USaveGame* Data)
     {
         for(auto& Map : TickingActors)
         {
-            const FString& OrigValStr = *Map.Key->GetName() + FString(TEXT("Original"));
-            const FString& CurrValStr = *Map.Key->GetName() + FString(TEXT("Current"));
+            const FString& OrigValStr = *Map.Key->GetName() + FString("Original");
+            const FString& CurrValStr = *Map.Key->GetName() + FString("Current");
             
             POdimhData->CustomInt.Add(OrigValStr, Map.Value.Original);
             POdimhData->CustomInt.Add(CurrValStr, Map.Value.Current);
@@ -35,8 +35,8 @@ const bool ATimestepGameplayOptions::Load(USaveGame* Data)
     {
         for(auto& Map: TickingActors)
         {
-            const FString& OrigValStr = *Map.Key->GetName() + FString(TEXT("Original"));
-            const FString& CurrValStr = *Map.Key->GetName() + FString(TEXT("Current"));
+            const FString& OrigValStr = *Map.Key->GetName() + FString("Original");
+            const FString& CurrValStr = *Map.Key->GetName() + FString("Current");
             
             Map.Value.Original = *POdimhData->CustomInt.Find(OrigValStr);
             Map.Value.Current = *POdimhData->CustomInt.Find(CurrValStr);

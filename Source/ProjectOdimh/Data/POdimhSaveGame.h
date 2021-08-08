@@ -18,9 +18,7 @@ struct FBaseSaveData
     GENERATED_USTRUCT_BODY()
     
 public:
-    /** When true, the associated data will be reset to its original RESET_GAME_SLOT save by GameInstance->ResetGame(),
-     otherwise data will be persistance throughout the entire game */
-    uint8 bReset : 1;
+    
 };
 
 /**
@@ -32,13 +30,8 @@ struct FBoardSaveData : public FBaseSaveData
     GENERATED_USTRUCT_BODY()
     
 public:
-    FBoardSaveData()
-    {
-        GameScore = 0;
-    }
-    /** Add to the data the type of tile */
-    void AddTile(int Type);
-    
+    FBoardSaveData() {}
+        
     /** Get the total tiles that data contained */
     const int32 GetNumberOfTiles() const;
     
@@ -46,9 +39,6 @@ public:
     UPROPERTY(BlueprintReadOnly)
     TArray<int> TileTypes;
     
-    /** The data for game score */
-    UPROPERTY()
-    int32 GameScore;
 };
 
 USTRUCT()
@@ -103,6 +93,8 @@ public:
     // default constructor
     UPOdimhSaveGame();
     
+    void AddTile(int Type);
+    
     /** The name of the save slot */
     UPROPERTY()
     FString SaveSlotName;
@@ -120,10 +112,7 @@ public:
     TArray<FParticipantInfo> ParticipantsRegistry;
     
     UPROPERTY()
-    uint32 CurrentParticipantIndex;
-    
-    UPROPERTY()
-    TMap<FString, uint32> CustomInt;
+    TMap<FString, int32> CustomInt;
     
     UPROPERTY()
     TMap<FString, FIntPoint> CustomIntPoint;

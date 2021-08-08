@@ -4,9 +4,9 @@
 
 
 
-void FBoardSaveData::AddTile(int Type)
+void UPOdimhSaveGame::AddTile(int Type)
 {
-    TileTypes.Add(Type);
+    SavedGrid.TileTypes.Add(Type);
 }
 
 const int32 FBoardSaveData::GetNumberOfTiles() const
