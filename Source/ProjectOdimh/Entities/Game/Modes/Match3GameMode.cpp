@@ -25,7 +25,10 @@ void AMatch3GameMode::Save(USaveGame* DataPtr)
 {
     // save current score
     if(UPOdimhSaveGame* Data = Cast<UPOdimhSaveGame>(DataPtr))
+    {
         Data->CustomInt.Add("GameScore", GetCurrentScore());
+        Data->CustomInt.Add("POdimhAwareness", PGameState->AwarenessCounter);
+    }
     
     if(Participants.Num() == 0) return;
     
@@ -35,8 +38,10 @@ void AMatch3GameMode::Save(USaveGame* DataPtr)
 const bool AMatch3GameMode::Load(USaveGame* DataPtr)
 {
     if(UPOdimhSaveGame* Data = Cast<UPOdimhSaveGame>(DataPtr))
+    {
         SetCurrentScore(Data->CustomInt["GameScore"]);
-    
+        PGameState->AwarenessCounter = Data->CustomInt["POdimhAwareness"];
+    }
     return LoadParticipants(DataPtr);
 }
 
@@ -56,10 +61,10 @@ const bool AMatch3GameMode::LoadParticipants(USaveGame* Data)
             {
                 FActorSpawnParameters Params;
                 
-                Params.Name = FName(*SaveData->ParticipantsRegistry[i].Name);
+                Params.Name = FName(*SaveData->ParticipantsRegistry[i].Id);
                 Params.Owner = this;
                 
-                uint32 TurnNum = SaveData->ParticipantsRegistry[i].PositionInQueue;
+                uint32 TurnNum = SaveData->ParticipantsRegistry[i].Value;
                 
 #if !UE_BUILD_SHIPPING
                 UE_LOG(LogTemp,Warning,TEXT("Loading Participant: %s, Turn: %i"),*Params.Name.ToString(), TurnNum);
@@ -234,14 +239,14 @@ void AMatch3GameMode::SaveParticipants(USaveGame* DataPtr)
         {
             if(AParticipantTurn* CurrentEntity = Elem.Value)
             {
-                FParticipantInfo NewInfo(CurrentEntity->GetDisplayName(),
+                FCustomIntData NewInfo(CurrentEntity->GetDisplayName(),
                                                      Elem.Key);
                 
                 // add to save data
                 SaveData->ParticipantsRegistry.Add(NewInfo);
 #if !UE_BUILD_SHIPPING
                 EntitiesRecorded++;
-                UE_LOG(LogTemp,Warning,TEXT("Saving Participant: %s, QUEUE POSITION: %i"), *NewInfo.Name, NewInfo.PositionInQueue);
+                UE_LOG(LogTemp,Warning,TEXT("Saving Participant: %s, QUEUE POSITION: %i"), *NewInfo.Id, NewInfo.Value);
 #endif
             }
             

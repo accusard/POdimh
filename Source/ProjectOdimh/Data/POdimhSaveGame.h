@@ -41,29 +41,14 @@ public:
     
 };
 
-USTRUCT()
-struct FParticipantInfo : public FBaseSaveData
-{
-    GENERATED_USTRUCT_BODY()
-    
-public:
-    FParticipantInfo();
-    FParticipantInfo(const FString &Name, const uint32 TurnPosition);
-    
-    /** The name of the entity being saved */
-    UPROPERTY()
-    FString Name;
-    
-    /** The entity's position in the queue to determine when its turn to act */
-    UPROPERTY()
-    uint32 PositionInQueue;
-};
-
 USTRUCT(BlueprintType)
 struct FCustomIntData
 {
     GENERATED_USTRUCT_BODY()
 public:
+    FCustomIntData() {}
+    FCustomIntData(const FString& Str, const int Val) : Id(Str), Value(Val) {}
+    
     UPROPERTY(BlueprintReadWrite)
     FString Id;
     
@@ -109,7 +94,7 @@ public:
     
     /** Data for the turn queue */
     UPROPERTY()
-    TArray<FParticipantInfo> ParticipantsRegistry;
+    TArray<FCustomIntData> ParticipantsRegistry;
     
     UPROPERTY()
     TMap<FString, int32> CustomInt;

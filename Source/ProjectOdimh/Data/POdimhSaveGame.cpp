@@ -14,18 +14,6 @@ const int32 FBoardSaveData::GetNumberOfTiles() const
     return TileTypes.Num();
 }
 
-FParticipantInfo::FParticipantInfo()
-{
-    Name = FString("Empty");
-    PositionInQueue = 0;
-}
-
-FParticipantInfo::FParticipantInfo(const FString &SetName, const uint32 TurnPosition)
-{
-    Name = SetName;
-    PositionInQueue = TurnPosition;
-}
-
 UPOdimhSaveGame::UPOdimhSaveGame()
 {
     SaveSlotName = DEFAULT_SAVE_SLOT;

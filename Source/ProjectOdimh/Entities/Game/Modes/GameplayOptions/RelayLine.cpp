@@ -38,10 +38,7 @@ const bool ARelayLine::Load(USaveGame* Data)
         
         for(const TPair<FString, int>& Elem : POdimhData->CustomInt)
         {
-            FCustomIntData Loaded;
-            Loaded.Id = *Elem.Key;
-            Loaded.Value = Elem.Value;
-            
+            FCustomIntData Loaded(*Elem.Key, Elem.Value);
             CustomDataArray.Add(Loaded);
         }
         return OnLoadFromBlueprint(CustomDataArray);
