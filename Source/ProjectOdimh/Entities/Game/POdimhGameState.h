@@ -16,9 +16,6 @@ class PROJECTODIMH_API APOdimhGameState : public AGameStateBase
 	
 public:
     UPROPERTY(BlueprintReadOnly)
-    int32 RoundCounter;
-    
-    UPROPERTY(BlueprintReadOnly)
     int32 TurnCounter;
     
     UPROPERTY(BlueprintReadWrite)
@@ -31,6 +28,6 @@ public:
     int32 CurrentScore;
     
     UPROPERTY()
-    uint8 bEnableScoring : 1;
+    uint8 bGameHasStarted : 1;
 
 };

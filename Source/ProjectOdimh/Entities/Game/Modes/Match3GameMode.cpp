@@ -28,6 +28,7 @@ void AMatch3GameMode::Save(USaveGame* DataPtr)
     {
         Data->CustomInt.Add("GameScore", GetCurrentScore());
         Data->CustomInt.Add("POdimhAwareness", PGameState->AwarenessCounter);
+//        Data->CustomInt.Add("TurnCounter", PGameState->TurnCounter);
     }
     
     if(Participants.Num() == 0) return;
@@ -41,6 +42,7 @@ const bool AMatch3GameMode::Load(USaveGame* DataPtr)
     {
         SetCurrentScore(Data->CustomInt["GameScore"]);
         PGameState->AwarenessCounter = Data->CustomInt["POdimhAwareness"];
+//        PGameState->TurnCounter = Data->CustomInt["TurnCounter"];
     }
     return LoadParticipants(DataPtr);
 }
@@ -93,7 +95,7 @@ TMap<uint32, AParticipantTurn*>& AMatch3GameMode::GetParticipants()
 
 void AMatch3GameMode::AddScore(const int32 Score)
 {
-    if(PGameState->bEnableScoring)
+    if(PGameState->bGameHasStarted)
         PGameState->CurrentScore += Score;
 }
 
@@ -272,9 +274,7 @@ const bool AMatch3GameMode::NewGame()
 {
     if(ParticipantsBlueprintIsValid() && LoadParticipantsFromBlueprint())
     {
-        PGameState->bEnableScoring = false;
-        PGameState->TurnCounter = 0;
-        PGameState->RoundCounter = 0;
+        PGameState->bGameHasStarted = false;
         PGameState->ParticipantIndex = 1;
         GetGrid()->NewGrid();
         return true;
@@ -284,7 +284,7 @@ const bool AMatch3GameMode::NewGame()
 
 void AMatch3GameMode::StartGame(const bool bIsNewGame)
 {
-    PGameState->bEnableScoring = true;
+    PGameState->bGameHasStarted = true;
     const int32 Player1 = (int32)EPlayer::One;
     
     if(Participants.Num() != 0)
@@ -310,7 +310,6 @@ AParticipantTurn* AMatch3GameMode::StartNextParticipant(const uint32 Participant
     
     if(AParticipantTurn* NextParticipant = Participants[ParticipantTurnNum])
     {
-        PGameState->RoundCounter++;
         CurrentParticipant = NextParticipant;
         StartTurn(ParticipantTurnNum, nullptr);
         OnRoundStart();
