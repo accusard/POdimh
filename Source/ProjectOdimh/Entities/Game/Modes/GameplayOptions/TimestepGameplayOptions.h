@@ -6,7 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "ClassInterface/GameplayOptionsInterface.h"
 #include "ClassInterface/DataSaveInterface.h"
-#include "Utilities/FGameStats.h"
+#include "Data/FGameStats.h"
 #include "TimestepGameplayOptions.generated.h"
 
 UCLASS()

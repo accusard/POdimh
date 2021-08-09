@@ -46,7 +46,7 @@ struct FCustomIntData
 {
     GENERATED_USTRUCT_BODY()
 public:
-    FCustomIntData() {}
+    FCustomIntData() : FCustomIntData("", 0) {}
     FCustomIntData(const FString& Str, const int Val) : Id(Str), Value(Val) {}
     
     UPROPERTY(BlueprintReadWrite)

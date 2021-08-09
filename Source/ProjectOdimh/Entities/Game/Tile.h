@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Utilities/FGameStats.h"
+#include "Data/FGameStats.h"
 #include "Tile.generated.h"
 
 const int INIT_DEFAULT_TILE_VALUE = 100;

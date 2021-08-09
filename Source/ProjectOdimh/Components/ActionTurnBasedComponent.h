@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "Data/GameTypes.h"
 #include "Components/ActorComponent.h"
-#include "Utilities/FGameStats.h"
+#include "Data/FGameStats.h"
 #include "ActionTurnBasedComponent.generated.h"
 
 const int INIT_MAX_ACTIONS = 1;
