@@ -28,7 +28,7 @@ void AMatch3GameMode::Save(USaveGame* DataPtr)
     {
         Data->CustomInt.Add("GameScore", GetCurrentScore());
         Data->CustomInt.Add("POdimhAwareness", PGameState->AwarenessCounter);
-//        Data->CustomInt.Add("TurnCounter", PGameState->TurnCounter);
+        Data->CustomInt.Add("TurnCounter", PGameState->TurnCounter);
     }
     
     if(Participants.Num() == 0) return;
@@ -42,7 +42,7 @@ const bool AMatch3GameMode::Load(USaveGame* DataPtr)
     {
         SetCurrentScore(Data->CustomInt["GameScore"]);
         PGameState->AwarenessCounter = Data->CustomInt["POdimhAwareness"];
-//        PGameState->TurnCounter = Data->CustomInt["TurnCounter"];
+        PGameState->TurnCounter = Data->CustomInt["TurnCounter"];
     }
     return LoadParticipants(DataPtr);
 }
@@ -331,6 +331,7 @@ void AMatch3GameMode::ReceiveRequestToEndTurn()
     
     const bool bIsNewGame = true;
     const int EndedOnTurnNum = PGameState->TurnCounter;
+    NotifyGameplayOptionsTurnEnded(EndedOnTurnNum);
     
     UPOdimhGameInstance* Instance = GetGameInstance<UPOdimhGameInstance>();
     Instance->SaveGame(CONTINUE_GAME_SLOT, (int32)EPlayer::One, !bIsNewGame);
@@ -357,8 +358,9 @@ void AMatch3GameMode::ReceiveRequestToEndTurn()
         }
     }
     
-    ActiveTurn->End();
-    NotifyGameplayOptionsTurnEnded(EndedOnTurnNum);
+    //already being called in ReceiveActorReleasedNotification
+    //ActiveTurn->End();
+    
     OnRoundEnd();
     PGameState->ParticipantIndex = 1;
     StartTurn(PGameState->ParticipantIndex, nullptr);
