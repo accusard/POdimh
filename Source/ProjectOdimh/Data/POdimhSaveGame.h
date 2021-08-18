@@ -99,7 +99,7 @@ public:
     UPROPERTY()
     TMap<FString, int32> CustomInt;
     
-    UPROPERTY()
+    UPROPERTY(BlueprintReadWrite)
     TMap<FString, FIntPoint> CustomIntPoint;
 
 };
