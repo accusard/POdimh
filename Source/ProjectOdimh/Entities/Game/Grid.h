@@ -166,7 +166,7 @@ protected:
     void HandleTilesSwapped(AController* GridController, ATile* DynamicTile, ATile* StaticTile);
     
     UFUNCTION(BlueprintCallable)
-    void RandomizeNewTiles(TArray<class ATile*> OldTiles, TSubclassOf<ATile> Class);
+    TArray<ATile*> RandomizeNewTiles(TArray<class ATile*> OldTiles, TSubclassOf<ATile> Class);
     
     UFUNCTION(BlueprintImplementableEvent)
     const int GetRandomMatchType() const;

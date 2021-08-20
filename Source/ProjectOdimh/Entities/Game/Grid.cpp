@@ -250,16 +250,17 @@ void AGrid::HandleTilesSwapped(AController* GridController, ATile* DynamicTile, 
     }
 }
 
-void AGrid::RandomizeNewTiles(TArray<ATile*> Old, TSubclassOf<ATile> Class)
+TArray<ATile*> AGrid::RandomizeNewTiles(TArray<ATile*> Old, TSubclassOf<ATile> Class)
 {
-    
+    TArray<ATile*> NewTiles;
     for(ATile* T : Old)
     {
         const bool bRegisterNewPos = true;
-        SpawnTile(Class, T->GetActorTransform(), GetRandomMatchType(), bRegisterNewPos);
+        NewTiles.Add(SpawnTile(Class, T->GetActorTransform(), GetRandomMatchType(), bRegisterNewPos));
         T->Destroy();
         
     }
+    return NewTiles;
 }
 
 void AGrid::NewGrid()
