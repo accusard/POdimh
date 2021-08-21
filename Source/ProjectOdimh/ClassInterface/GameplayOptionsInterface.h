@@ -26,6 +26,9 @@ public:
     UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
     void Run();
     
+    UFUNCTION(BlueprintImplementableEvent)
+    const bool IsRunning() const;
+    
     UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
     void Init(AActor* Actor, UBaseEvent* Evt);
     

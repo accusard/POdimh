@@ -235,7 +235,7 @@ const int32 AGrid::CalculateTileValue(const int NumOfMatchingTiles, const int Ti
 void AGrid::OnEventBurstEnd_Implementation(AMatch3GameMode* Mode)
 {
     bTilesHaveSwapped = false;
-    Mode->ReceiveRequestToEndTurn();
+    Mode->ReceiveRequestToEndTurn(true);
 }
 
 void AGrid::HandleTilesSwapped(AController* GridController, ATile* DynamicTile, ATile* StaticTile)

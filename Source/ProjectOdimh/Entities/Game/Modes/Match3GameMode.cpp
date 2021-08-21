@@ -44,7 +44,7 @@ const bool AMatch3GameMode::Load(USaveGame* DataPtr)
         PGameState->AwarenessCounter = Data->CustomInt["POdimhAwareness"];
         PGameState->TurnCounter = Data->CustomInt["TurnCounter"];
     }
-    return LoadParticipants(DataPtr);
+    return true;
 }
 
 const bool AMatch3GameMode::LoadParticipants(USaveGame* Data)
@@ -155,7 +155,7 @@ void AMatch3GameMode::StartPlay()
     }
 }
 
-void AMatch3GameMode::NotifyGameplayOptionsTurnEnded(const int OnTick)
+void AMatch3GameMode::NotifyGameplayOptionsTurnEnding(const int OnTick)
 {
     for(AActor* It : GameplayOptions)
         Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager->CallBackOnStepTick.Broadcast(It, OnTick);
@@ -272,14 +272,11 @@ const bool AMatch3GameMode::TryLoadGame(const FString &SlotName, const int32 Pla
 
 const bool AMatch3GameMode::NewGame()
 {
-    if(ParticipantsBlueprintIsValid() && LoadParticipantsFromBlueprint())
-    {
-        PGameState->bGameHasStarted = false;
-        PGameState->ParticipantIndex = 1;
-        GetGrid()->NewGrid();
-        return true;
-    }
-    return false;
+    PGameState->bGameHasStarted = false;
+    PGameState->ParticipantIndex = 1;
+    GetGrid()->NewGrid();
+
+    return true;
 }
 
 void AMatch3GameMode::StartGame(const bool bIsNewGame)
@@ -287,105 +284,41 @@ void AMatch3GameMode::StartGame(const bool bIsNewGame)
     PGameState->bGameHasStarted = true;
     const int32 Player1 = (int32)EPlayer::One;
     
-    if(Participants.Num() != 0)
+    if(bIsNewGame)
     {
-        const uint32 NextParticipant = PGameState->ParticipantIndex;
-
-        StartNextParticipant(NextParticipant);
-        if(bIsNewGame)
-        {
-            UPOdimhGameInstance* Instance = GetGameInstance<UPOdimhGameInstance>();
-            Instance->SaveGame(RESET_GAME_SLOT, Player1, bIsNewGame);
-            Instance->SaveGame(CONTINUE_GAME_SLOT, Player1, bIsNewGame);
-            Instance->SaveGame(LAST_SUCCESSFUL_SLOT, Player1, bIsNewGame);
-        }
+        UPOdimhGameInstance* Instance = GetGameInstance<UPOdimhGameInstance>();
+        Instance->SaveGame(RESET_GAME_SLOT, Player1, bIsNewGame);
+        Instance->SaveGame(CONTINUE_GAME_SLOT, Player1, bIsNewGame);
+        Instance->SaveGame(LAST_SUCCESSFUL_SLOT, Player1, bIsNewGame);
     }
-    else
-        UE_LOG(LogTemp, Warning, TEXT("Error starting round. Participants contain 0 objects."));
 }
 
-AParticipantTurn* AMatch3GameMode::StartNextParticipant(const uint32 ParticipantTurnNum)
+void AMatch3GameMode::ReceiveRequestToEndTurn(const bool bSaveNow)
 {
-    CurrentParticipant = nullptr;
+    const bool bSafeToSave = bSaveNow && !GetGrid()->IsTilesBursting() || !IsTurnPending();
     
-    if(AParticipantTurn* NextParticipant = Participants[ParticipantTurnNum])
-    {
-        CurrentParticipant = NextParticipant;
-        StartTurn(ParticipantTurnNum, nullptr);
-        OnRoundStart();
-    }
-    
-    return CurrentParticipant;
-}
-
-void AMatch3GameMode::ReceiveRequestToEndTurn()
-{
-    if(GetGrid()->IsTilesBursting() || IsTurnPending())
-        return;
-    
-    if(AParticipantTurn* ActiveParticipant = GetCurrentParticipant())
-    {
-        if(AController* GridController = ActiveParticipant->GetGridController())
-            GridController->UnPossess();
-    }
-    
-    const bool bIsNewGame = true;
     const int EndedOnTurnNum = PGameState->TurnCounter;
-    NotifyGameplayOptionsTurnEnded(EndedOnTurnNum);
+    NotifyGameplayOptionsTurnEnding(EndedOnTurnNum);
     
-    CallInstanceToSaveCurrentState();
-    
-    // Participants
-    if(AParticipantTurn* ActiveParticipant = GetCurrentParticipant())
-    {
-        // next turn
-        for(uint32 i = ++PGameState->ParticipantIndex; i <= Participants.Num(); ++i)
-        {
-            if(StartTurn(i, nullptr))
-                return;
-            else
-                continue;
-        }
-        
-        // end of round
-        for(int i = 1; i <= Participants.Num(); i++)
-        {
-            if(AParticipantTurn* Participant = Cast<AParticipantTurn>(Participants[i]))
-                Participant->Reset();
-        }
-    }
-    
-    //already being called in ReceiveActorReleasedNotification
-    //ActiveTurn->End();
-    
-    OnRoundEnd();
-    PGameState->ParticipantIndex = 1;
-    StartTurn(PGameState->ParticipantIndex, nullptr);
+    if(bSafeToSave)
+        CallInstanceToSaveCurrentState();
 }
 
 void AMatch3GameMode::ReceiveRequestToEndTurn(ATile* LastTileGrabbed)
 {
-    if(AParticipantTurn* ActiveParticipant = GetCurrentParticipant())
+    if(GetGrid()->HasTilePositionChanged(LastTileGrabbed))
     {
-        if(GetGrid()->HasTilePositionChanged(LastTileGrabbed))
-            ReceiveRequestToEndTurn();
+        const bool bSaveOnPosChange = true;
+        ReceiveRequestToEndTurn(bSaveOnPosChange);
     }
 }
 
 void AMatch3GameMode::CallInstanceToSaveCurrentState()
 {
-    const bool bIsNewGame = true;
     UPOdimhGameInstance* Instance = GetGameInstance<UPOdimhGameInstance>();
-    Instance->SaveGame(CONTINUE_GAME_SLOT, (int32)EPlayer::One, !bIsNewGame);
-    Instance->SaveGame(LAST_SUCCESSFUL_SLOT, (int32)EPlayer::One, !bIsNewGame);
+    Instance->SaveGame(CONTINUE_GAME_SLOT, (int32)EPlayer::One, false);
+    Instance->SaveGame(LAST_SUCCESSFUL_SLOT, (int32)EPlayer::One, false);
     Instance->EventManager->ClearEventQueue();
-}
-
-AParticipantTurn* AMatch3GameMode::GetCurrentParticipant() const
-{
-    if(ActiveTurn)
-        return Cast<AParticipantTurn>(ActiveTurn->GetOwner());
-    return nullptr;
 }
 
 void AMatch3GameMode::Give(AActor* Controller, const FMatch3GameAction& Action, const bool bExecuteNow)
@@ -400,44 +333,6 @@ void AMatch3GameMode::Give(AActor* Controller, const FMatch3GameAction& Action, 
     // TODO: give to pending action?
 }
 
-const bool AMatch3GameMode::StartTurn(const uint32 Index, APawn* InPawn)
-{
-    if(Participants.Contains(Index))
-    {
-        PGameState->ParticipantIndex = Index;
-        StartTurn(Participants[Index], InPawn);
-        return true;
-    }
-    return false;
-}
-
-void AMatch3GameMode::StartTurn(AParticipantTurn* Participant, APawn* InPawn)
-{
-    if(Participant)
-    {
-        if(ActiveTurn && !ActiveTurn->IsPendingKill())
-        {
-            ActiveTurn->End();
-            ActiveTurn->MarkPendingKill();
-        }
-        const bool bStartTurnNow = true;
-        FString TurnDescription = Participant->GetDisplayName();
-        TurnDescription.Append("'s Turn");
-        
-        ActiveTurn = GetGameInstance<UPOdimhGameInstance>()->EventManager->NewEvent<UGameEvent>(Participant, FName(*TurnDescription), bStartTurnNow);
-        
-        if(InPawn)
-            Participant->GetGridController()->Possess(InPawn);
-        else
-            UE_LOG(LogTemp, Warning, TEXT("TODO: Need GridController and InPawn to possess."));
-        
-        PGameState->TurnCounter++;
-        OnTurnStart(*Participant->GetDisplayName());
-        
-        UE_LOG(LogTemp, Warning, TEXT("DebugTurn: Starting Turn %i: %s."), PGameState->TurnCounter, *Participant->GetDisplayName());
-    }
-}
-
 void AMatch3GameMode::ReceiveActorPickedNotification(AActor* PickedActor)
 {
     if(ATile* Tile = Cast<ATile>(PickedActor))
@@ -447,26 +342,22 @@ void AMatch3GameMode::ReceiveActorPickedNotification(AActor* PickedActor)
         SwapAction.Identifier = SWAP_POSITIONS;
         SwapAction.Num = INIT_MAX_ACTIONS;
         
-        Give(GetCurrentParticipant()->GetGridController(), SwapAction);
+        Give(GetGrid()->GetController(), SwapAction);
     }
 }
 
 void AMatch3GameMode::ReceiveActorReleasedNotification(AActor* ReleasedActor)
 {
-    if(ActiveTurn)
-    {
-        if(ATile* Tile = Cast<ATile>(ReleasedActor))
-        {
-            ReceiveRequestToEndTurn(Tile);
-            ActiveTurn->End();
-        }
-    }
+    if(ATile* Tile = Cast<ATile>(ReleasedActor))
+        ReceiveRequestToEndTurn(Tile);
 }
 
 const bool AMatch3GameMode::IsTurnPending() const
 {
-    if(ActiveTurn)
-        return ActiveTurn->IsPendingFinish();
-    else
-        return false;
+    for(AActor* Option : GameplayOptions)
+    {
+        if(Cast<IGameplayOptionsInterface>(Option)->Execute_IsRunning(Option))
+            return true;
+    }
+    return false;
 }

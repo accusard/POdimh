@@ -32,21 +32,11 @@ public:
     virtual void Save(USaveGame* Data) override;
     virtual const bool Load(USaveGame* Data) override;
     
-    void NotifyGameplayOptionsTurnEnded(const int TurnNum);
+    void NotifyGameplayOptionsTurnEnding(const int TurnNum);
     
     /** Save the game and quit */
     UFUNCTION(BlueprintCallable)
     void SaveAndQuit(const int32 PlayerIndex);
-
-    const bool ParticipantsBlueprintIsValid();
-    
-    const bool LoadParticipantsFromBlueprint();
-    
-    const bool LoadParticipants(USaveGame* Data);
-    
-    void SaveParticipants(USaveGame* Data);
-    
-    TMap<uint32, AParticipantTurn*>& GetParticipants();
     
     /** Add to the score */
     UFUNCTION(BlueprintCallable)
@@ -65,34 +55,19 @@ public:
     UFUNCTION(BlueprintCallable)
     void StartGame(const bool bIsNewGame);
     
-    AParticipantTurn* StartNextParticipant(const uint32 ParticipantTurnNum);
-    
-    UFUNCTION(BlueprintImplementableEvent)
-    void OnRoundStart();
-    
     UFUNCTION(BlueprintImplementableEvent)
     void OnTurnStart(const FString& ParticipantName);
     
-    UFUNCTION(BlueprintImplementableEvent)
-    void OnRoundEnd();
-    
-    void ReceiveRequestToEndTurn();
+    void ReceiveRequestToEndTurn(const bool bSaveNow);
     void ReceiveRequestToEndTurn(ATile* LastTileGrabbed);
     
     UFUNCTION(BlueprintCallable)
     void CallInstanceToSaveCurrentState();
     
-    UFUNCTION(BlueprintCallable, Category="")
-    AParticipantTurn* GetCurrentParticipant() const;
-    
-    AParticipantTurn* NewParticipant(const FActorSpawnParameters& Params);
-    
     void Give(AActor* Controller, const FMatch3GameAction& Action, const bool bExecuteNow = true);
     
     UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
     AGrid* GetGrid() const;
-    
-    const bool StartTurn(const uint32 Index, APawn* InPawn);
     
     UFUNCTION()
     void ReceiveActorReleasedNotification(AActor* Actor);
@@ -104,9 +79,6 @@ public:
     
 protected:
     virtual void BeginPlay() override;
-    
-    UPROPERTY(EditAnywhere)
-    TMap<uint32, TSubclassOf<AParticipantTurn>> ParticipantsBlueprint;
     
     UPROPERTY(EditAnywhere, Category="Additional Gameplay")
     TSubclassOf<ATimestepGameplayOptions> TimerClass;
@@ -123,13 +95,20 @@ protected:
     class APOdimhGameState* PGameState;
     
 private:
-    void StartTurn(AParticipantTurn* Turn, APawn* InPawn);
+    // deprecate
+    AParticipantTurn* NewParticipant(const FActorSpawnParameters& Params);
+    const bool ParticipantsBlueprintIsValid();
+    const bool LoadParticipantsFromBlueprint();
+    const bool LoadParticipants(USaveGame* Data);
+    void SaveParticipants(USaveGame* Data);
+    
+    TMap<uint32, AParticipantTurn*>& GetParticipants();
+    
+    UPROPERTY(EditAnywhere)
+    TMap<uint32, TSubclassOf<AParticipantTurn>> ParticipantsBlueprint;
     
     UPROPERTY()
     TMap<uint32, AParticipantTurn*> Participants;
-    
-    AParticipantTurn* CurrentParticipant;
-    
-    UGameEvent* ActiveTurn;
+
     
 };
