@@ -333,10 +333,7 @@ void AMatch3GameMode::ReceiveRequestToEndTurn()
     const int EndedOnTurnNum = PGameState->TurnCounter;
     NotifyGameplayOptionsTurnEnded(EndedOnTurnNum);
     
-    UPOdimhGameInstance* Instance = GetGameInstance<UPOdimhGameInstance>();
-    Instance->SaveGame(CONTINUE_GAME_SLOT, (int32)EPlayer::One, !bIsNewGame);
-    Instance->SaveGame(LAST_SUCCESSFUL_SLOT, (int32)EPlayer::One, !bIsNewGame);
-    Instance->EventManager->ClearEventQueue();
+    CallInstanceToSaveCurrentState();
     
     // Participants
     if(AParticipantTurn* ActiveParticipant = GetCurrentParticipant())
@@ -373,6 +370,15 @@ void AMatch3GameMode::ReceiveRequestToEndTurn(ATile* LastTileGrabbed)
         if(GetGrid()->HasTilePositionChanged(LastTileGrabbed))
             ReceiveRequestToEndTurn();
     }
+}
+
+void AMatch3GameMode::CallInstanceToSaveCurrentState()
+{
+    const bool bIsNewGame = true;
+    UPOdimhGameInstance* Instance = GetGameInstance<UPOdimhGameInstance>();
+    Instance->SaveGame(CONTINUE_GAME_SLOT, (int32)EPlayer::One, !bIsNewGame);
+    Instance->SaveGame(LAST_SUCCESSFUL_SLOT, (int32)EPlayer::One, !bIsNewGame);
+    Instance->EventManager->ClearEventQueue();
 }
 
 AParticipantTurn* AMatch3GameMode::GetCurrentParticipant() const

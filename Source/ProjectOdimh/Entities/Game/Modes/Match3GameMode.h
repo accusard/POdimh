@@ -79,6 +79,9 @@ public:
     void ReceiveRequestToEndTurn();
     void ReceiveRequestToEndTurn(ATile* LastTileGrabbed);
     
+    UFUNCTION(BlueprintCallable)
+    void CallInstanceToSaveCurrentState();
+    
     UFUNCTION(BlueprintCallable, Category="")
     AParticipantTurn* GetCurrentParticipant() const;
     
