@@ -29,7 +29,7 @@ public:
     UFUNCTION(BlueprintCallable)
     void ResetGame(const int32 PlayerIndex);
     UFUNCTION(BlueprintCallable)
-    void SaveGame(const FString& SlotName, const int32 PlayerIndex, const bool bNewGameState);
+    void SaveGame(const FString& SlotName, const int32 PlayerIndex);
     const bool LoadGame(const FString& SlotName, const int32 PlayerIndex);
     const bool SafeToSave(const bool bBypassGridState) const;
     

@@ -166,7 +166,7 @@ void AMatch3GameMode::SaveAndQuit(const int32 PlayerIndex)
     const bool bIgnorePlatformSpecificRestrictions = true;
     const bool bNotNewGame = false;
     
-    GetGameInstance<UPOdimhGameInstance>()->SaveGame(CONTINUE_GAME_SLOT, PlayerIndex, bNotNewGame);
+    GetGameInstance<UPOdimhGameInstance>()->SaveGame(CONTINUE_GAME_SLOT, PlayerIndex);
     
     UKismetSystemLibrary::QuitGame(GetWorld(),
                                    UGameplayStatics::GetPlayerController(GetWorld(),PlayerIndex),
@@ -279,46 +279,75 @@ const bool AMatch3GameMode::NewGame()
     return true;
 }
 
+UGameEvent* AMatch3GameMode::NewTurn(const FName& TurnDescription, const bool bStartTurnNow)
+{
+    UGameEvent* Turn = NewObject<UGameEvent>(GetGrid()->GetController(), TurnDescription);
+    Turn->Init();
+    if(bStartTurnNow)
+        Turn->Start();
+    return Turn;
+}
+
 void AMatch3GameMode::StartGame(const bool bIsNewGame)
 {
     PGameState->bGameHasStarted = true;
     const int32 Player1 = (int32)EPlayer::One;
     
+    PlayerMove = NewTurn("Player Move", true);
+    
     if(bIsNewGame)
     {
         UPOdimhGameInstance* Instance = GetGameInstance<UPOdimhGameInstance>();
-        Instance->SaveGame(RESET_GAME_SLOT, Player1, bIsNewGame);
-        Instance->SaveGame(CONTINUE_GAME_SLOT, Player1, bIsNewGame);
-        Instance->SaveGame(LAST_SUCCESSFUL_SLOT, Player1, bIsNewGame);
+        Instance->SaveGame(RESET_GAME_SLOT, Player1);
+        Instance->SaveGame(CONTINUE_GAME_SLOT, Player1);
+        Instance->SaveGame(LAST_SUCCESSFUL_SLOT, Player1);
     }
 }
 
-void AMatch3GameMode::ReceiveRequestToEndTurn(const bool bSaveNow)
+const bool AMatch3GameMode::HasGameStarted() const
 {
-    const bool bSafeToSave = bSaveNow && !GetGrid()->IsTilesBursting() || !IsTurnPending();
+    return PGameState->bGameHasStarted;
+}
+
+void AMatch3GameMode::ReceiveRequestToEndTurn()
+{
+    if(PlayerMove->IsPendingFinish())
+        return;
     
     const int EndedOnTurnNum = PGameState->TurnCounter;
-    NotifyGameplayOptionsTurnEnding(EndedOnTurnNum);
     
-    if(bSafeToSave)
-        CallInstanceToSaveCurrentState();
+    NotifyGameplayOptionsTurnEnding(EndedOnTurnNum);
+    GetWorldTimerManager().SetTimer(TimerHandler, this, &AMatch3GameMode::TryEndTurn, 1.f, true, 0.f);
 }
 
 void AMatch3GameMode::ReceiveRequestToEndTurn(ATile* LastTileGrabbed)
 {
-    if(GetGrid()->HasTilePositionChanged(LastTileGrabbed))
-    {
-        const bool bSaveOnPosChange = true;
-        ReceiveRequestToEndTurn(bSaveOnPosChange);
-    }
+    ReceiveRequestToEndTurn();
 }
 
-void AMatch3GameMode::CallInstanceToSaveCurrentState()
+void AMatch3GameMode::TryEndTurn()
 {
+    if(PendingGameplayFinish())
+        return;
+    
     UPOdimhGameInstance* Instance = GetGameInstance<UPOdimhGameInstance>();
-    Instance->SaveGame(CONTINUE_GAME_SLOT, (int32)EPlayer::One, false);
-    Instance->SaveGame(LAST_SUCCESSFUL_SLOT, (int32)EPlayer::One, false);
+    PGameState->TurnCounter++;
+    SaveCurrentGameState(Instance);
     Instance->EventManager->ClearEventQueue();
+    PlayerMove->Reset();
+    PlayerMove->Start();
+    GetWorldTimerManager().ClearTimer(TimerHandler);
+}
+
+void AMatch3GameMode::SaveCurrentGameState(UPOdimhGameInstance* Instance)
+{
+    const bool bNewGame = true;
+    
+    if(Instance->SafeToSave(!bNewGame))
+    {
+        Instance->SaveGame(CONTINUE_GAME_SLOT, (int32)EPlayer::One);
+        Instance->SaveGame(LAST_SUCCESSFUL_SLOT, (int32)EPlayer::One);
+    }
 }
 
 void AMatch3GameMode::Give(AActor* Controller, const FMatch3GameAction& Action, const bool bExecuteNow)
@@ -349,10 +378,13 @@ void AMatch3GameMode::ReceiveActorPickedNotification(AActor* PickedActor)
 void AMatch3GameMode::ReceiveActorReleasedNotification(AActor* ReleasedActor)
 {
     if(ATile* Tile = Cast<ATile>(ReleasedActor))
+    {
         ReceiveRequestToEndTurn(Tile);
+        PlayerMove->End();
+    }
 }
 
-const bool AMatch3GameMode::IsTurnPending() const
+const bool AMatch3GameMode::PendingGameplayFinish() const
 {
     for(AActor* Option : GameplayOptions)
     {

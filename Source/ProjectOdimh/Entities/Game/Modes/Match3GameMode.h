@@ -55,14 +55,20 @@ public:
     UFUNCTION(BlueprintCallable)
     void StartGame(const bool bIsNewGame);
     
+    const bool HasGameStarted() const;
+    
+    UGameEvent* NewTurn(const FName& TurnDescription, const bool bStartTurnNow);
+    
     UFUNCTION(BlueprintImplementableEvent)
     void OnTurnStart(const FString& ParticipantName);
     
-    void ReceiveRequestToEndTurn(const bool bSaveNow);
+    void ReceiveRequestToEndTurn();
     void ReceiveRequestToEndTurn(ATile* LastTileGrabbed);
     
+    void TryEndTurn();
+    
     UFUNCTION(BlueprintCallable)
-    void CallInstanceToSaveCurrentState();
+    void SaveCurrentGameState(UPOdimhGameInstance* Instance);
     
     void Give(AActor* Controller, const FMatch3GameAction& Action, const bool bExecuteNow = true);
     
@@ -75,7 +81,7 @@ public:
     UFUNCTION()
     void ReceiveActorPickedNotification(AActor* PickedActor);
     
-    const bool IsTurnPending() const;
+    const bool PendingGameplayFinish() const;
     
 protected:
     virtual void BeginPlay() override;
@@ -95,6 +101,11 @@ protected:
     class APOdimhGameState* PGameState;
     
 private:
+    UPROPERTY()
+    UGameEvent* PlayerMove;
+    
+    FTimerHandle TimerHandler;
+    
     // deprecate
     AParticipantTurn* NewParticipant(const FActorSpawnParameters& Params);
     const bool ParticipantsBlueprintIsValid();

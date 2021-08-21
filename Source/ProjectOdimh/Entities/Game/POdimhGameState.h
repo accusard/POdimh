@@ -16,7 +16,7 @@ class PROJECTODIMH_API APOdimhGameState : public AGameStateBase
 	
 public:
     UPROPERTY(BlueprintReadOnly)
-    int32 TurnCounter;
+    int32 TurnCounter = 1;
     
     UPROPERTY(BlueprintReadWrite)
     int32 AwarenessCounter;

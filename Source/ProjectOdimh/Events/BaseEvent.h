@@ -31,7 +31,7 @@ public:
     /** Perform any final event processing and let the state of the event know that it has finished */
     void End();
     
-    void ResetEvent();
+    void Reset();
     
     /** Checks if End() have not been called yet */
     const bool IsPendingFinish() const;
