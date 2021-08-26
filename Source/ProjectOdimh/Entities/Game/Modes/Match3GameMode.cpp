@@ -131,6 +131,8 @@ void AMatch3GameMode::StartPlay()
 {
     Super::StartPlay();
     
+    PGameState = GetGameState<APOdimhGameState>();
+    
     // initialize
     for(AActor* Option : GameplayOptions)
     {
@@ -143,16 +145,14 @@ void AMatch3GameMode::StartPlay()
         }
     }
     
-    bool bIsNewGame = false;
-    const int32 Player1 = (int32)EPlayer::One;
-    PGameState = GetGameState<APOdimhGameState>();
+    StartGame();
+}
+
+void AMatch3GameMode::StartMatch()
+{
+    Super::StartMatch();
     
-    
-    if(!TryLoadGame(CONTINUE_GAME_SLOT, Player1))
-    {
-        if(!TryLoadGame(LAST_SUCCESSFUL_SLOT, Player1))
-            bIsNewGame = NewGame();
-    }
+
 }
 
 void AMatch3GameMode::NotifyGameplayOptionsTurnEnding(const int OnTick)
@@ -270,15 +270,6 @@ const bool AMatch3GameMode::TryLoadGame(const FString &SlotName, const int32 Pla
     return false;
 }
 
-const bool AMatch3GameMode::NewGame()
-{
-    PGameState->bGameHasStarted = false;
-    PGameState->ParticipantIndex = 1;
-    GetGrid()->NewGrid();
-
-    return true;
-}
-
 UGameEvent* AMatch3GameMode::NewTurn(const FName& TurnDescription, const bool bStartTurnNow)
 {
     UGameEvent* Turn = NewObject<UGameEvent>(GetGrid()->GetController(), TurnDescription);
@@ -288,15 +279,26 @@ UGameEvent* AMatch3GameMode::NewTurn(const FName& TurnDescription, const bool bS
     return Turn;
 }
 
-void AMatch3GameMode::StartGame(const bool bIsNewGame)
+void AMatch3GameMode::StartGame()
 {
-    PGameState->bGameHasStarted = true;
+    bool bIsNewGame = false;
+    PlayerMove = NewTurn("Player Move", true);
     const int32 Player1 = (int32)EPlayer::One;
     
-    PlayerMove = NewTurn("Player Move", true);
-    
-    if(bIsNewGame)
+    if(!TryLoadGame(CONTINUE_GAME_SLOT, Player1))
     {
+        if(!TryLoadGame(LAST_SUCCESSFUL_SLOT, Player1))
+            GetGrid()->NewGrid();
+    }
+}
+
+void AMatch3GameMode::OnStartGame_Implementation(const bool bSaveGame)
+{
+    PGameState->bGameHasStarted = true;
+
+    if(bSaveGame)
+    {
+        const int32 Player1 = (int32)EPlayer::One;
         UPOdimhGameInstance* Instance = GetGameInstance<UPOdimhGameInstance>();
         Instance->SaveGame(RESET_GAME_SLOT, Player1);
         Instance->SaveGame(CONTINUE_GAME_SLOT, Player1);

@@ -3,25 +3,27 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/GameStateBase.h"
+#include "GameFramework/GameState.h"
 #include "POdimhGameState.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECTODIMH_API APOdimhGameState : public AGameStateBase
+class PROJECTODIMH_API APOdimhGameState : public AGameState
 {
 	GENERATED_BODY()
 	
 public:
+    APOdimhGameState();
+    
     UPROPERTY(BlueprintReadOnly)
     int32 TurnCounter = 1;
     
     UPROPERTY(BlueprintReadWrite)
     int32 AwarenessCounter;
     
-    uint32 ParticipantIndex;
+    uint32 ParticipantIndex = 1;
     
     /** Tracks the current score of the game */
     UPROPERTY()

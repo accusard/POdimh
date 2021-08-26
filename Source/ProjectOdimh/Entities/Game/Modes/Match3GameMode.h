@@ -20,7 +20,7 @@ class ATimestepGameplayOptions;
  * The mode for a Match3 game. Tracks a turn-based puzzle game.
  */
 UCLASS()
-class PROJECTODIMH_API AMatch3GameMode : public AGameModeBase, public IDataSaveInterface
+class PROJECTODIMH_API AMatch3GameMode : public AGameMode, public IDataSaveInterface
 {
 	GENERATED_BODY()
 	
@@ -31,6 +31,7 @@ public:
     virtual void StartPlay() override;
     virtual void Save(USaveGame* Data) override;
     virtual const bool Load(USaveGame* Data) override;
+    virtual void StartMatch() override;
     
     void NotifyGameplayOptionsTurnEnding(const int TurnNum);
     
@@ -50,10 +51,11 @@ public:
     
     const bool TryLoadGame(const FString &SlotName, const int32 PlayerIndex);
     
-    const bool NewGame();
+    UFUNCTION()
+    void StartGame();
     
-    UFUNCTION(BlueprintCallable)
-    void StartGame(const bool bIsNewGame);
+    UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+    void OnStartGame(const bool bSaveGame);
     
     const bool HasGameStarted() const;
     

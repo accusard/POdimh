@@ -57,15 +57,18 @@ void AGridPlayerController::SetupInputComponent()
 
 void AGridPlayerController::BeginTouch(ETouchIndex::Type FingerIndex, FVector Location)
 {
-    if(!UGameplayStatics::IsGamePaused(this) && GridPtr->IsPickState() && TileHandlerComponent)
+    if(GridPtr)
     {
-        FHitResult Hit = FHitResult();
-        NewInput("Player Input Event", false, FingerIndex, Location);
-        
-        if(GetHitResultUnderFinger(FingerIndex, ECollisionChannel::ECC_WorldDynamic, false, Hit))
+        if(!UGameplayStatics::IsGamePaused(this) && GridPtr->IsPickState() && TileHandlerComponent)
         {
-            if(GrabActor(this, TileHandlerComponent, Hit))
-                InputEvent->Start();
+            FHitResult Hit = FHitResult();
+            NewInput("Player Input Event", false, FingerIndex, Location);
+            
+            if(GetHitResultUnderFinger(FingerIndex, ECollisionChannel::ECC_WorldDynamic, false, Hit))
+            {
+                if(GrabActor(this, TileHandlerComponent, Hit))
+                    InputEvent->Start();
+            }
         }
     }
 }

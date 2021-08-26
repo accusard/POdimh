@@ -3,4 +3,7 @@
 #include "POdimhGameState.h"
 
 
-
+APOdimhGameState::APOdimhGameState() : bGameHasStarted(false)
+{
+    
+}
