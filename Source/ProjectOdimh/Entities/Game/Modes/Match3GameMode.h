@@ -51,12 +51,13 @@ public:
     
     const bool TryLoadGame(const FString &SlotName, const int32 PlayerIndex);
     
-    UFUNCTION()
+    UFUNCTION(BlueprintCallable)
     void StartGame();
     
     UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
     void OnStartGame(const bool bSaveGame);
     
+    UFUNCTION(BlueprintPure)
     const bool HasGameStarted() const;
     
     UGameEvent* NewTurn(const FName& TurnDescription, const bool bStartTurnNow);
@@ -106,8 +107,8 @@ private:
     UPROPERTY()
     UGameEvent* PlayerMove;
     
-    FTimerHandle TimerHandler;
-    
+    FTimerHandle TurnTickTimerHandler;
+    FTimerHandle GameStartTimerHandler;
     // deprecate
     AParticipantTurn* NewParticipant(const FActorSpawnParameters& Params);
     const bool ParticipantsBlueprintIsValid();

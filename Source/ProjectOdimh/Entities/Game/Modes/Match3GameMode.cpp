@@ -113,6 +113,7 @@ void AMatch3GameMode::BeginPlay()
 {
     Super::BeginPlay();
     
+    PGameState = GetGameState<APOdimhGameState>();
     UEventManager* EvtManager = Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager;
     
     EvtManager->OnActorPicked.AddUniqueDynamic(this, &AMatch3GameMode::ReceiveActorPickedNotification);
@@ -131,8 +132,6 @@ void AMatch3GameMode::StartPlay()
 {
     Super::StartPlay();
     
-    PGameState = GetGameState<APOdimhGameState>();
-    
     // initialize
     for(AActor* Option : GameplayOptions)
     {
@@ -145,14 +144,14 @@ void AMatch3GameMode::StartPlay()
         }
     }
     
-    StartGame();
+    GetWorldTimerManager().SetTimer(GameStartTimerHandler, this, &AMatch3GameMode::StartGame, 1.f, true);
 }
 
 void AMatch3GameMode::StartMatch()
 {
     Super::StartMatch();
     
-
+    
 }
 
 void AMatch3GameMode::NotifyGameplayOptionsTurnEnding(const int OnTick)
@@ -281,15 +280,20 @@ UGameEvent* AMatch3GameMode::NewTurn(const FName& TurnDescription, const bool bS
 
 void AMatch3GameMode::StartGame()
 {
-    bool bIsNewGame = false;
-    PlayerMove = NewTurn("Player Move", true);
-    const int32 Player1 = (int32)EPlayer::One;
     
-    if(!TryLoadGame(CONTINUE_GAME_SLOT, Player1))
+    if(AActor* ActiveGame = GetGrid())
     {
-        if(!TryLoadGame(LAST_SUCCESSFUL_SLOT, Player1))
-            GetGrid()->NewGrid();
+        const int32 Player1 = (int32)EPlayer::One;
+        
+        if(!TryLoadGame(CONTINUE_GAME_SLOT, Player1))
+        {
+            if(!TryLoadGame(LAST_SUCCESSFUL_SLOT, Player1))
+                Cast<AGrid>(ActiveGame)->NewGrid();
+        }
+        PlayerMove = NewTurn("Player Move", true);
+        GetWorldTimerManager().ClearTimer(GameStartTimerHandler);
     }
+    
 }
 
 void AMatch3GameMode::OnStartGame_Implementation(const bool bSaveGame)
@@ -319,7 +323,7 @@ void AMatch3GameMode::ReceiveRequestToEndTurn()
     const int EndedOnTurnNum = PGameState->TurnCounter;
     
     NotifyGameplayOptionsTurnEnding(EndedOnTurnNum);
-    GetWorldTimerManager().SetTimer(TimerHandler, this, &AMatch3GameMode::TryEndTurn, 1.f, true, 0.f);
+    GetWorldTimerManager().SetTimer(TurnTickTimerHandler, this, &AMatch3GameMode::TryEndTurn, 1.f, true, 0.f);
 }
 
 void AMatch3GameMode::ReceiveRequestToEndTurn(ATile* LastTileGrabbed)
@@ -338,7 +342,7 @@ void AMatch3GameMode::TryEndTurn()
     Instance->EventManager->ClearEventQueue();
     PlayerMove->Reset();
     PlayerMove->Start();
-    GetWorldTimerManager().ClearTimer(TimerHandler);
+    GetWorldTimerManager().ClearTimer(TurnTickTimerHandler);
 }
 
 void AMatch3GameMode::SaveCurrentGameState(UPOdimhGameInstance* Instance)
