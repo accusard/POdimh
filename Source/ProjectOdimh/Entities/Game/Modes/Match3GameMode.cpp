@@ -27,8 +27,8 @@ void AMatch3GameMode::Save(USaveGame* DataPtr)
     if(UPOdimhSaveGame* Data = Cast<UPOdimhSaveGame>(DataPtr))
     {
         Data->CustomInt.Add("GameScore", GetCurrentScore());
-        Data->CustomInt.Add("POdimhAwareness", PGameState->AwarenessCounter);
-        Data->CustomInt.Add("TurnCounter", PGameState->TurnCounter);
+        Data->CustomInt.Add("POdimhAwareness", GameState->AwarenessCounter);
+        Data->CustomInt.Add("TurnCounter", GameState->TurnCounter);
     }
     
     if(Participants.Num() == 0) return;
@@ -41,8 +41,8 @@ const bool AMatch3GameMode::Load(USaveGame* DataPtr)
     if(UPOdimhSaveGame* Data = Cast<UPOdimhSaveGame>(DataPtr))
     {
         SetCurrentScore(Data->CustomInt["GameScore"]);
-        PGameState->AwarenessCounter = Data->CustomInt["POdimhAwareness"];
-        PGameState->TurnCounter = Data->CustomInt["TurnCounter"];
+        GameState->AwarenessCounter = Data->CustomInt["POdimhAwareness"];
+        GameState->TurnCounter = Data->CustomInt["TurnCounter"];
     }
     return true;
 }
@@ -52,7 +52,7 @@ const bool AMatch3GameMode::LoadParticipants(USaveGame* Data)
     // load from save
     if(UPOdimhSaveGame* SaveData = Cast<UPOdimhSaveGame>(Data))
     {
-        PGameState->ParticipantIndex = SaveData->CustomInt["CurrentParticipantIndex"];
+        GameState->ParticipantIndex = SaveData->CustomInt["CurrentParticipantIndex"];
         
         if(Participants.Num() > 0)
             return true;
@@ -95,25 +95,25 @@ TMap<uint32, AParticipantTurn*>& AMatch3GameMode::GetParticipants()
 
 void AMatch3GameMode::AddScore(const int32 Score)
 {
-    if(PGameState->bGameHasStarted)
-        PGameState->CurrentScore += Score;
+    if(GameState->bGameHasStarted)
+        GameState->CurrentScore += Score;
 }
 
 const int AMatch3GameMode::GetCurrentScore()
 {
-    return PGameState->CurrentScore;
+    return GameState->CurrentScore;
 }
 
 void AMatch3GameMode::SetCurrentScore(const int32 Score)
 {
-    PGameState->CurrentScore = Score;
+    GameState->CurrentScore = Score;
 }
 
 void AMatch3GameMode::BeginPlay()
 {
     Super::BeginPlay();
     
-    PGameState = GetGameState<APOdimhGameState>();
+    GameState = GetGameState<APOdimhGameState>();
     UEventManager* EvtManager = Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager;
     
     EvtManager->OnActorPicked.AddUniqueDynamic(this, &AMatch3GameMode::ReceiveActorPickedNotification);
@@ -232,7 +232,7 @@ void AMatch3GameMode::SaveParticipants(USaveGame* DataPtr)
     if(UPOdimhSaveGame* SaveData = Cast<UPOdimhSaveGame>(DataPtr))
     {
         const int32 NumOfEntities = Participants.Num();
-        SaveData->CustomInt.Add("CurrentParticipantIndex", PGameState->ParticipantIndex);
+        SaveData->CustomInt.Add("CurrentParticipantIndex", GameState->ParticipantIndex);
         
         // loop and cycle through for each element
 //        for(int i = 0; i < Participants.Num(); i++)
@@ -298,7 +298,7 @@ void AMatch3GameMode::StartGame()
 
 void AMatch3GameMode::OnStartGame_Implementation(const bool bSaveGame)
 {
-    PGameState->bGameHasStarted = true;
+    GameState->bGameHasStarted = true;
 
     if(bSaveGame)
     {
@@ -312,7 +312,7 @@ void AMatch3GameMode::OnStartGame_Implementation(const bool bSaveGame)
 
 const bool AMatch3GameMode::HasGameStarted() const
 {
-    return PGameState->bGameHasStarted;
+    return GameState->bGameHasStarted;
 }
 
 void AMatch3GameMode::ReceiveRequestToEndTurn()
@@ -320,7 +320,7 @@ void AMatch3GameMode::ReceiveRequestToEndTurn()
     if(PlayerMove->IsPendingFinish())
         return;
     
-    const int EndedOnTurnNum = PGameState->TurnCounter;
+    const int EndedOnTurnNum = GameState->TurnCounter;
     
     NotifyGameplayOptionsTurnEnding(EndedOnTurnNum);
     GetWorldTimerManager().SetTimer(TurnTickTimerHandler, this, &AMatch3GameMode::TryEndTurn, 1.f, true, 0.f);
@@ -337,7 +337,7 @@ void AMatch3GameMode::TryEndTurn()
         return;
     
     UPOdimhGameInstance* Instance = GetGameInstance<UPOdimhGameInstance>();
-    PGameState->TurnCounter++;
+    GameState->TurnCounter++;
     SaveCurrentGameState(Instance);
     Instance->EventManager->ClearEventQueue();
     PlayerMove->Reset();

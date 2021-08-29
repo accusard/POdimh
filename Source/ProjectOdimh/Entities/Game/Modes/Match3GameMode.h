@@ -101,7 +101,7 @@ protected:
     UPROPERTY(BlueprintReadOnly)
     TArray<AActor*> GameplayOptions;
     
-    class APOdimhGameState* PGameState;
+    class APOdimhGameState* GameState;
     
 private:
     UPROPERTY()
