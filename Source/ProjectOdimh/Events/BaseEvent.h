@@ -34,16 +34,19 @@ public:
     void Reset();
     
     /** Checks if End() have not been called yet */
+    UFUNCTION(BlueprintPure, Category="POdimh Event")
     const bool IsPendingFinish() const;
     
+    UFUNCTION(BlueprintPure, Category="POdimh Event")
     const bool HasStarted() const;
     
-    UPROPERTY(BlueprintReadOnly, Category="POdimh Events")
+    UPROPERTY(BlueprintReadOnly, Category="POdimh Event")
     UEventManager* Manager;
 
-    UPROPERTY(BlueprintReadOnly, Category="POdimh Events")
+    UPROPERTY(BlueprintReadOnly, Category="POdimh Event")
     UPOdimhGameInstance* GameInstance;
     
+    UPROPERTY(BlueprintReadOnly, Category="POdimh Event")
     AGameModeBase* GameMode;
     
     UObject* GetOwner() const;

@@ -33,9 +33,9 @@ public:
 	UEventManager();
     
     template<class T>
-    T* NewEvent(UObject* Outer, FName Name, const bool bStartNow)
+    T* NewEvent(UObject* Outer, FName Identifier, const bool bStartNow)
     {
-        T* NewEvent = NewObject<T>(Outer, Name);
+        T* NewEvent = NewObject<T>(Outer, Identifier);
         if(UBaseEvent* Event = Cast<UBaseEvent>(NewEvent))
         {
             Event->Init();

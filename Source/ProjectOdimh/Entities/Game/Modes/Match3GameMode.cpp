@@ -280,18 +280,19 @@ UGameEvent* AMatch3GameMode::NewTurn(const FName& TurnDescription, const bool bS
 
 void AMatch3GameMode::StartGame()
 {
-    
-    if(AActor* ActiveGame = GetGrid())
+    if(AGrid* ActiveGame = GetGrid())
     {
         const int32 Player1 = (int32)EPlayer::One;
         
         if(!TryLoadGame(CONTINUE_GAME_SLOT, Player1))
         {
             if(!TryLoadGame(LAST_SUCCESSFUL_SLOT, Player1))
-                Cast<AGrid>(ActiveGame)->NewGrid();
+                ActiveGame->NewGrid();
         }
         PlayerMove = NewTurn("Player Move", true);
         GetWorldTimerManager().ClearTimer(GameStartTimerHandler);
+        GameState->StartState = NewObject<UGameEvent>(ActiveGame->GetController(), "StartState");
+        GameState->StartState->Init();
     }
     
 }
@@ -299,15 +300,19 @@ void AMatch3GameMode::StartGame()
 void AMatch3GameMode::OnStartGame_Implementation(const bool bSaveGame)
 {
     GameState->bGameHasStarted = true;
-
+    UPOdimhGameInstance* Instance = GetGameInstance<UPOdimhGameInstance>();
+    
     if(bSaveGame)
     {
         const int32 Player1 = (int32)EPlayer::One;
-        UPOdimhGameInstance* Instance = GetGameInstance<UPOdimhGameInstance>();
+        
         Instance->SaveGame(RESET_GAME_SLOT, Player1);
         Instance->SaveGame(CONTINUE_GAME_SLOT, Player1);
         Instance->SaveGame(LAST_SUCCESSFUL_SLOT, Player1);
     }
+    
+    GameState->StartState->Start();
+    Instance->EventManager->OnActorEvent.Broadcast(this, GameState->StartState);
 }
 
 const bool AMatch3GameMode::HasGameStarted() const

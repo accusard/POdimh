@@ -31,5 +31,8 @@ public:
     
     UPROPERTY()
     uint8 bGameHasStarted : 1;
+    
+    UPROPERTY()
+    class UGameEvent* StartState;
 
 };
