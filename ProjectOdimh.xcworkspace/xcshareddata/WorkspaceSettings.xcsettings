@@ -4,5 +4,7 @@
 <dict>
 	<key>DisableBuildSystemDeprecationWarning</key>
 	<true/>
+	<key>DisableBuildSystemDeprecationDiagnostic</key>
+	<true/>
 </dict>
 </plist>
