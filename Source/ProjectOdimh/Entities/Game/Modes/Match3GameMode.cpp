@@ -112,16 +112,18 @@ void AMatch3GameMode::SetCurrentScore(const int32 Score)
 void AMatch3GameMode::BeginPlay()
 {
     Super::BeginPlay();
-    
+
     GameState = GetGameState<APOdimhGameState>();
     UEventManager* EvtManager = Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager;
-    
+
     EvtManager->OnActorPicked.AddUniqueDynamic(this, &AMatch3GameMode::ReceiveActorPickedNotification);
     EvtManager->OnActorReleased.AddUniqueDynamic(this, &AMatch3GameMode::ReceiveActorReleasedNotification);
-    
+
     if(TimerClass)
-           TimerPtr = GetWorld()->SpawnActor<ATimestepGameplayOptions>(TimerClass);
-    
+        TimerPtr = GetWorld()->SpawnActor<ATimestepGameplayOptions>(TimerClass);
+    else
+        TimerPtr = GetWorld()->SpawnActor<ATimestepGameplayOptions>();
+
     for(TSubclassOf<AActor> Class : GameplayOptionsClass)
     {
         GameplayOptions.Add(GetWorld()->SpawnActor<AActor>(Class));
@@ -135,7 +137,7 @@ void AMatch3GameMode::StartPlay()
     // initialize
     for(AActor* Option : GameplayOptions)
     {
-        if(IGameplayOptionsInterface* ImplmentsGameplay = Cast<IGameplayOptionsInterface>(Option))
+        if(IGameplayOptionsInterface* ImplementsGameplay = Cast<IGameplayOptionsInterface>(Option))
         {
             const uint32 StepsBeforeTick = TimerPtr->GetDefaultStepsBeforeTick();
             const FGameStats Steps(StepsBeforeTick);
