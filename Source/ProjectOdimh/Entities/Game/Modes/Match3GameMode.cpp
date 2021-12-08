@@ -139,7 +139,7 @@ void AMatch3GameMode::StartPlay()
     {
         if(IGameplayOptionsInterface* ImplementsGameplay = Cast<IGameplayOptionsInterface>(Option))
         {
-            const uint32 StepsBeforeTick = TimerPtr->GetDefaultStepsBeforeTick();
+            const uint32 StepsBeforeTick = TimerPtr->GetTickCounter();
             const FGameStats Steps(StepsBeforeTick);
             
             TimerPtr->AddActorToTick(Option, Steps);

@@ -85,10 +85,10 @@ void ATimestepGameplayOptions::SetActorToTickOn(AActor* SetActor, const int Tick
         TickingActors[SetActor].Current = TickOn;
 }
 
-void ATimestepGameplayOptions::ResetAllActorsTickDefault()
+void ATimestepGameplayOptions::ResetAllActorsTickCounter()
 {
     for(auto& Map : TickingActors)
-        Map.Value = FGameStats(DefaultTick);
+        Map.Value = FGameStats(TickCounter);
 }
 
 void ATimestepGameplayOptions::TickStepTimer(AActor* ActPtr, const int OnTick)

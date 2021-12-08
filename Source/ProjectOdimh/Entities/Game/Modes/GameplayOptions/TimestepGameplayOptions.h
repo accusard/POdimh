@@ -32,7 +32,7 @@ public:
     void SetActorToTickOn(AActor* SetActor, const int TickOn);
     
     UFUNCTION(BlueprintCallable)
-    void ResetAllActorsTickDefault();
+    void ResetAllActorsTickCounter();
     
     UFUNCTION()
     void TickStepTimer(AActor* Actor, const int OnTick);
@@ -43,7 +43,7 @@ public:
     const bool ShouldTick(AActor* CheckActor, const int OnTick);
     const TArray<AActor*> ShouldTick(const int OnTick);
     
-    const uint32 GetDefaultStepsBeforeTick() const { return DefaultTick; }
+    const uint32 GetTickCounter() const { return TickCounter; }
     
 protected:
 	// Called when the game starts or when spawned
@@ -53,5 +53,5 @@ protected:
     TMap<AActor*, FGameStats> TickingActors;
     
     UPROPERTY(EditDefaultsOnly)
-    uint32 DefaultTick;
+    uint32 TickCounter;
 };
