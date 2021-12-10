@@ -15,7 +15,11 @@ class PROJECTODIMH_API AGameplay : public AActor, public IGameplayOptionsInterfa
 public:	
 	// Sets default values for this actor's properties
 	AGameplay();
+    const uint32 GetNumOfTicksBeforeRun() const { return NumOfTicksBeforeRun; }
     
+protected:
+    UPROPERTY(EditDefaultsOnly)
+    uint32 NumOfTicksBeforeRun;
 
 
 

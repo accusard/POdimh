@@ -65,15 +65,14 @@ const int AGameplayRunModeBase::GetOnTickFrom(AActor* Gameplay)
     return OnTick;
 }
 
-void AGameplayRunModeBase::AddGameplayToTick(AActor* Gameplay, const FGameStats& TickOnCount)
+void AGameplayRunModeBase::SetGameplayToTickOn(AActor* Gameplay, const FGameStats& TickOn)
 {
-    TickingGameplays.Add(Gameplay, TickOnCount);
-}
-
-void AGameplayRunModeBase::SetGameplayToTickOn(AActor* SetGameplay, const int TickOn)
-{
-    if(TickingGameplays.Contains(SetGameplay))
-        TickingGameplays[SetGameplay].Current = TickOn;
+    if(Gameplay == nullptr) return;
+    
+    if(TickingGameplays.Contains(Gameplay))
+        TickingGameplays[Gameplay].Current = TickOn.Original;
+    else
+        TickingGameplays.Add(Gameplay, TickOn);
 }
 
 void AGameplayRunModeBase::StepTick(AActor* ActPtr, const int OnTick)

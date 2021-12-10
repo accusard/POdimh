@@ -100,7 +100,7 @@ protected:
     AGameplayRunModeBase* Mode;
     
     UPROPERTY(BlueprintReadOnly)
-    TArray<AActor*> Gameplay;
+    TArray<class AGameplay*> Gameplays;
     
     class APOdimhGameState* GameState;
     

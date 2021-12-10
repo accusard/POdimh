@@ -22,10 +22,8 @@ public:
     
     const int GetOnTickFrom(AActor* Gameplay);
     
-    void AddGameplayToTick(AActor* Gameplay, const FGameStats& Tick);
-    
     UFUNCTION(BlueprintCallable)
-    void SetGameplayToTickOn(AActor* SetGameplay, const int TickOn);
+    void SetGameplayToTickOn(AActor* SetGameplay, const FGameStats& Tick);
     
     UFUNCTION()
     void StepTick(AActor* Gameplay, const int OnTick);
@@ -36,15 +34,11 @@ public:
     const bool ShouldTick(AActor* CheckGameplay, const int OnTick);
     const TArray<AActor*> ShouldTick(const int OnTick);
     
-    const uint32 GetTickCounter() const { return TickCounter; }
-    
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
     UPROPERTY()
     TMap<AActor*, FGameStats> TickingGameplays;
-    
-    UPROPERTY(EditDefaultsOnly)
-    uint32 TickCounter;
+
 };

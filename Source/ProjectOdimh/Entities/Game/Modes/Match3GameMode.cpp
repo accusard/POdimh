@@ -127,7 +127,7 @@ void AMatch3GameMode::BeginPlay()
 
     for(TSubclassOf<AGameplay> Class : GameplayOptions)
     {
-        Gameplay.Add(GetWorld()->SpawnActor<AActor>(Class));
+        Gameplays.Add(GetWorld()->SpawnActor<AGameplay>(Class));
     }
 }
 
@@ -136,14 +136,14 @@ void AMatch3GameMode::StartPlay()
     Super::StartPlay();
     
     // initialize
-    for(AActor* Option : Gameplay)
+    for(AGameplay* Option : Gameplays)
     {
         if(IGameplayOptionsInterface* ImplementsGameplay = Cast<IGameplayOptionsInterface>(Option))
         {
-            const uint32 StepsBeforeTick = Mode->GetTickCounter();
+            const uint32 StepsBeforeTick = Option->GetNumOfTicksBeforeRun();
             const FGameStats Steps(StepsBeforeTick);
             
-            Mode->AddGameplayToTick(Option, Steps);
+            Mode->SetGameplayToTickOn(Option, Steps);
         }
     }
     
@@ -160,7 +160,7 @@ void AMatch3GameMode::StartMatch()
 void AMatch3GameMode::NotifyGameplayOptionsTurnEnding(const int OnTick)
 {
     // call to whoever is concerned with the turn ending
-    for(AActor* It : Gameplay)
+    for(AActor* It : Gameplays)
         Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager->CallbackOnCount.Broadcast(It, OnTick);
 }
 
@@ -401,7 +401,7 @@ void AMatch3GameMode::ReceiveActorReleasedNotification(AActor* ReleasedActor)
 
 const bool AMatch3GameMode::PendingGameplayFinish() const
 {
-    for(AActor* Option : Gameplay)
+    for(AActor* Option : Gameplays)
     {
         if(Cast<IGameplayOptionsInterface>(Option)->Execute_IsRunning(Option))
             return true;
