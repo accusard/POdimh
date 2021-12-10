@@ -25,13 +25,7 @@ public:
     void AddGameplayToTick(AActor* Gameplay, const FGameStats& Tick);
     
     UFUNCTION(BlueprintCallable)
-    void ResetGameplaysTickCounter(TArray<AActor*> Gameplays);
-    
-    UFUNCTION(BlueprintCallable)
     void SetGameplayToTickOn(AActor* SetGameplay, const int TickOn);
-    
-    UFUNCTION(BlueprintCallable)
-    void ResetAllGameplaysTickCounter();
     
     UFUNCTION()
     void StepTick(AActor* Gameplay, const int OnTick);

@@ -70,25 +70,10 @@ void AGameplayRunModeBase::AddGameplayToTick(AActor* Gameplay, const FGameStats&
     TickingGameplays.Add(Gameplay, TickOnCount);
 }
 
-void AGameplayRunModeBase::ResetGameplaysTickCounter(TArray<AActor*> AllGameplays)
-{
-    for(AActor* It : AllGameplays)
-    {
-        if(TickingGameplays.Contains(It))
-            TickingGameplays[It].Current = TickingGameplays[It].Original;
-    }
-}
-
 void AGameplayRunModeBase::SetGameplayToTickOn(AActor* SetGameplay, const int TickOn)
 {
     if(TickingGameplays.Contains(SetGameplay))
         TickingGameplays[SetGameplay].Current = TickOn;
-}
-
-void AGameplayRunModeBase::ResetAllGameplaysTickCounter()
-{
-    for(auto& Map : TickingGameplays)
-        Map.Value = FGameStats(TickCounter);
 }
 
 void AGameplayRunModeBase::StepTick(AActor* ActPtr, const int OnTick)
