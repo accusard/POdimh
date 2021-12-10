@@ -5,11 +5,10 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Entities/Game/Modes/GameplayOptions/Gameplay.h"
-#include "ClassInterface/GameplayOptionsInterface.h"
 #include "Logic.generated.h"
 
 UCLASS()
-class PROJECTODIMH_API ALogic : public AGameplay, public IGameplayOptionsInterface
+class PROJECTODIMH_API ALogic : public AGameplay
 {
 	GENERATED_BODY()
 	

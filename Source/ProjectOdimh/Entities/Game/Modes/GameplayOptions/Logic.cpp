@@ -1,8 +1,8 @@
 // Copyright 2017-2021 Vanny Sou. All Rights Reserved.
 
 
-#include "Entities/Game/Modes/GameplayOptions/Logic.h"
-#include "ClassInterface/LogicInterface.h"
+#include "Logic.h"
+
 
 // Sets default values
 ALogic::ALogic()

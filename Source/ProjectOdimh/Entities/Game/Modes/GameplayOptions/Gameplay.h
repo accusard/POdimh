@@ -4,10 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "ClassInterface/GameplayOptionsInterface.h"
 #include "Gameplay.generated.h"
 
 UCLASS()
-class PROJECTODIMH_API AGameplay : public AActor
+class PROJECTODIMH_API AGameplay : public AActor, public IGameplayOptionsInterface
 {
 	GENERATED_BODY()
 	

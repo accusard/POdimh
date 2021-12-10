@@ -7,14 +7,13 @@
 #include "Data/GameTypes.h"
 #include "Data/POdimhSaveGame.h"
 #include "ClassInterface/DataSaveInterface.h"
-#include "ClassInterface/GameplayOptionsInterface.h"
 #include "Entities/Game/Modes/GameplayOptions/Gameplay.h"
 #include "RelayLine.generated.h"
 
 class UBaseEvent;
 
 UCLASS()
-class PROJECTODIMH_API ARelayLine : public AGameplay, public IDataSaveInterface, public IGameplayOptionsInterface
+class PROJECTODIMH_API ARelayLine : public AGameplay, public IDataSaveInterface
 {
 	GENERATED_BODY()
 	
