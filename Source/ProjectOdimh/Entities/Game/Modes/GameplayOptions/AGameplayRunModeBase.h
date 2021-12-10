@@ -4,19 +4,18 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "ClassInterface/GameplayOptionsInterface.h"
 #include "ClassInterface/DataSaveInterface.h"
 #include "Data/FGameStats.h"
 #include "TimestepGameplayOptions.generated.h"
 
 UCLASS()
-class PROJECTODIMH_API ATimestepGameplayOptions : public AActor, public IDataSaveInterface, public IGameplayOptionsInterface
+class PROJECTODIMH_API AGameplayRunModeBase : public AActor, public IDataSaveInterface 
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	ATimestepGameplayOptions();
+	AGameplayRunModeBase();
 
     virtual void Save(USaveGame* Data) override;
     virtual const bool Load(USaveGame* Data) override;

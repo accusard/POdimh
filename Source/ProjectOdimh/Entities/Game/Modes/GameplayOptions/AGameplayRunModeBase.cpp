@@ -1,20 +1,20 @@
 // Copyright 2017-2021 Vanny Sou. All Rights Reserved.
 
 
-#include "Entities/Game/Modes/GameplayOptions/TimestepGameplayOptions.h"
+#include "TimestepGameplayOptions.h"
 #include "POdimhGameInstance.h"
 #include "ClassInterface/GameplayOptionsInterface.h"
 
 
 // Sets default values
-ATimestepGameplayOptions::ATimestepGameplayOptions()
+AGameplayRunModeBase::AGameplayRunModeBase()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
 }
 
-void ATimestepGameplayOptions::Save(USaveGame* Data)
+void AGameplayRunModeBase::Save(USaveGame* Data)
 {
     if(UPOdimhSaveGame* POdimhData = Cast<UPOdimhSaveGame>(Data))
     {
@@ -29,7 +29,7 @@ void ATimestepGameplayOptions::Save(USaveGame* Data)
     }
 }
 
-const bool ATimestepGameplayOptions::Load(USaveGame* Data)
+const bool AGameplayRunModeBase::Load(USaveGame* Data)
 {
     if(UPOdimhSaveGame* POdimhData = Cast<UPOdimhSaveGame>(Data))
     {
@@ -49,15 +49,15 @@ const bool ATimestepGameplayOptions::Load(USaveGame* Data)
 }
 
 // Called when the game starts or when spawned
-void ATimestepGameplayOptions::BeginPlay()
+void AGameplayRunModeBase::BeginPlay()
 {
 	Super::BeginPlay();
     
     UEventManager* EvtMgr = Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager;
-    EvtMgr->CallBackOnStepTick.AddDynamic(this, &ATimestepGameplayOptions::TickStepTimer);
+    EvtMgr->CallBackOnStepTick.AddDynamic(this, &AGameplayRunModeBase::TickStepTimer);
 }
 
-const int ATimestepGameplayOptions::GetOnTickFrom(AActor* Gameplay)
+const int AGameplayRunModeBase::GetOnTickFrom(AActor* Gameplay)
 {
     int OnTick = -1;
     if(TickingActors.Contains(Gameplay))
@@ -65,12 +65,12 @@ const int ATimestepGameplayOptions::GetOnTickFrom(AActor* Gameplay)
     return OnTick;
 }
 
-void ATimestepGameplayOptions::AddActorToTick(AActor* Actor, const FGameStats& TickOnCount)
+void AGameplayRunModeBase::AddActorToTick(AActor* Actor, const FGameStats& TickOnCount)
 {
     TickingActors.Add(Actor, TickOnCount);
 }
 
-void ATimestepGameplayOptions::ResetActorsTickCounter(TArray<AActor*> AllActors)
+void AGameplayRunModeBase::ResetActorsTickCounter(TArray<AActor*> AllActors)
 {
     for(AActor* It : AllActors)
     {
@@ -79,19 +79,19 @@ void ATimestepGameplayOptions::ResetActorsTickCounter(TArray<AActor*> AllActors)
     }
 }
 
-void ATimestepGameplayOptions::SetActorToTickOn(AActor* SetActor, const int TickOn)
+void AGameplayRunModeBase::SetActorToTickOn(AActor* SetActor, const int TickOn)
 {
     if(TickingActors.Contains(SetActor))
         TickingActors[SetActor].Current = TickOn;
 }
 
-void ATimestepGameplayOptions::ResetAllActorsTickCounter()
+void AGameplayRunModeBase::ResetAllActorsTickCounter()
 {
     for(auto& Map : TickingActors)
         Map.Value = FGameStats(TickCounter);
 }
 
-void ATimestepGameplayOptions::TickStepTimer(AActor* ActPtr, const int OnTick)
+void AGameplayRunModeBase::TickStepTimer(AActor* ActPtr, const int OnTick)
 {
     if(TickingActors.Num() > 0)
     {
@@ -103,7 +103,7 @@ void ATimestepGameplayOptions::TickStepTimer(AActor* ActPtr, const int OnTick)
     }
 }
 
-const int ATimestepGameplayOptions::GetTickOnTurn(AActor* CheckActor, const int CurrTurn)
+const int AGameplayRunModeBase::GetTickOnTurn(AActor* CheckActor, const int CurrTurn)
 {
     const int TickOn = GetOnTickFrom(CheckActor);
     
@@ -118,7 +118,7 @@ const int ATimestepGameplayOptions::GetTickOnTurn(AActor* CheckActor, const int 
     return TickOn;
 }
 
-const bool ATimestepGameplayOptions::ShouldTick(AActor* CheckActor, const int OnTick)
+const bool AGameplayRunModeBase::ShouldTick(AActor* CheckActor, const int OnTick)
 {
     if(TickingActors.Contains(CheckActor))
         return TickingActors[CheckActor].Current == 0 || OnTick % TickingActors[CheckActor].Current == 0;
@@ -126,7 +126,7 @@ const bool ATimestepGameplayOptions::ShouldTick(AActor* CheckActor, const int On
     return false;
 }
 
-const TArray<AActor*> ATimestepGameplayOptions::ShouldTick(const int OnTick)
+const TArray<AActor*> AGameplayRunModeBase::ShouldTick(const int OnTick)
 {
     TArray<AActor*> CheckTickedActors;
     for(auto& Map : TickingActors)

@@ -14,7 +14,7 @@ class AGrid;
 class ATile;
 class UGameEvent;
 class AParticipantTurn;
-class ATimestepGameplayOptions;
+class AGameplayRunModeBase;
 
 /**
  * The mode for a Match3 game. Tracks a turn-based puzzle game.
@@ -91,13 +91,13 @@ protected:
     
     /** The gameplay mode to run when Match3GameMode receive request to end turn */
     UPROPERTY(EditAnywhere, Category="Additional Gameplay")
-    TSubclassOf<ATimestepGameplayOptions> RunMode;
+    TSubclassOf<AGameplayRunModeBase> RunMode;
     
     UPROPERTY(EditAnywhere, Category="Additional Gameplay")
     TArray<TSubclassOf<class AGameplay>> GameplayOptions;
     
     UPROPERTY(BlueprintReadOnly)
-    ATimestepGameplayOptions* Mode;
+    AGameplayRunModeBase* Mode;
     
     UPROPERTY(BlueprintReadOnly)
     TArray<AActor*> Gameplay;

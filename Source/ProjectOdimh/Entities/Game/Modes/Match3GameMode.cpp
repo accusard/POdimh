@@ -121,9 +121,9 @@ void AMatch3GameMode::BeginPlay()
     EvtManager->OnActorReleased.AddUniqueDynamic(this, &AMatch3GameMode::ReceiveActorReleasedNotification);
 
     if(RunMode)
-        Mode = GetWorld()->SpawnActor<ATimestepGameplayOptions>(RunMode);
+        Mode = GetWorld()->SpawnActor<AGameplayRunModeBase>(RunMode);
     else
-        Mode = GetWorld()->SpawnActor<ATimestepGameplayOptions>();
+        Mode = GetWorld()->SpawnActor<AGameplayRunModeBase>();
 
     for(TSubclassOf<AGameplay> Class : GameplayOptions)
     {
@@ -160,7 +160,8 @@ void AMatch3GameMode::StartMatch()
 void AMatch3GameMode::NotifyGameplayOptionsTurnEnding(const int OnTick)
 {
     // call to whoever is concerned with the turn ending
-    Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager->CallBackOnStepTick.Broadcast(Mode, OnTick);
+    for(AActor* It : Gameplay)
+        Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager->CallBackOnStepTick.Broadcast(It, OnTick);
 }
 
 void AMatch3GameMode::SaveAndQuit(const int32 PlayerIndex)
