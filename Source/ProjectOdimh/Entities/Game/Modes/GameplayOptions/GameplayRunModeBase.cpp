@@ -1,7 +1,7 @@
 // Copyright 2017-2021 Vanny Sou. All Rights Reserved.
 
 
-#include "TimestepGameplayOptions.h"
+#include "GameplayRunModeBase.h"
 #include "POdimhGameInstance.h"
 #include "ClassInterface/GameplayOptionsInterface.h"
 
@@ -18,7 +18,7 @@ void AGameplayRunModeBase::Save(USaveGame* Data)
 {
     if(UPOdimhSaveGame* POdimhData = Cast<UPOdimhSaveGame>(Data))
     {
-        for(auto& Map : TickingActors)
+        for(auto& Map : TickingGameplays)
         {
             const FString& OrigValStr = *Map.Key->GetName() + FString("Original");
             const FString& CurrValStr = *Map.Key->GetName() + FString("Current");
@@ -33,7 +33,7 @@ const bool AGameplayRunModeBase::Load(USaveGame* Data)
 {
     if(UPOdimhSaveGame* POdimhData = Cast<UPOdimhSaveGame>(Data))
     {
-        for(auto& Map: TickingActors)
+        for(auto& Map: TickingGameplays)
         {
             const FString& OrigValStr = *Map.Key->GetName() + FString("Original");
             const FString& CurrValStr = *Map.Key->GetName() + FString("Current");
@@ -54,58 +54,58 @@ void AGameplayRunModeBase::BeginPlay()
 	Super::BeginPlay();
     
     UEventManager* EvtMgr = Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager;
-    EvtMgr->CallBackOnStepTick.AddDynamic(this, &AGameplayRunModeBase::TickStepTimer);
+    EvtMgr->CallbackOnCount.AddDynamic(this, &AGameplayRunModeBase::StepTick);
 }
 
 const int AGameplayRunModeBase::GetOnTickFrom(AActor* Gameplay)
 {
     int OnTick = -1;
-    if(TickingActors.Contains(Gameplay))
-        OnTick = TickingActors[Gameplay].Current;
+    if(TickingGameplays.Contains(Gameplay))
+        OnTick = TickingGameplays[Gameplay].Current;
     return OnTick;
 }
 
-void AGameplayRunModeBase::AddActorToTick(AActor* Actor, const FGameStats& TickOnCount)
+void AGameplayRunModeBase::AddGameplayToTick(AActor* Gameplay, const FGameStats& TickOnCount)
 {
-    TickingActors.Add(Actor, TickOnCount);
+    TickingGameplays.Add(Gameplay, TickOnCount);
 }
 
-void AGameplayRunModeBase::ResetActorsTickCounter(TArray<AActor*> AllActors)
+void AGameplayRunModeBase::ResetGameplaysTickCounter(TArray<AActor*> AllGameplays)
 {
-    for(AActor* It : AllActors)
+    for(AActor* It : AllGameplays)
     {
-        if(TickingActors.Contains(It))
-            TickingActors[It].Current = TickingActors[It].Original;
+        if(TickingGameplays.Contains(It))
+            TickingGameplays[It].Current = TickingGameplays[It].Original;
     }
 }
 
-void AGameplayRunModeBase::SetActorToTickOn(AActor* SetActor, const int TickOn)
+void AGameplayRunModeBase::SetGameplayToTickOn(AActor* SetGameplay, const int TickOn)
 {
-    if(TickingActors.Contains(SetActor))
-        TickingActors[SetActor].Current = TickOn;
+    if(TickingGameplays.Contains(SetGameplay))
+        TickingGameplays[SetGameplay].Current = TickOn;
 }
 
-void AGameplayRunModeBase::ResetAllActorsTickCounter()
+void AGameplayRunModeBase::ResetAllGameplaysTickCounter()
 {
-    for(auto& Map : TickingActors)
+    for(auto& Map : TickingGameplays)
         Map.Value = FGameStats(TickCounter);
 }
 
-void AGameplayRunModeBase::TickStepTimer(AActor* ActPtr, const int OnTick)
+void AGameplayRunModeBase::StepTick(AActor* ActPtr, const int OnTick)
 {
-    if(TickingActors.Num() > 0)
+    if(TickingGameplays.Num() > 0)
     {
         if(ShouldTick(ActPtr, OnTick))
         {
-            if(IGameplayOptionsInterface* TickActor = Cast<IGameplayOptionsInterface>(ActPtr))
-                TickActor->Execute_Run(ActPtr);
+            if(IGameplayOptionsInterface* TickGameplay = Cast<IGameplayOptionsInterface>(ActPtr))
+                TickGameplay->Execute_Run(ActPtr);
         }
     }
 }
 
-const int AGameplayRunModeBase::GetTickOnTurn(AActor* CheckActor, const int CurrTurn)
+const int AGameplayRunModeBase::GetTickOnTurn(AActor* CheckGameplay, const int CurrTurn)
 {
-    const int TickOn = GetOnTickFrom(CheckActor);
+    const int TickOn = GetOnTickFrom(CheckGameplay);
     
     if(TickOn > 0)
     {
@@ -118,22 +118,22 @@ const int AGameplayRunModeBase::GetTickOnTurn(AActor* CheckActor, const int Curr
     return TickOn;
 }
 
-const bool AGameplayRunModeBase::ShouldTick(AActor* CheckActor, const int OnTick)
+const bool AGameplayRunModeBase::ShouldTick(AActor* CheckGameplay, const int OnTick)
 {
-    if(TickingActors.Contains(CheckActor))
-        return TickingActors[CheckActor].Current == 0 || OnTick % TickingActors[CheckActor].Current == 0;
+    if(TickingGameplays.Contains(CheckGameplay))
+        return TickingGameplays[CheckGameplay].Current == 0 || OnTick % TickingGameplays[CheckGameplay].Current == 0;
     
     return false;
 }
 
 const TArray<AActor*> AGameplayRunModeBase::ShouldTick(const int OnTick)
 {
-    TArray<AActor*> CheckTickedActors;
-    for(auto& Map : TickingActors)
+    TArray<AActor*> CheckTickedGameplays;
+    for(auto& Map : TickingGameplays)
     {
         if(Map.Value.Current == 0 || OnTick % Map.Value.Current == 0)
-            CheckTickedActors.Add(Map.Key);
+            CheckTickedGameplays.Add(Map.Key);
     }
     
-    return CheckTickedActors;
+    return CheckTickedGameplays;
 }

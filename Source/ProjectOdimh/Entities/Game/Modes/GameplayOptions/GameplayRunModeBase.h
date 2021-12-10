@@ -6,7 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "ClassInterface/DataSaveInterface.h"
 #include "Data/FGameStats.h"
-#include "TimestepGameplayOptions.generated.h"
+#include "GameplayRunModeBase.generated.h"
 
 UCLASS()
 class PROJECTODIMH_API AGameplayRunModeBase : public AActor, public IDataSaveInterface 
@@ -20,26 +20,26 @@ public:
     virtual void Save(USaveGame* Data) override;
     virtual const bool Load(USaveGame* Data) override;
     
-    const int GetOnTickFrom(AActor* Actor);
+    const int GetOnTickFrom(AActor* Gameplay);
     
-    void AddActorToTick(AActor* Actor, const FGameStats& Tick);
-    
-    UFUNCTION(BlueprintCallable)
-    void ResetActorsTickCounter(TArray<AActor*> ActorArray);
+    void AddGameplayToTick(AActor* Gameplay, const FGameStats& Tick);
     
     UFUNCTION(BlueprintCallable)
-    void SetActorToTickOn(AActor* SetActor, const int TickOn);
+    void ResetGameplaysTickCounter(TArray<AActor*> Gameplays);
     
     UFUNCTION(BlueprintCallable)
-    void ResetAllActorsTickCounter();
+    void SetGameplayToTickOn(AActor* SetGameplay, const int TickOn);
+    
+    UFUNCTION(BlueprintCallable)
+    void ResetAllGameplaysTickCounter();
     
     UFUNCTION()
-    void TickStepTimer(AActor* Actor, const int OnTick);
+    void StepTick(AActor* Gameplay, const int OnTick);
     
     UFUNCTION(BlueprintPure)
-    const int GetTickOnTurn(AActor* CheckActor, const int CurrentTurn);
+    const int GetTickOnTurn(AActor* CheckGameplay, const int CurrentTurn);
     
-    const bool ShouldTick(AActor* CheckActor, const int OnTick);
+    const bool ShouldTick(AActor* CheckGameplay, const int OnTick);
     const TArray<AActor*> ShouldTick(const int OnTick);
     
     const uint32 GetTickCounter() const { return TickCounter; }
@@ -49,7 +49,7 @@ protected:
 	virtual void BeginPlay() override;
 
     UPROPERTY()
-    TMap<AActor*, FGameStats> TickingActors;
+    TMap<AActor*, FGameStats> TickingGameplays;
     
     UPROPERTY(EditDefaultsOnly)
     uint32 TickCounter;

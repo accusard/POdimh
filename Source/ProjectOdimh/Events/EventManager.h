@@ -88,7 +88,7 @@ public:
     UPROPERTY(BlueprintAssignable, BlueprintCallable)
     FActorEventDelegate OnActorEvent;
     
-    FActorCallBackOnCount CallBackOnStepTick;
+    FActorCallBackOnCount CallbackOnCount;
     
     FResolveTileCollisions TilesSwapped;
     

@@ -4,7 +4,7 @@
 #include "POdimhGameInstance.h"
 #include "Entities/Game/POdimhGameState.h"
 #include "Entities/Game/Modes/GameplayOptions/Gameplay.h"
-#include "Entities/Game/Modes/GameplayOptions/TimestepGameplayOptions.h"
+#include "Entities/Game/Modes/GameplayOptions/GameplayRunModeBase.h"
 #include "ClassInterface/GameplayOptionsInterface.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
@@ -143,7 +143,7 @@ void AMatch3GameMode::StartPlay()
             const uint32 StepsBeforeTick = Mode->GetTickCounter();
             const FGameStats Steps(StepsBeforeTick);
             
-            Mode->AddActorToTick(Option, Steps);
+            Mode->AddGameplayToTick(Option, Steps);
         }
     }
     
@@ -161,7 +161,7 @@ void AMatch3GameMode::NotifyGameplayOptionsTurnEnding(const int OnTick)
 {
     // call to whoever is concerned with the turn ending
     for(AActor* It : Gameplay)
-        Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager->CallBackOnStepTick.Broadcast(It, OnTick);
+        Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager->CallbackOnCount.Broadcast(It, OnTick);
 }
 
 void AMatch3GameMode::SaveAndQuit(const int32 PlayerIndex)
