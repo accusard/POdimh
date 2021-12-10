@@ -37,7 +37,7 @@ public:
     void StepTick(AActor* Gameplay, const int OnTick);
     
     UFUNCTION(BlueprintPure)
-    const int GetTurnNumBeforeTick(AActor* CheckGameplay, const int CurrentTurn);
+    const int GetTickOnTurn(AActor* CheckGameplay, const int CurrentTurn);
     
     const bool ShouldTick(AActor* CheckGameplay, const int OnTick);
     const TArray<AActor*> ShouldTick(const int OnTick);

@@ -103,7 +103,7 @@ void AGameplayRunModeBase::StepTick(AActor* ActPtr, const int OnTick)
     }
 }
 
-const int AGameplayRunModeBase::GetTurnNumBeforeTick(AActor* CheckGameplay, const int CurrTurn)
+const int AGameplayRunModeBase::GetTickOnTurn(AActor* CheckGameplay, const int CurrTurn)
 {
     const int TickOn = GetOnTickFrom(CheckGameplay);
     
@@ -115,7 +115,7 @@ const int AGameplayRunModeBase::GetTurnNumBeforeTick(AActor* CheckGameplay, cons
         
         return (TurnsBeforeTick - CurrTurn) + 1;
     }
-    return -1;
+    return TickOn;
 }
 
 const bool AGameplayRunModeBase::ShouldTick(AActor* CheckGameplay, const int OnTick)
