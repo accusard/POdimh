@@ -89,11 +89,12 @@ public:
 protected:
     virtual void BeginPlay() override;
     
+    /** The gameplay mode to run when Match3GameMode receive request to end turn */
     UPROPERTY(EditAnywhere, Category="Additional Gameplay")
     TSubclassOf<ATimestepGameplayOptions> RunMode;
     
     UPROPERTY(EditAnywhere, Category="Additional Gameplay")
-    TArray<TSubclassOf<AActor>> GameplayOptions;
+    TArray<TSubclassOf<class AGameplay>> GameplayOptions;
     
     UPROPERTY(BlueprintReadOnly)
     ATimestepGameplayOptions* Mode;

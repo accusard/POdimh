@@ -3,6 +3,7 @@
 #include "Match3GameMode.h"
 #include "POdimhGameInstance.h"
 #include "Entities/Game/POdimhGameState.h"
+#include "Entities/Game/Modes/GameplayOptions/Gameplay.h"
 #include "Entities/Game/Modes/GameplayOptions/TimestepGameplayOptions.h"
 #include "ClassInterface/GameplayOptionsInterface.h"
 #include "Kismet/GameplayStatics.h"
@@ -124,7 +125,7 @@ void AMatch3GameMode::BeginPlay()
     else
         Mode = GetWorld()->SpawnActor<ATimestepGameplayOptions>();
 
-    for(TSubclassOf<AActor> Class : GameplayOptions)
+    for(TSubclassOf<AGameplay> Class : GameplayOptions)
     {
         Gameplay.Add(GetWorld()->SpawnActor<AActor>(Class));
     }
@@ -159,7 +160,7 @@ void AMatch3GameMode::StartMatch()
 void AMatch3GameMode::NotifyGameplayOptionsTurnEnding(const int OnTick)
 {
     // call to whoever is concerned with the turn ending
-    Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager->CallBackOnStepTick.Broadcast(It, OnTick);
+    Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager->CallBackOnStepTick.Broadcast(Mode, OnTick);
 }
 
 void AMatch3GameMode::SaveAndQuit(const int32 PlayerIndex)
