@@ -103,7 +103,7 @@ void AGameplayRunModeBase::StepTick(AActor* ActPtr, const int OnTick)
     }
 }
 
-const int AGameplayRunModeBase::GetTickOnTurn(AActor* CheckGameplay, const int CurrTurn)
+const int AGameplayRunModeBase::GetTurnNumBeforeRun(AActor* CheckGameplay, const int CurrTurn)
 {
     const int TickOn = GetOnTickFrom(CheckGameplay);
     
