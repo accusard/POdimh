@@ -90,16 +90,16 @@ protected:
     virtual void BeginPlay() override;
     
     UPROPERTY(EditAnywhere, Category="Additional Gameplay")
-    TSubclassOf<ATimestepGameplayOptions> TimerClass;
+    TSubclassOf<ATimestepGameplayOptions> RunMode;
     
     UPROPERTY(EditAnywhere, Category="Additional Gameplay")
-    TArray<TSubclassOf<AActor>> GameplayOptionsClass;
+    TArray<TSubclassOf<AActor>> GameplayOptions;
     
     UPROPERTY(BlueprintReadOnly)
-    ATimestepGameplayOptions* TimerPtr;
+    ATimestepGameplayOptions* Mode;
     
     UPROPERTY(BlueprintReadOnly)
-    TArray<AActor*> GameplayOptions;
+    TArray<AActor*> Gameplay;
     
     class APOdimhGameState* GameState;
     

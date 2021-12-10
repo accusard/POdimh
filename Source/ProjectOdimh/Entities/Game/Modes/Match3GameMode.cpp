@@ -119,14 +119,14 @@ void AMatch3GameMode::BeginPlay()
     EvtManager->OnActorPicked.AddUniqueDynamic(this, &AMatch3GameMode::ReceiveActorPickedNotification);
     EvtManager->OnActorReleased.AddUniqueDynamic(this, &AMatch3GameMode::ReceiveActorReleasedNotification);
 
-    if(TimerClass)
-        TimerPtr = GetWorld()->SpawnActor<ATimestepGameplayOptions>(TimerClass);
+    if(RunMode)
+        Mode = GetWorld()->SpawnActor<ATimestepGameplayOptions>(RunMode);
     else
-        TimerPtr = GetWorld()->SpawnActor<ATimestepGameplayOptions>();
+        Mode = GetWorld()->SpawnActor<ATimestepGameplayOptions>();
 
-    for(TSubclassOf<AActor> Class : GameplayOptionsClass)
+    for(TSubclassOf<AActor> Class : GameplayOptions)
     {
-        GameplayOptions.Add(GetWorld()->SpawnActor<AActor>(Class));
+        Gameplay.Add(GetWorld()->SpawnActor<AActor>(Class));
     }
 }
 
@@ -135,14 +135,14 @@ void AMatch3GameMode::StartPlay()
     Super::StartPlay();
     
     // initialize
-    for(AActor* Option : GameplayOptions)
+    for(AActor* Option : Gameplay)
     {
         if(IGameplayOptionsInterface* ImplementsGameplay = Cast<IGameplayOptionsInterface>(Option))
         {
-            const uint32 StepsBeforeTick = TimerPtr->GetTickCounter();
+            const uint32 StepsBeforeTick = Mode->GetTickCounter();
             const FGameStats Steps(StepsBeforeTick);
             
-            TimerPtr->AddActorToTick(Option, Steps);
+            Mode->AddActorToTick(Option, Steps);
         }
     }
     
@@ -158,7 +158,7 @@ void AMatch3GameMode::StartMatch()
 
 void AMatch3GameMode::NotifyGameplayOptionsTurnEnding(const int OnTick)
 {
-    for(AActor* It : GameplayOptions)
+    for(AActor* It : Gameplay)
         Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager->CallBackOnStepTick.Broadcast(It, OnTick);
 }
 
@@ -399,7 +399,7 @@ void AMatch3GameMode::ReceiveActorReleasedNotification(AActor* ReleasedActor)
 
 const bool AMatch3GameMode::PendingGameplayFinish() const
 {
-    for(AActor* Option : GameplayOptions)
+    for(AActor* Option : Gameplay)
     {
         if(Cast<IGameplayOptionsInterface>(Option)->Execute_IsRunning(Option))
             return true;
