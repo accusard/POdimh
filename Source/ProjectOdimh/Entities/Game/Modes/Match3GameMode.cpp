@@ -159,7 +159,7 @@ void AMatch3GameMode::StartMatch()
 
 void AMatch3GameMode::NotifyGameplayOptionsTurnEnding(const int OnTick)
 {
-    // call to whoever is concerned with the turn ending
+    // call to whoever is concerned with the turn ending on this tick
     for(AActor* It : Gameplays)
         Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager->CallbackOnCount.Broadcast(It, OnTick);
 }
