@@ -19,7 +19,7 @@ struct FGameStats
     UPROPERTY(EditAnywhere,Category="")
     uint32 Value;
 
-    UPROPERTY(EditAnywhere,Category="")
+    UPROPERTY()
     uint32 Default;
 
     // constructors
