@@ -28,7 +28,7 @@ void UActionTurnBasedComponent::ResetActions()
 
 void UActionTurnBasedComponent::RestoreActionMax()
 {
-    ActionCount.Current = ActionCount.Original;
+    ActionCount.Value = ActionCount.Default;
 }
 
 // Called when the game starts
@@ -42,6 +42,6 @@ void UActionTurnBasedComponent::BeginPlay()
 
 const int32 UActionTurnBasedComponent::GetRemainingActions() const
 {
-    return ActionCount.Current;
+    return ActionCount.Value;
 }
 

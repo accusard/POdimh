@@ -17,10 +17,10 @@ struct FGameStats
     GENERATED_USTRUCT_BODY()
 
     UPROPERTY(EditAnywhere,Category="")
-    uint32 Current;
+    uint32 Value;
 
     UPROPERTY(EditAnywhere,Category="")
-    uint32 Original;
+    uint32 Default;
 
     // constructors
     FGameStats();

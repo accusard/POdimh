@@ -5,15 +5,15 @@
 
 FGameStats::FGameStats()
 {
-    Current = DEFAULT_ONE;
-    Original = DEFAULT_ONE;
+    Value = DEFAULT_ONE;
+    Default = DEFAULT_ONE;
 }
 
 FGameStats::FGameStats(const uint32 Max) : FGameStats(Max, Max) {}
 
 FGameStats::FGameStats(const uint32 Max, const uint32 Remaining)
 {
-    Original = Max;
-    Current = Remaining;
+    Default = Max;
+    Value = Remaining;
 }
 

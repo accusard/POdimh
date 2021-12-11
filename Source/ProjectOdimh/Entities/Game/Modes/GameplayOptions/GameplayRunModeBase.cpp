@@ -20,11 +20,11 @@ void AGameplayRunModeBase::Save(USaveGame* Data)
     {
         for(auto& Map : TickingGameplays)
         {
-            const FString& OrigValStr = *Map.Key->GetName() + FString("Original");
-            const FString& CurrValStr = *Map.Key->GetName() + FString("Current");
+            const FString& OrigValStr = *Map.Key->GetName() + FString("Default");
+            const FString& CurrValStr = *Map.Key->GetName() + FString("Value");
             
-            POdimhData->CustomInt.Add(OrigValStr, Map.Value.Original);
-            POdimhData->CustomInt.Add(CurrValStr, Map.Value.Current);
+            POdimhData->CustomInt.Add(OrigValStr, Map.Value.Default);
+            POdimhData->CustomInt.Add(CurrValStr, Map.Value.Value);
         }
     }
 }
@@ -35,11 +35,11 @@ const bool AGameplayRunModeBase::Load(USaveGame* Data)
     {
         for(auto& Map: TickingGameplays)
         {
-            const FString& OrigValStr = *Map.Key->GetName() + FString("Original");
-            const FString& CurrValStr = *Map.Key->GetName() + FString("Current");
+            const FString& OrigValStr = *Map.Key->GetName() + FString("Default");
+            const FString& CurrValStr = *Map.Key->GetName() + FString("Value");
             
-            Map.Value.Original = *POdimhData->CustomInt.Find(OrigValStr);
-            Map.Value.Current = *POdimhData->CustomInt.Find(CurrValStr);
+            Map.Value.Default = *POdimhData->CustomInt.Find(OrigValStr);
+            Map.Value.Value = *POdimhData->CustomInt.Find(CurrValStr);
         }
         
         return true;
@@ -61,7 +61,7 @@ const int AGameplayRunModeBase::GetOnTickFrom(AActor* Gameplay)
 {
     int OnTick = -1;
     if(TickingGameplays.Contains(Gameplay))
-        OnTick = TickingGameplays[Gameplay].Current;
+        OnTick = TickingGameplays[Gameplay].Value;
     return OnTick;
 }
 
@@ -70,7 +70,7 @@ void AGameplayRunModeBase::SetGameplayToTickOn(AActor* Gameplay, const FGameStat
     if(Gameplay == nullptr) return;
     
     if(TickingGameplays.Contains(Gameplay))
-        TickingGameplays[Gameplay].Current = TickOn.Original;
+        TickingGameplays[Gameplay].Value = TickOn.Default;
     else
         TickingGameplays.Add(Gameplay, TickOn);
 }
@@ -105,7 +105,7 @@ const int AGameplayRunModeBase::GetTurnNumBeforeRun(AActor* CheckGameplay, const
 const bool AGameplayRunModeBase::ShouldTick(AActor* CheckGameplay, const int OnTick)
 {
     if(TickingGameplays.Contains(CheckGameplay))
-        return TickingGameplays[CheckGameplay].Current == 0 || OnTick % TickingGameplays[CheckGameplay].Current == 0;
+        return TickingGameplays[CheckGameplay].Value == 0 || OnTick % TickingGameplays[CheckGameplay].Value == 0;
     
     return false;
 }
@@ -115,7 +115,7 @@ const TArray<AActor*> AGameplayRunModeBase::ShouldTick(const int OnTick)
     TArray<AActor*> CheckTickedGameplays;
     for(auto& Map : TickingGameplays)
     {
-        if(Map.Value.Current == 0 || OnTick % Map.Value.Current == 0)
+        if(Map.Value.Value == 0 || OnTick % Map.Value.Value == 0)
             CheckTickedGameplays.Add(Map.Key);
     }
     
