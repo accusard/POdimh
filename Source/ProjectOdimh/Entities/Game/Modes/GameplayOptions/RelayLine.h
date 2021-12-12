@@ -24,9 +24,6 @@ public:
     virtual void Save(USaveGame* Data) override;
     virtual const bool Load(USaveGame* Data) override;
     
-    UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-    void Init(AActor* Actor, UBaseEvent* Evt);
-    
     UFUNCTION(BlueprintImplementableEvent)
     const TArray<FCustomIntData> OnSaveFromBlueprint() const;
     UFUNCTION(BlueprintImplementableEvent)

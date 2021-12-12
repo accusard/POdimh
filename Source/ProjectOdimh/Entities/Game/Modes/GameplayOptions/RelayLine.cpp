@@ -70,8 +70,3 @@ TArray<ATile*> ARelayLine::GetUnusedTiles(AGrid* Grid)
     
     return UnusedTiles;
 }
-
-void ARelayLine::Init_Implementation(AActor* Actor, UBaseEvent* EvtPtr)
-{
-    EvtPtr->Manager->OnActorEvent.RemoveDynamic(this, &ARelayLine::Init);
-}

@@ -2,6 +2,7 @@
 
 
 #include "Entities/Game/Modes/GameplayOptions/Gameplay.h"
+#include "Events/EventManager.hpring"
 
 // Sets default values
 AGameplay::AGameplay()
@@ -12,3 +13,9 @@ AGameplay::AGameplay()
 }
 
 
+void AGameplay::Init_Implementation(AActor* Actor, UBaseEvent* EvtPtr)
+{
+    // unbind the Init event
+    // blueprint must call to parent after it finishes initialization
+    EvtPtr->Manager->OnActorEvent.RemoveDynamic(this, &AGameplay::Init);
+}
