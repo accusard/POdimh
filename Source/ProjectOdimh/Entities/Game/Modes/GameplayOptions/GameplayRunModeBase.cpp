@@ -4,7 +4,7 @@
 #include "GameplayRunModeBase.h"
 #include "POdimhGameInstance.h"
 #include "ClassInterface/GameplayOptionsInterface.h"
-
+#include "Entities/Game/Modes/GameplayOptions/Gameplay.h"
 
 // Sets default values
 AGameplayRunModeBase::AGameplayRunModeBase()
@@ -69,10 +69,13 @@ void AGameplayRunModeBase::SetGameplayToTickOn(AActor* Gameplay, const FGameStat
 {
     if(Gameplay == nullptr) return;
     
-    if(TickingGameplays.Contains(Gameplay))
-        TickingGameplays[Gameplay].Value = TickOn.Default;
-    else
-        TickingGameplays.Add(Gameplay, TickOn);
+    if(AGameplay* ImplementsGameplay = Cast<AGameplay>(Gameplay))
+    {
+        if(TickingGameplays.Contains(Gameplay))
+            ImplementsGameplay->SetNumTicksBeforeRun(TickOn.Default);
+        else
+            TickingGameplays.Add(Gameplay, TickOn);
+    }
 }
 
 void AGameplayRunModeBase::StepTick(AActor* ActPtr, const int OnTick)

@@ -20,11 +20,12 @@ public:
     UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
     void Init(AActor* Actor, UBaseEvent* Evt);
     
-    const uint32 GetNumOfTicksBeforeRun() const { return NumOfTicksBeforeRun.Value; }
+    void SetNumTicksBeforeRun(const uint32 Set);
+    const uint32 GetNumOfTicksBeforeRun() const { return NumOfTicksBeforeRun; }
     
 protected:
     UPROPERTY(EditDefaultsOnly)
-    FGameStats NumOfTicksBeforeRun;
+    uint32 NumOfTicksBeforeRun;
 
 
 

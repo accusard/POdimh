@@ -12,6 +12,10 @@ AGameplay::AGameplay()
 
 }
 
+void AGameplay::SetNumTicksBeforeRun(const uint32 Set)
+{
+    NumOfTicksBeforeRun = Set;
+}
 
 void AGameplay::Init_Implementation(AActor* Actor, UBaseEvent* EvtPtr)
 {
