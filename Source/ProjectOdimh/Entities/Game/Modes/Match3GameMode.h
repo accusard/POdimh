@@ -119,11 +119,11 @@ private:
     
     TMap<uint32, AParticipantTurn*>& GetParticipants();
     
-    UPROPERTY(EditAnywhere)
-    TMap<uint32, TSubclassOf<AParticipantTurn>> ParticipantsBlueprint;
+    UPROPERTY(EditAnywhere, Category="Additional Gameplay")
+    TMap<uint32, TSubclassOf<AParticipantTurn>> Participants;
     
     UPROPERTY()
-    TMap<uint32, AParticipantTurn*> Participants;
+    TMap<uint32, AParticipantTurn*> ParticipantsList;
 
     
 };

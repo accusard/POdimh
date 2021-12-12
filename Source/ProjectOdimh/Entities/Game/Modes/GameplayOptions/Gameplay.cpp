@@ -2,7 +2,7 @@
 
 
 #include "Entities/Game/Modes/GameplayOptions/Gameplay.h"
-#include "Events/EventManager.hpring"
+#include "Events/EventManager.h"
 
 // Sets default values
 AGameplay::AGameplay()

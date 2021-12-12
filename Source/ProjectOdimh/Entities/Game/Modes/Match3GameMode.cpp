@@ -32,7 +32,7 @@ void AMatch3GameMode::Save(USaveGame* DataPtr)
         Data->CustomInt.Add("TurnCounter", GameState->TurnCounter);
     }
     
-    if(Participants.Num() == 0) return;
+    if(ParticipantsList.Num() == 0) return;
     
     SaveParticipants(DataPtr);
 }
@@ -55,7 +55,7 @@ const bool AMatch3GameMode::LoadParticipants(USaveGame* Data)
     {
         GameState->ParticipantIndex = SaveData->CustomInt["CurrentParticipantIndex"];
         
-        if(Participants.Num() > 0)
+        if(ParticipantsList.Num() > 0)
             return true;
         
         if(SaveData->ParticipantsRegistry.Num() != 0)
@@ -73,7 +73,7 @@ const bool AMatch3GameMode::LoadParticipants(USaveGame* Data)
                 UE_LOG(LogTemp,Warning,TEXT("Loading Participant: %s, Turn: %i"),*Params.Name.ToString(), TurnNum);
 #endif
                 AParticipantTurn* NewEntity = NewParticipant(Params);
-                Participants.Add(TurnNum, NewEntity);
+                ParticipantsList.Add(TurnNum, NewEntity);
             }
             return true;
         }
@@ -91,7 +91,7 @@ AParticipantTurn* AMatch3GameMode::NewParticipant(const FActorSpawnParameters& P
 
 TMap<uint32, AParticipantTurn*>& AMatch3GameMode::GetParticipants()
 {
-    return Participants;
+    return ParticipantsList;
 }
 
 void AMatch3GameMode::AddScore(const int32 Score)
@@ -179,13 +179,13 @@ void AMatch3GameMode::SaveAndQuit(const int32 PlayerIndex)
 
 const bool AMatch3GameMode::ParticipantsBlueprintIsValid()
 {
-    if(ParticipantsBlueprint.Num() == 0)
+    if(Participants.Num() == 0)
     {
-        UE_LOG(LogTemp,Warning,TEXT("ParticipantsBlueprint contain no element."));
+        UE_LOG(LogTemp,Warning,TEXT("Participant's blueprint contains no element."));
         return false;
     }
     
-    for(auto& Check : ParticipantsBlueprint)
+    for(auto& Check : Participants)
     {
         AParticipantTurn* IsValid = Check.Value.GetDefaultObject();
         uint32 TurnOrder = Check.Key;
@@ -194,7 +194,7 @@ const bool AMatch3GameMode::ParticipantsBlueprintIsValid()
             continue;
         else
         {
-            UE_LOG(LogTemp,Warning,TEXT("ParticipantsBlueprint contain invalid data. Ensure blueprint is assigned in GameMode and TurnOrder is greater than 0."));
+            UE_LOG(LogTemp,Warning,TEXT("Participant's blueprint contain invalid data. Ensure blueprint is assigned in GameMode and TurnOrder is greater than 0."));
             return false;
         }
     }
@@ -206,7 +206,7 @@ const bool AMatch3GameMode::LoadParticipantsFromBlueprint()
 {
     UE_LOG(LogTemp,Warning,TEXT("Creating a Participants list from preassigned blueprint."));
 
-    for(auto& Elem : ParticipantsBlueprint)
+    for(auto& Elem : Participants)
     {
         if(AParticipantTurn* Spawn_BP = GetWorld()->SpawnActor<AParticipantTurn>(Elem.Value))
         {
@@ -216,7 +216,7 @@ const bool AMatch3GameMode::LoadParticipantsFromBlueprint()
 #if !UE_BUILD_SHIPPING
             UE_LOG(LogTemp,Warning,TEXT("Creating new Participant: %s, %i"), *ClassName, Elem.Key);
 #endif
-            Participants.Add(Elem.Key, Spawn_BP);
+            ParticipantsList.Add(Elem.Key, Spawn_BP);
         }
         else
         {
@@ -235,12 +235,12 @@ void AMatch3GameMode::SaveParticipants(USaveGame* DataPtr)
 #endif
     if(UPOdimhSaveGame* SaveData = Cast<UPOdimhSaveGame>(DataPtr))
     {
-        const int32 NumOfEntities = Participants.Num();
+        const int32 NumOfEntities = ParticipantsList.Num();
         SaveData->CustomInt.Add("CurrentParticipantIndex", GameState->ParticipantIndex);
         
         // loop and cycle through for each element
-//        for(int i = 0; i < Participants.Num(); i++)
-        for(auto& Elem : Participants)
+//        for(int i = 0; i < ParticipantsList.Num(); i++)
+        for(auto& Elem : ParticipantsList)
         {
             if(AParticipantTurn* CurrentEntity = Elem.Value)
             {
