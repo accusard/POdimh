@@ -39,6 +39,6 @@ protected:
 	virtual void BeginPlay() override;
 
     UPROPERTY()
-    TMap<AActor*, FGameStats> TickingGameplays;
+    TArray<AActor*> TickingGameplays;
 
 };
