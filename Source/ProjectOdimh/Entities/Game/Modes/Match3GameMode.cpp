@@ -30,6 +30,11 @@ void AMatch3GameMode::Save(USaveGame* DataPtr)
         Data->CustomInt.Add("GameScore", GetCurrentScore());
         Data->CustomInt.Add("POdimhAwareness", GameState->AwarenessCounter);
         Data->CustomInt.Add("TurnCounter", GameState->TurnCounter);
+
+        Data->CustomInt.Add("LifetimeMatchedTiles", GameState->LifetimeMatchedTiles);
+        Data->CustomInt.Add("TierLevel", GameState->TierLevel);
+        Data->CustomInt.Add("TierThresholdCurVal", GameState->TierThreshold.Value);
+        Data->CustomInt.Add("TierThresholdNeeded", GameState->TierThreshold.Default);
     }
     
     if(ParticipantsList.Num() == 0) return;
@@ -44,6 +49,11 @@ const bool AMatch3GameMode::Load(USaveGame* DataPtr)
         SetCurrentScore(Data->CustomInt["GameScore"]);
         GameState->AwarenessCounter = Data->CustomInt["POdimhAwareness"];
         GameState->TurnCounter = Data->CustomInt["TurnCounter"];
+        
+        GameState->LifetimeMatchedTiles = Data->CustomInt["LifetimeMatchedTiles"];
+        GameState->TierLevel = Data->CustomInt["TierLevel"];
+        GameState->TierThreshold.Value = Data->CustomInt["TierThresholdCurVal"];
+        GameState->TierThreshold.Default = Data->CustomInt["TierThresholdNeeded"];
     }
     return true;
 }
