@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameState.h"
+#include "Data/FGameStats.h"
 #include "POdimhGameState.generated.h"
 
 /**
@@ -24,7 +25,13 @@ public:
     int32 AwarenessCounter;
     
     UPROPERTY(BlueprintReadOnly)
-    int32 TotalMatchedTiles;
+    int32 LifetimeMatchedTiles;
+    
+    UPROPERTY(BlueprintReadOnly)
+    int32 TierLevel = 1;
+    
+    UPROPERTY(BlueprintReadWrite)
+    FGameStats TierThreshold;
     
     uint32 ParticipantIndex = 1;
     

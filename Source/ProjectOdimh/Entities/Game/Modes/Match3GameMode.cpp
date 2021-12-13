@@ -347,7 +347,15 @@ void AMatch3GameMode::TryEndTurn()
     
     UPOdimhGameInstance* Instance = GetGameInstance<UPOdimhGameInstance>();
     GameState->TurnCounter++;
-    GameState->TotalMatchedTiles += GetGrid()->GetTotalMatchedThisTurn();
+    
+    GameState->LifetimeMatchedTiles += GetGrid()->GetTotalMatchedThisTurn();
+    GameState->TierThreshold.Value += GetGrid()->GetTotalMatchedThisTurn();
+    if(GameState->TierThreshold.Value >= GameState->TierThreshold.Default)
+    {
+        GameState->TierThreshold.Value = 0;
+        GameState->TierLevel++;
+    }
+    
     SaveCurrentGameState(Instance);
     
     Instance->EventManager->ClearEventQueue();
