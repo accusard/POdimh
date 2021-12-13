@@ -186,6 +186,9 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Tiles")
     int TilesNeededForMatch;
     
+    UPROPERTY(BlueprintReadWrite)
+    int32 TotalNumTilesMatchedThisTurn;
+    
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 SizeX;
     

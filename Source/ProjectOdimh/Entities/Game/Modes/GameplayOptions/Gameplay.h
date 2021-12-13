@@ -24,7 +24,7 @@ public:
     const uint32 GetNumOfTicksBeforeRun() const { return NumOfTicksBeforeRun; }
     
 protected:
-    UPROPERTY(EditDefaultsOnly)
+    UPROPERTY(VisibleAnywhere)
     uint32 NumOfTicksBeforeRun;
 
 
