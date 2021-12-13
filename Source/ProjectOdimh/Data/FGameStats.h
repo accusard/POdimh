@@ -16,11 +16,12 @@ struct FGameStats
 {
     GENERATED_USTRUCT_BODY()
 
-    UPROPERTY(EditAnywhere,Category="")
-    uint32 Value;
+    
+    UPROPERTY(BlueprintReadOnly, EditAnywhere,Category="")
+    int32 Value;
 
-    UPROPERTY()
-    uint32 Default;
+    UPROPERTY(BlueprintReadOnly)
+    int32 Default;
 
     // constructors
     FGameStats();
