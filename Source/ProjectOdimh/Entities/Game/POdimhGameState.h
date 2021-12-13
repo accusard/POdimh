@@ -23,6 +23,9 @@ public:
     UPROPERTY(BlueprintReadWrite)
     int32 AwarenessCounter;
     
+    UPROPERTY(BlueprintReadOnly)
+    int32 TotalMatchedTiles;
+    
     uint32 ParticipantIndex = 1;
     
     /** Tracks the current score of the game */

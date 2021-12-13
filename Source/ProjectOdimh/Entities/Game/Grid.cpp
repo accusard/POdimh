@@ -308,3 +308,7 @@ void AGrid::Tick(float DeltaTime)
     
 }
 
+void AGrid::ResetAccumulatedMatchedTiles()
+{
+    TotalNumTilesMatchedThisTurn = 0;
+}

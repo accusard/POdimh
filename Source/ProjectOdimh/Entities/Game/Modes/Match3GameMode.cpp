@@ -347,8 +347,11 @@ void AMatch3GameMode::TryEndTurn()
     
     UPOdimhGameInstance* Instance = GetGameInstance<UPOdimhGameInstance>();
     GameState->TurnCounter++;
+    GameState->TotalMatchedTiles += GetGrid()->GetTotalMatchedThisTurn();
     SaveCurrentGameState(Instance);
+    
     Instance->EventManager->ClearEventQueue();
+    GetGrid()->ResetAccumulatedMatchedTiles();
     PlayerMove->Reset();
     PlayerMove->Start();
     GetWorldTimerManager().ClearTimer(TurnTickTimerHandler);

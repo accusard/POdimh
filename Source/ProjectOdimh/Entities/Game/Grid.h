@@ -139,6 +139,10 @@ public:
     
     void OnEventEnd();
     
+    const int32 GetTotalMatchedThisTurn() { return TotalNumTilesMatchedThisTurn; }
+    
+    void ResetAccumulatedMatchedTiles();
+    
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
