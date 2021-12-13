@@ -30,6 +30,9 @@ public:
     UPROPERTY(BlueprintReadOnly)
     int32 TierLevel = 1;
     
+    UPROPERTY(BlueprintReadWrite)
+    int32 Multiplier;
+    
     UFUNCTION(BlueprintCallable)
     void ResetTierLevel() { TierLevel = 1; }
     
