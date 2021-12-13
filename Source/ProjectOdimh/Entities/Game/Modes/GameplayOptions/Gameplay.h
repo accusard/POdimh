@@ -24,8 +24,8 @@ public:
     const uint32 GetNumOfTicksBeforeRun() const { return NumOfTicksBeforeRun; }
     
 protected:
-    UPROPERTY(VisibleAnywhere)
-    uint32 NumOfTicksBeforeRun;
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+    int32 NumOfTicksBeforeRun;
 
 
 
