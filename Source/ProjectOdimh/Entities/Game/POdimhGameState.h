@@ -7,6 +7,7 @@
 #include "Data/FGameStats.h"
 #include "POdimhGameState.generated.h"
 
+const uint32 DEFAULT_TARGET_THRESHOLD = 15;
 /**
  * 
  */
@@ -37,7 +38,7 @@ public:
     void ResetTierLevel() { TierLevel = 1; }
     
     UPROPERTY(BlueprintReadWrite)
-    FGameStats TierThreshold;
+    FGameStats TierThreshold = FGameStats(DEFAULT_TARGET_THRESHOLD, 0);
     
     uint32 ParticipantIndex = 1;
     

@@ -5,5 +5,5 @@
 
 APOdimhGameState::APOdimhGameState() : bGameHasStarted(false)
 {
-    TierThreshold = FGameStats(0, 15);
+    
 }
