@@ -7,7 +7,11 @@
 #include "Data/FGameStats.h"
 #include "POdimhGameState.generated.h"
 
-const uint32 DEFAULT_TARGET_THRESHOLD = 15;
+const uint32 DEFAULT_TIER_THRESHOLD = 15;
+
+class APointTracker;
+class ATier;
+
 /**
  * 
  */
@@ -18,6 +22,21 @@ class PROJECTODIMH_API APOdimhGameState : public AGameState
 	
 public:
     APOdimhGameState();
+    
+    APointTracker* GetScore() { return Score; }
+    
+    ATier* GetScoreTier() { return ScoreTier; }
+    
+    void AddToScore(const int32 Points, const int32 Multiplier);
+    
+    const uint32 GetTotalScore() const;
+    
+    void AddToTierPoints(const uint32 Points);
+    
+    const uint32 GetTierLevel() const;
+    
+    UPROPERTY(BlueprintReadWrite)
+    int32 ScoreMultiplier = 1;
     
     UPROPERTY(BlueprintReadOnly)
     int32 TurnCounter = 1;
@@ -31,14 +50,11 @@ public:
     UPROPERTY(BlueprintReadOnly)
     int32 TierLevel = 1;
     
-    UPROPERTY(BlueprintReadWrite)
-    int32 Multiplier;
-    
     UFUNCTION(BlueprintCallable)
     void ResetTierLevel() { TierLevel = 1; }
     
     UPROPERTY(BlueprintReadWrite)
-    FGameStats TierThreshold = FGameStats(DEFAULT_TARGET_THRESHOLD, 0);
+    FGameStats TierThreshold = FGameStats(0, DEFAULT_TIER_THRESHOLD);
     
     uint32 ParticipantIndex = 1;
     
@@ -52,4 +68,10 @@ public:
     UPROPERTY()
     class UGameEvent* StartState;
 
+private:
+    UPROPERTY()
+    APointTracker* Score;
+    
+    UPROPERTY()
+    ATier* ScoreTier;
 };

@@ -11,7 +11,7 @@ FGameStats::FGameStats()
 
 FGameStats::FGameStats(const uint32 Max) : FGameStats(Max, Max) {}
 
-FGameStats::FGameStats(const uint32 Max, const uint32 Remaining)
+FGameStats::FGameStats(const uint32 Remaining, const uint32 Max)
 {
     Default = Max;
     Value = Remaining;
