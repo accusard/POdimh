@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Info.h"
+#include "Data/FGameStats.h"
 #include "PointTracker.generated.h"
 
 /**
@@ -14,4 +15,22 @@ class PROJECTODIMH_API APointTracker : public AInfo
 {
 	GENERATED_BODY()
 	
+public:
+    UFUNCTION()
+    void NotifyPointsUp(const uint32 Value);
+    
+    UFUNCTION()
+    void NotifyPointsThreshold();
+    
+    void Add(const uint32 Value, const uint32 Multiplier = 1);
+    
+    const uint32 GetTotalPoints() const;
+    
+    void SetThreshold(const uint32 Value);
+    
+    const uint32 GetThreshold() const;
+    
+private:
+    UPROPERTY()
+    FGameStats Points;
 };
