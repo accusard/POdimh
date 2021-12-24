@@ -8,7 +8,7 @@
 #include "PointTracker.generated.h"
 
 /**
- * 
+ *  Track the game's scoring and a point threshold. Mostly used for game progression.
  */
 UCLASS()
 class PROJECTODIMH_API APointTracker : public AInfo
@@ -30,7 +30,7 @@ public:
     
     const uint32 GetThreshold() const;
     
-private:
+protected:
     UPROPERTY()
     FGameStats Points;
 };
