@@ -30,11 +30,11 @@ void AMatch3GameMode::Save(USaveGame* DataPtr)
         Data->CustomInt.Add("GameScore", GetCurrentScore());
         Data->CustomInt.Add("POdimhAwareness", GameState->AwarenessCounter);
         Data->CustomInt.Add("TurnCounter", GameState->TurnCounter);
-
         Data->CustomInt.Add("LifetimeMatchedTiles", GameState->LifetimeMatchedTiles);
-        Data->CustomInt.Add("TierLevel", GameState->TierLevel);
-        Data->CustomInt.Add("TierThresholdCurVal", GameState->TierThreshold.Value);
-        Data->CustomInt.Add("TierThresholdNeeded", GameState->TierThreshold.Default);
+        
+        Data->CustomInt.Add("TierLevel", GameState->GetTierLevel());
+        Data->CustomInt.Add("TierThresholdCurVal", GameState->GetScoreTier()->GetTotalPoints());
+        Data->CustomInt.Add("TierThresholdNeeded", GameState->GetScoreTier()->GetThreshold());
     }
     
     if(ParticipantsList.Num() == 0) return;
