@@ -13,7 +13,7 @@
 #include "Components/ActionTurnBasedComponent.h"
 #include "Events/GameEvent.h"
 #include "Events/EventManager.h"
-
+#include "Data/Tier.h"
 
 
 AMatch3GameMode::AMatch3GameMode()
@@ -32,9 +32,9 @@ void AMatch3GameMode::Save(USaveGame* DataPtr)
         Data->CustomInt.Add("TurnCounter", GameState->TurnCounter);
         Data->CustomInt.Add("LifetimeMatchedTiles", GameState->LifetimeMatchedTiles);
         
-        Data->CustomInt.Add("TierLevel", GameState->GetTierLevel());
-        Data->CustomInt.Add("TierThresholdCurVal", GameState->GetScoreTier()->GetTotalPoints());
-        Data->CustomInt.Add("TierThresholdNeeded", GameState->GetScoreTier()->GetThreshold());
+        Data->CustomInt.Add("TierLevel", GameState->TierProgression->GetLevel());
+        Data->CustomInt.Add("TierThresholdCurVal", GameState->Score->GetTotalPoints());
+        Data->CustomInt.Add("TierThresholdNeeded", GameState->TierProgression->GetThreshold());
     }
     
     if(ParticipantsList.Num() == 0) return;
@@ -46,12 +46,12 @@ const bool AMatch3GameMode::Load(USaveGame* DataPtr)
 {
     if(UPOdimhSaveGame* Data = Cast<UPOdimhSaveGame>(DataPtr))
     {
-        SetCurrentScore(Data->CustomInt["GameScore"]);
+        GameState->Score->Add((Data->CustomInt["GameScore"]));
         GameState->AwarenessCounter = Data->CustomInt["POdimhAwareness"];
         GameState->TurnCounter = Data->CustomInt["TurnCounter"];
         GameState->LifetimeMatchedTiles = Data->CustomInt["LifetimeMatchedTiles"];
         
-        GameState->GetScoreTier()->SetLevel
+        GameState->TierProgression->SetLevel
         (Data->CustomInt["TierLevel"],
         Data->CustomInt["TierThresholdCurVal"],
         Data->CustomInt["TierThresholdNeeded"]);
@@ -105,20 +105,15 @@ TMap<uint32, AParticipantTurn*>& AMatch3GameMode::GetParticipants()
     return ParticipantsList;
 }
 
-void AMatch3GameMode::AddScore(const int32 Score)
+void AMatch3GameMode::AddScore(const int32 Value)
 {
     if(GameState->bGameHasStarted)
-        GameState->CurrentScore += Score;
+        GameState->Score->Add(Value);
 }
 
 const int AMatch3GameMode::GetCurrentScore()
 {
-    return GameState->CurrentScore;
-}
-
-void AMatch3GameMode::SetCurrentScore(const int32 Score)
-{
-    GameState->CurrentScore = Score;
+    return GameState->Score->GetTotalPoints();
 }
 
 void AMatch3GameMode::BeginPlay()
@@ -360,12 +355,6 @@ void AMatch3GameMode::TryEndTurn()
     GameState->TurnCounter++;
     
     GameState->LifetimeMatchedTiles += GetGrid()->GetTotalMatchedThisTurn();
-    GameState->TierThreshold.Value += GetGrid()->GetTotalMatchedThisTurn();
-    if(GameState->TierThreshold.Value >= GameState->TierThreshold.Default)
-    {
-        GameState->TierThreshold.Value = 0;
-        GameState->TierLevel++;
-    }
     
     SaveCurrentGameState(Instance);
     

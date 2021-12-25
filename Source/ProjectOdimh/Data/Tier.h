@@ -15,11 +15,12 @@ class PROJECTODIMH_API ATier : public APointTracker
 	GENERATED_BODY()
     
 public:
-    void Levelup(const uint32 SetPointValue, const uint32 SetPointThreshold);
+    void LevelUp(const uint32 SetPointValue, const uint32 SetPointThreshold);
     
     const uint32 GetLevel() const;
+    void SetLevel(const uint32 SetLevel);
     void SetLevel(const uint32 SetLevel, const uint32 PointValue, const uint32 Threshold);
-    const uint32 GetNextLevelUp() const;
+    const uint32 GetPointsForNextLevel() const;
     
 private:
     uint32 Level = 1;

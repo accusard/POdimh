@@ -7,6 +7,8 @@
 #include "Data/FGameStats.h"
 #include "PointTracker.generated.h"
 
+const uint32 DEFAULT_MAX_POINTS = 75000;
+
 /**
  *  Track the game's scoring and a point threshold. Mostly used for game progression.
  */
@@ -30,7 +32,9 @@ public:
     
     const uint32 GetThreshold() const;
     
+    const uint32 GetDeltaPoints() const;
+    
 protected:
     UPROPERTY()
-    FGameStats Points;
+    FGameStats Points = FGameStats(0, DEFAULT_MAX_POINTS);
 };

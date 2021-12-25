@@ -47,8 +47,6 @@ public:
     UFUNCTION(BlueprintPure)
     const int GetCurrentScore();
     
-    void SetCurrentScore(const int32 Score);
-    
     const bool TryLoadGame(const FString &SlotName, const int32 PlayerIndex);
     
     UFUNCTION(BlueprintCallable)

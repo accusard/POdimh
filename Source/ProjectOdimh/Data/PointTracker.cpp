@@ -43,3 +43,9 @@ const uint32 APointTracker::GetThreshold() const
 {
     return Points.Default;
 }
+
+const uint32 APointTracker::GetDeltaPoints() const
+{
+    const uint32 Delta = GetThreshold() - GetTotalPoints();
+    return Delta;
+}

@@ -5,7 +5,7 @@
 
 
 
-void ATier::Levelup(const uint32 PointValue, const uint32 Threshold)
+void ATier::LevelUp(const uint32 PointValue, const uint32 Threshold)
 {
     Level++;
     Points.Value = PointValue;
@@ -17,15 +17,25 @@ const uint32 ATier::GetLevel() const
     return Level;
 }
 
-const uint32 ATier::GetNextLevelUp() const
+const uint32 ATier::GetPointsForNextLevel() const
 {
-    const uint32 Diff = GetThreshold() - Points.Value;
-    return Diff;
+    return GetDeltaPoints();
 }
 
-void ATier::SetLevel(const uint32 Set, const uint32 PointValue, const uint32 Threshold)
+void ATier::SetLevel(const uint32 NewLevel)
 {
-    Level = Set;
+    if(NewLevel < 1)
+    {
+        Level = 1;
+        return;
+    }
+    
+    Level = NewLevel;
+}
+
+void ATier::SetLevel(const uint32 NewLevel, const uint32 PointValue, const uint32 Threshold)
+{
+    SetLevel(NewLevel);
     Points.Value = PointValue;
     SetThreshold(Threshold);
 }
