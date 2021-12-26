@@ -15,6 +15,8 @@ class PROJECTODIMH_API ATier : public APointTracker
 	GENERATED_BODY()
     
 public:
+    const static uint32 DEFAULT_NEXT_TIER = 15;
+    
     void LevelUp(const uint32 SetPointValue, const uint32 SetPointThreshold);
     
     UFUNCTION(BlueprintPure)

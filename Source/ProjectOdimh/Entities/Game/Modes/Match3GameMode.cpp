@@ -22,6 +22,47 @@ AMatch3GameMode::AMatch3GameMode()
     
 }
 
+void AMatch3GameMode::BeginPlay()
+{
+    Super::BeginPlay();
+
+    GameState = GetGameState<APOdimhGameState>();
+    UEventManager* EvtManager = Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager;
+
+    EvtManager->OnActorPicked.AddUniqueDynamic(this, &AMatch3GameMode::ReceiveActorPickedNotification);
+    EvtManager->OnActorReleased.AddUniqueDynamic(this, &AMatch3GameMode::ReceiveActorReleasedNotification);
+    EvtManager->OnActorEvent.AddUniqueDynamic(this, &AMatch3GameMode::HandleTierThreshold);
+    
+    if(RunMode)
+        Mode = GetWorld()->SpawnActor<AGameplayRunModeBase>(RunMode);
+    else
+        Mode = GetWorld()->SpawnActor<AGameplayRunModeBase>();
+
+    for(TSubclassOf<AGameplay> Class : GameplayOptions)
+    {
+        Gameplays.Add(GetWorld()->SpawnActor<AGameplay>(Class));
+    }
+}
+
+void AMatch3GameMode::StartPlay()
+{
+    Super::StartPlay();
+    
+    // initialize
+    for(AGameplay* Option : Gameplays)
+    {
+        if(IGameplayOptionsInterface* ImplementsGameplay = Cast<IGameplayOptionsInterface>(Option))
+        {
+            const uint32 StepsBeforeTick = Option->GetNumOfTicksBeforeRun();
+            const FGameStats Steps(StepsBeforeTick);
+            
+            Mode->SetGameplayToTickOn(Option, Steps);
+        }
+    }
+    
+    GetWorldTimerManager().SetTimer(GameStartTimerHandler, this, &AMatch3GameMode::StartGame, 1.f, true);
+}
+
 void AMatch3GameMode::Save(USaveGame* DataPtr)
 {
     // save current score
@@ -105,55 +146,25 @@ TMap<uint32, AParticipantTurn*>& AMatch3GameMode::GetParticipants()
     return ParticipantsList;
 }
 
-void AMatch3GameMode::AddScore(const int32 Value)
+const uint32 AMatch3GameMode::CalculateTotalTileValue(const uint32 TileCnt, const uint32 Mltplr)
+{
+    return TileCnt * Mltplr * TileValue;
+}
+
+void AMatch3GameMode::UpdateGameState(const int32 TileCnt)
 {
     if(GameState->bGameHasStarted)
-        GameState->Score->Add(Value);
+    {
+        uint32 Mltplr = GameState->ScoreMultiplier;
+        uint32 TotScr = CalculateTotalTileValue(TileCnt, Mltplr);
+        GameState->Score->Add(TotScr);
+        GameState->TierProgression->Add(TileCnt);
+    }
 }
 
 const int AMatch3GameMode::GetCurrentScore()
 {
     return GameState->Score->GetTotalPoints();
-}
-
-void AMatch3GameMode::BeginPlay()
-{
-    Super::BeginPlay();
-
-    GameState = GetGameState<APOdimhGameState>();
-    UEventManager* EvtManager = Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager;
-
-    EvtManager->OnActorPicked.AddUniqueDynamic(this, &AMatch3GameMode::ReceiveActorPickedNotification);
-    EvtManager->OnActorReleased.AddUniqueDynamic(this, &AMatch3GameMode::ReceiveActorReleasedNotification);
-
-    if(RunMode)
-        Mode = GetWorld()->SpawnActor<AGameplayRunModeBase>(RunMode);
-    else
-        Mode = GetWorld()->SpawnActor<AGameplayRunModeBase>();
-
-    for(TSubclassOf<AGameplay> Class : GameplayOptions)
-    {
-        Gameplays.Add(GetWorld()->SpawnActor<AGameplay>(Class));
-    }
-}
-
-void AMatch3GameMode::StartPlay()
-{
-    Super::StartPlay();
-    
-    // initialize
-    for(AGameplay* Option : Gameplays)
-    {
-        if(IGameplayOptionsInterface* ImplementsGameplay = Cast<IGameplayOptionsInterface>(Option))
-        {
-            const uint32 StepsBeforeTick = Option->GetNumOfTicksBeforeRun();
-            const FGameStats Steps(StepsBeforeTick);
-            
-            Mode->SetGameplayToTickOn(Option, Steps);
-        }
-    }
-    
-    GetWorldTimerManager().SetTimer(GameStartTimerHandler, this, &AMatch3GameMode::StartGame, 1.f, true);
 }
 
 void AMatch3GameMode::StartMatch()
@@ -167,7 +178,7 @@ void AMatch3GameMode::NotifyGameplayOptionsTurnEnding(const int OnTick)
 {
     // call to whoever is concerned with the turn ending on this tick
     for(AActor* It : Gameplays)
-        Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager->CallbackOnCount.Broadcast(It, OnTick);
+        Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager->OnTurn.Broadcast(It, OnTick);
 }
 
 void AMatch3GameMode::SaveAndQuit(const int32 PlayerIndex)
@@ -344,6 +355,18 @@ void AMatch3GameMode::ReceiveRequestToEndTurn()
 void AMatch3GameMode::ReceiveRequestToEndTurn(ATile* LastTileGrabbed)
 {
     ReceiveRequestToEndTurn();
+}
+
+void AMatch3GameMode::HandleTierThreshold(AActor* TierPtr, UBaseEvent* Evt)
+{
+    if(ATier* TierProgress = Cast<ATier>(TierPtr))
+    {
+        if(Evt->GetFName() == THRESHOLD_EVENT)
+        {
+            const uint32 Reset = 0;
+            TierProgress->LevelUp(Reset, ATier::DEFAULT_NEXT_TIER);
+        }
+    }
 }
 
 void AMatch3GameMode::TryEndTurn()

@@ -89,7 +89,10 @@ public:
     FActorEventDelegate OnActorEvent;
     
     UPROPERTY(BlueprintAssignable, BlueprintCallable)
-    FActorCallBackOnCount CallbackOnCount;
+    FActorCallBackOnCount OnTurn;
+    
+    UPROPERTY(BlueprintAssignable, BlueprintCallable)
+    FActorCallBackOnCount OnScoreUp;
     
     FResolveTileCollisions TilesSwapped;
     

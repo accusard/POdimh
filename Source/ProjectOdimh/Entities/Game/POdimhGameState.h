@@ -7,8 +7,6 @@
 #include "Data/FGameStats.h"
 #include "POdimhGameState.generated.h"
 
-const uint32 DEFAULT_HIGH_SCORE = 75000;
-const uint32 DEFAULT_NEXT_TIER_LEVEL = 15;
 
 class APointTracker;
 class ATier;

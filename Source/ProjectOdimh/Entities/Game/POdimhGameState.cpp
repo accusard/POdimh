@@ -2,6 +2,7 @@
 
 #include "POdimhGameState.h"
 #include "Data/Tier.h"
+#include "Data/Gametypes.h"
 
 APOdimhGameState::APOdimhGameState() : bGameHasStarted(false)
 {
@@ -9,6 +10,6 @@ APOdimhGameState::APOdimhGameState() : bGameHasStarted(false)
     TierProgression = CreateDefaultSubobject<ATier>("TierProgression");
     
     Score->SetThreshold(DEFAULT_HIGH_SCORE);
-    TierProgression->SetThreshold(DEFAULT_NEXT_TIER_LEVEL);
+    TierProgression->SetThreshold(ATier::DEFAULT_NEXT_TIER);
     
 }

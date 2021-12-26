@@ -6,6 +6,9 @@
 #include "UObject/NoExportTypes.h"
 #include "BaseEvent.generated.h"
 
+// for name inits
+static const FName THRESHOLD_EVENT(TEXT("Threshold Event"));
+
 class UEventManager;
 class UPOdimhGameInstance;
 
@@ -18,6 +21,8 @@ class PROJECTODIMH_API UBaseEvent : public UObject
 	GENERATED_BODY()
 	
 public:
+    
+    
     UBaseEvent();
     ~UBaseEvent();
     

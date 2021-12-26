@@ -8,7 +8,7 @@
 #include "ClassInterface/DataSaveInterface.h"
 #include "Match3GameMode.generated.h"
 
-const int8 INIT_BASE_SCORE_MULTIPLIER = 1;
+
 
 class AGrid;
 class ATile;
@@ -39,9 +39,11 @@ public:
     UFUNCTION(BlueprintCallable)
     void SaveAndQuit(const int32 PlayerIndex);
     
+    const uint32 CalculateTotalTileValue(const uint32 TileCount, const uint32 Multiplier = DEFAULT_SCORE_MULTIPLIER);
+    
     /** Add to the score */
     UFUNCTION(BlueprintCallable)
-    void AddScore(const int32 Score);
+    void UpdateGameState(const int32 TileCount);
     
     /** Get the current score of the game */
     UFUNCTION(BlueprintPure)
@@ -65,6 +67,9 @@ public:
     
     void ReceiveRequestToEndTurn();
     void ReceiveRequestToEndTurn(ATile* LastTileGrabbed);
+    
+    UFUNCTION()
+    void HandleTierThreshold(AActor* TierPtr, UBaseEvent* Evt);
     
     void TryEndTurn();
     
@@ -103,6 +108,9 @@ protected:
     class APOdimhGameState* GameState;
     
 private:
+    UPROPERTY(EditDefaultsOnly)
+    int32 TileValue = INIT_TILE_VALUE;
+    
     UPROPERTY()
     UGameEvent* PlayerMove;
     

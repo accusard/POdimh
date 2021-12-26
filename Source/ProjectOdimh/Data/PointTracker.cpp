@@ -9,21 +9,20 @@
 void APointTracker::NotifyPointsUp(const uint32 Value)
 {
     UEventManager* EvtMgr = Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager;
-    EvtMgr->CallbackOnCount.Broadcast(this, Value);
+    EvtMgr->OnScoreUp.Broadcast(this, Value);
 }
 
 void APointTracker::NotifyPointsThreshold()
 {
     UEventManager* EvtMgr = Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager;
-    UGameEvent* ThresholdEvent = EvtMgr->NewEvent<UGameEvent>(this, "Threshold", true);
-    EvtMgr->OnActorEvent.Broadcast(this, ThresholdEvent);
+    UGameEvent* GameEvt = EvtMgr->NewEvent<UGameEvent>(this, THRESHOLD_EVENT, true);
+    EvtMgr->OnActorEvent.Broadcast(this, GameEvt);
 }
 
-void APointTracker::Add(const uint32 BaseValue, const uint32 Multiplier)
+void APointTracker::Add(const uint32 Val)
 {
-    const uint32 Total = BaseValue * Multiplier;
-    Points.Value += Total;
-    NotifyPointsUp(Total);
+    Points.Value += Val;
+    NotifyPointsUp(Val);
     
     if(Points.Value >= GetThreshold())
         NotifyPointsThreshold();

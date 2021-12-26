@@ -54,7 +54,7 @@ void AGameplayRunModeBase::BeginPlay()
 	Super::BeginPlay();
     
     UEventManager* EvtMgr = Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager;
-    EvtMgr->CallbackOnCount.AddDynamic(this, &AGameplayRunModeBase::StepTick);
+    EvtMgr->OnTurn.AddDynamic(this, &AGameplayRunModeBase::StepTick);
 }
 
 const int AGameplayRunModeBase::GetOnTickFrom(AActor* Gameplay)

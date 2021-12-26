@@ -5,10 +5,13 @@
 #include "Gametypes.generated.h"
 
 // constants
-const uint32 DEFAULT_ONE = 1; // the default number of grid moves that a game piece can make per turn
-const uint32 MAXIMUM_VALUE_1000 = 1000;
+const uint32    DEFAULT_ONE = 1; // the default number of grid moves that a game piece can make per turn
+const uint32    MAXIMUM_VALUE_1000 = 1000;
+const uint32    DEFAULT_HIGH_SCORE = 75000;
+const uint32    INIT_TILE_VALUE = 10;
+const uint8     DEFAULT_SCORE_MULTIPLIER = 1;
 
-const FName SWAP_POSITIONS = TEXT("Swap Tile Positions");
+static const FName SWAP_POSITIONS(TEXT("Swap Tile Positions"));
 
 /** An enum for player ID */
 UENUM(BlueprintType)
