@@ -43,7 +43,7 @@ public:
     
     /** Add to the score */
     UFUNCTION(BlueprintCallable)
-    void UpdateGameState(const int32 TileCount);
+    void UpdateGameState(const int32 TileCount, const int32 ComboCount);
     
     /** Get the current score of the game */
     UFUNCTION(BlueprintPure)

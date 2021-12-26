@@ -151,12 +151,12 @@ const uint32 AMatch3GameMode::CalculateTotalTileValue(const uint32 TileCnt, cons
     return TileCnt * Mltplr * TileValue;
 }
 
-void AMatch3GameMode::UpdateGameState(const int32 TileCnt)
+void AMatch3GameMode::UpdateGameState(const int32 TileCnt, const int32 CmbCnt)
 {
     if(GameState->bGameHasStarted)
     {
-        uint32 Mltplr = GameState->ScoreMultiplier;
-        uint32 TotScr = CalculateTotalTileValue(TileCnt, Mltplr);
+        GameState->ScoreMultiplier = CmbCnt;
+        uint32 TotScr = CalculateTotalTileValue(TileCnt, CmbCnt);
         GameState->Score->Add(TotScr);
         GameState->TierProgression->Add(TileCnt);
     }

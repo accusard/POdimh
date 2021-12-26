@@ -82,10 +82,6 @@ public:
     UFUNCTION(BlueprintCallable)
     const bool MatchingTilesAvailable(int NumOfTileTypes);
     
-    /** Score is calculated based on number of tiles, the tile value and a multiplier */
-    UFUNCTION(BlueprintCallable)
-    const int32 CalculateTileValue(const int NumOfMatchingTiles, const int TileValue, const int Multiplier) const;
-    
     const bool HasTilePositionChanged(ATile* Tile);
     
     void NotifyGridStateChanged();

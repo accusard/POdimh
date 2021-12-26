@@ -225,13 +225,6 @@ void AGrid::OnInitialTilesSpawned(TArray<ATile*> SpecialTiles)
     EvtMgr->OnActorEvent.Broadcast(this, Event);
 }
 
-const int32 AGrid::CalculateTileValue(const int NumOfMatchingTiles, const int TileValue, const int Multiplier) const
-{
-    const int TotalScore = NumOfMatchingTiles * TileValue * Multiplier;
-    
-    return TotalScore;
-}
-
 void AGrid::OnEventBurstEnd_Implementation(AMatch3GameMode* Mode)
 {
     bTilesHaveSwapped = false;
