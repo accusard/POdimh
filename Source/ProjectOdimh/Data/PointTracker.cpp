@@ -29,7 +29,7 @@ void APointTracker::Add(const uint32 BaseValue, const uint32 Multiplier)
         NotifyPointsThreshold();
 }
 
-const uint32 APointTracker::GetTotalPoints() const
+const int32 APointTracker::GetTotalPoints() const
 {
     return Points.Value;
 }
@@ -39,12 +39,12 @@ void APointTracker::SetThreshold(const uint32 Value)
     Points.Default = Value;
 }
 
-const uint32 APointTracker::GetThreshold() const
+const int32 APointTracker::GetThreshold() const
 {
     return Points.Default;
 }
 
-const uint32 APointTracker::GetDeltaPoints() const
+const int32 APointTracker::GetDeltaPoints() const
 {
     const uint32 Delta = GetThreshold() - GetTotalPoints();
     return Delta;

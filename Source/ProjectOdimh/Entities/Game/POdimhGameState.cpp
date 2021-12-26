@@ -5,8 +5,10 @@
 
 APOdimhGameState::APOdimhGameState() : bGameHasStarted(false)
 {
-    Score = GetWorld()->SpawnActor<APointTracker>();
+    Score = CreateDefaultSubobject<APointTracker>("Score");
+    TierProgression = CreateDefaultSubobject<ATier>("TierProgression");
+    
     Score->SetThreshold(DEFAULT_HIGH_SCORE);
     TierProgression->SetThreshold(DEFAULT_NEXT_TIER_LEVEL);
-    TierProgression = GetWorld()->SpawnActor<ATier>();
+    
 }

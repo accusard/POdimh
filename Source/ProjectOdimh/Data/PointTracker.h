@@ -10,7 +10,7 @@
 const uint32 DEFAULT_MAX_POINTS = 75000;
 
 /**
- *  Track the game's scoring and a point threshold. Mostly used for game progression.
+ *  Track the game's scoring and points threshold. Mostly used for game progression.
  */
 UCLASS()
 class PROJECTODIMH_API APointTracker : public AInfo
@@ -26,13 +26,16 @@ public:
     
     void Add(const uint32 Value, const uint32 Multiplier = 1);
     
-    const uint32 GetTotalPoints() const;
+    UFUNCTION(BlueprintPure)
+    const int32 GetTotalPoints() const;
     
     void SetThreshold(const uint32 Value);
     
-    const uint32 GetThreshold() const;
+    UFUNCTION(BlueprintPure)
+    const int32 GetThreshold() const;
     
-    const uint32 GetDeltaPoints() const;
+    UFUNCTION(BlueprintPure)
+    const int32 GetDeltaPoints() const;
     
 protected:
     UPROPERTY()

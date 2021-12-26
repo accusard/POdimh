@@ -44,9 +44,9 @@ public:
     UPROPERTY()
     class UGameEvent* StartState;
 
-    UPROPERTY()
+    UPROPERTY(BlueprintReadOnly)
     APointTracker* Score;
     
-    UPROPERTY()
+    UPROPERTY(BlueprintReadOnly)
     ATier* TierProgression;
 };
