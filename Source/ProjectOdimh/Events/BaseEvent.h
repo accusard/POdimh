@@ -6,8 +6,10 @@
 #include "UObject/NoExportTypes.h"
 #include "BaseEvent.generated.h"
 
-// for name inits
+// for event identifiers
 static const FName THRESHOLD_EVENT(TEXT("Threshold Event"));
+static const FName INIT_TILE_SPAWN_EVENT(TEXT("Initial Spawn"));
+static const FName GRID_STATE_CHANGE_EVENT(TEXT("Grid State Change"));
 
 class UEventManager;
 class UPOdimhGameInstance;
