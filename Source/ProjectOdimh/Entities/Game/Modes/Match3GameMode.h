@@ -74,7 +74,7 @@ public:
     void TryEndTurn();
     
     UFUNCTION(BlueprintCallable)
-    void SaveCurrentGameState(UPOdimhGameInstance* Instance);
+    void SaveCurrentGameState(UPOdimhGameInstance* Instance, const bool bIsNewGame);
     
     void Give(AActor* Controller, const FMatch3GameAction& Action, const bool bExecuteNow = true);
     

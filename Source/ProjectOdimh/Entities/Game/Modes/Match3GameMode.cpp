@@ -184,7 +184,6 @@ void AMatch3GameMode::NotifyGameplayOptionsTurnEnding(const int OnTick)
 void AMatch3GameMode::SaveAndQuit(const int32 PlayerIndex)
 {
     const bool bIgnorePlatformSpecificRestrictions = true;
-    const bool bNotNewGame = false;
     
     GetGameInstance<UPOdimhGameInstance>()->SaveGame(CONTINUE_GAME_SLOT, PlayerIndex);
     
@@ -379,7 +378,7 @@ void AMatch3GameMode::TryEndTurn()
     
     GameState->LifetimeMatchedTiles += GetGrid()->GetTotalMatchedThisTurn();
     
-    SaveCurrentGameState(Instance);
+    SaveCurrentGameState(Instance, false);
     
     Instance->EventManager->ClearEventQueue();
     GetGrid()->ResetAccumulatedMatchedTiles();
@@ -388,11 +387,9 @@ void AMatch3GameMode::TryEndTurn()
     GetWorldTimerManager().ClearTimer(TurnTickTimerHandler);
 }
 
-void AMatch3GameMode::SaveCurrentGameState(UPOdimhGameInstance* Instance)
+void AMatch3GameMode::SaveCurrentGameState(UPOdimhGameInstance* Instance, const bool bIsNewGame)
 {
-    const bool bNewGame = true;
-    
-    if(Instance->SafeToSave(!bNewGame))
+    if(Instance->SafeToSave(bIsNewGame))
     {
         Instance->SaveGame(CONTINUE_GAME_SLOT, (int32)EPlayer::One);
         Instance->SaveGame(LAST_SUCCESSFUL_SLOT, (int32)EPlayer::One);
