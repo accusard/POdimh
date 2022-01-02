@@ -62,6 +62,9 @@ public:
     virtual void Save(USaveGame* Data) override;
     virtual const bool Load(USaveGame* Data) override;
     
+    UFUNCTION(BlueprintNativeEvent)
+    void StartMatch3(AActor* Actor, UBaseEvent* Evt);
+    
     // Called every frame
     virtual void Tick(float DeltaTime) override;
 

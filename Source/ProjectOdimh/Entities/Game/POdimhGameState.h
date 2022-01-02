@@ -36,7 +36,7 @@ public:
     
     uint32 ParticipantIndex = 1;
     
-    UPROPERTY()
+    UPROPERTY(BlueprintReadOnly)
     uint8 bGameHasStarted : 1;
     
     UPROPERTY()

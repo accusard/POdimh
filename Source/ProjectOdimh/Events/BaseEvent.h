@@ -10,6 +10,7 @@
 static const FName THRESHOLD_EVENT(TEXT("Threshold Event"));
 static const FName INIT_TILE_SPAWN_EVENT(TEXT("Initial Spawn"));
 static const FName GRID_STATE_CHANGE_EVENT(TEXT("Grid State Change"));
+static const FName GAME_HAS_STARTED_EVENT(TEXT("Game Has Started"));
 
 class UEventManager;
 class UPOdimhGameInstance;
@@ -23,7 +24,6 @@ class PROJECTODIMH_API UBaseEvent : public UObject
 	GENERATED_BODY()
 	
 public:
-    
     
     UBaseEvent();
     ~UBaseEvent();

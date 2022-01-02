@@ -47,8 +47,10 @@ void AGrid::BeginPlay()
 {
     Super::BeginPlay();
     
-    Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager->OnActorPicked.AddDynamic(this, &AGrid::SetOldLocation);
-    Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager->OnActorReleased.AddDynamic(this, &AGrid::CheckState);
+    UEventManager* EvtMgr = Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager;
+    EvtMgr->OnActorPicked.AddDynamic(this, &AGrid::SetOldLocation);
+    EvtMgr->OnActorReleased.AddDynamic(this, &AGrid::CheckState);
+    EvtMgr->OnActorEvent.AddDynamic(this, &AGrid::StartMatch3);
 }
 
 void AGrid::Save(USaveGame* SaveData)
@@ -85,6 +87,11 @@ const bool AGrid::Load(USaveGame* LoadData)
     }
     
     return bSuccess;
+}
+
+void AGrid::StartMatch3_Implementation(AActor* Actor, UBaseEvent* Evt)
+{
+    Evt->Manager->OnActorEvent.RemoveDynamic(this, &AGrid::StartMatch3);
 }
 
 const FVector2D& AGrid::GetTileCoords(const FVector& Location)

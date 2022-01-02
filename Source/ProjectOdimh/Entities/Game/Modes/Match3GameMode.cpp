@@ -311,7 +311,7 @@ void AMatch3GameMode::StartGame()
         }
         PlayerMove = NewTurn("Player Move", true);
         GetWorldTimerManager().ClearTimer(GameStartTimerHandler);
-        GameState->StartState = NewObject<UGameEvent>(ActiveGame->GetController(), "StartState");
+        GameState->StartState = NewObject<UGameEvent>(ActiveGame->GetController(), GAME_HAS_STARTED_EVENT);
         GameState->StartState->Init();
     }
     
