@@ -7,13 +7,15 @@
 #include "BaseEvent.generated.h"
 
 // for event identifiers
-static const FName THRESHOLD_EVENT(TEXT("Threshold Event"));
-static const FName INIT_TILE_SPAWN_EVENT(TEXT("Initial Spawn"));
-static const FName GRID_STATE_CHANGE_EVENT(TEXT("Grid State Change"));
-static const FName GAME_HAS_STARTED_EVENT(TEXT("Game Has Started"));
+static const FName F_THRESHOLD_EVENT(TEXT("Threshold Event"));
+static const FName F_INIT_TILE_SPAWN_EVENT(TEXT("Initial Spawn"));
+static const FName F_GRID_STATE_CHANGE_EVENT(TEXT("Grid State Change"));
+static const FName F_GAME_HAS_STARTED_EVENT(TEXT("Game Has Started"));
 
 class UEventManager;
 class UPOdimhGameInstance;
+
+
 
 /**
  * A UBaseEvent class is a wrapper class that responds to an event that just happend in an encapsulated process.
@@ -25,10 +27,27 @@ class PROJECTODIMH_API UBaseEvent : public UObject
 	
 public:
     
+    UPROPERTY(BlueprintReadOnly, Category="Event Identifier")
+    FName THRESHOLD_EVENT;
+    
+    UPROPERTY(BlueprintReadOnly, Category="Event Identifier")
+    FName INIT_TILE_SPAWN_EVENT;
+    
+    UPROPERTY(BlueprintReadOnly, Category="Event Identifier")
+    FName GRID_STATE_CHANGE_EVENT;
+    
+    UPROPERTY(BlueprintReadOnly, Category="Event Identifier")
+    FName GAME_HAS_STARTED_EVENT;
+    
+public:
     UBaseEvent();
     ~UBaseEvent();
     
     virtual void Init();
+    
+    /** Identify an event by a static event identifier */
+    UFUNCTION(BlueprintPure, Category="POdimh Event")
+    const bool Is(const FName EventId) const;
     
     void Start();
     

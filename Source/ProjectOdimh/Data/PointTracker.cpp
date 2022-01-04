@@ -15,7 +15,7 @@ void APointTracker::NotifyPointsUp(const uint32 Value)
 void APointTracker::NotifyPointsThreshold()
 {
     UEventManager* EvtMgr = Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager;
-    UGameEvent* GameEvt = EvtMgr->NewEvent<UGameEvent>(this, THRESHOLD_EVENT, true);
+    UGameEvent* GameEvt = EvtMgr->NewEvent<UGameEvent>(this, F_THRESHOLD_EVENT, true);
     EvtMgr->OnActorEvent.Broadcast(this, GameEvt);
 }
 

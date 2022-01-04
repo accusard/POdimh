@@ -194,7 +194,7 @@ const bool AGrid::HasTilePositionChanged(ATile* Tile)
 
 void AGrid::NotifyGridStateChanged()
 {
-    Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager->NewEvent<UGridEvent>(this, GRID_STATE_CHANGE_EVENT, true);
+    Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager->NewEvent<UGridEvent>(this, F_GRID_STATE_CHANGE_EVENT, true);
     bGridStateChanged = false;
 }
 
@@ -224,7 +224,7 @@ const float GetDistanceBetween(ATile* TileA, ATile* TileB)
 void AGrid::OnInitialTilesSpawned(TArray<ATile*> SpecialTiles)
 {
     UEventManager* EvtMgr = Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager;
-    UGridEvent* Event = EvtMgr->NewEvent<UGridEvent>(this, INIT_TILE_SPAWN_EVENT, true);
+    UGridEvent* Event = EvtMgr->NewEvent<UGridEvent>(this, F_INIT_TILE_SPAWN_EVENT, true);
     
     for(ATile* Tile : SpecialTiles)
         Event->PtrToCustomTiles.Add(Tile);
@@ -283,7 +283,7 @@ void AGrid::OnEventEnd()
 void AGrid::SpawnTileToEmptyGrid_Implementation(ATile* Tile, const bool bNotifyStateChange)
 {
     if(bNotifyStateChange)
-        Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager->NewEvent<UGridEvent>(this, GRID_STATE_CHANGE_EVENT, true);
+        Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager->NewEvent<UGridEvent>(this, F_GRID_STATE_CHANGE_EVENT, true);
 }
 
 ATile* AGrid::SpawnTile(TSubclassOf<ATile> BlueprintClass, const FTransform& Transform, const int Type, const bool bRegisterPos)
