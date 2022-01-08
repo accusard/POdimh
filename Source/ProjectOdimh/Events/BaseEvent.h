@@ -1,4 +1,4 @@
-// Copyright 2017-2018 Vanny Sou. All Rights Reserved.
+// Copyright 2022 Vanny Sou. All Rights Reserved.
 
 #pragma once
 
@@ -18,7 +18,7 @@ class UPOdimhGameInstance;
 
 
 /**
- * A UBaseEvent class is a wrapper class that responds to an event that just happend in an encapsulated process.
+ *
  */
 UCLASS(abstract, BlueprintType)
 class PROJECTODIMH_API UBaseEvent : public UObject
