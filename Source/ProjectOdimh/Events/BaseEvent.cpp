@@ -6,11 +6,18 @@
 #include "Kismet/GameplayStatics.h"
 
 
+
+
 UBaseEvent::UBaseEvent()
 {
     bPendingFinish = true;
     bStarted = false;
     UE_LOG(LogTemp,Warning,TEXT("Creating Event (%s)"), *GetName());
+    
+    THRESHOLD_EVENT = F_THRESHOLD_EVENT;
+    INIT_TILE_SPAWN_EVENT = F_INIT_TILE_SPAWN_EVENT;
+    GRID_STATE_CHANGE_EVENT = F_GRID_STATE_CHANGE_EVENT;
+    GAME_HAS_STARTED_EVENT = F_GAME_HAS_STARTED_EVENT;
 }
 
 UBaseEvent::~UBaseEvent()
@@ -23,6 +30,11 @@ void UBaseEvent::Init()
     check(Manager = Cast<UPOdimhGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()))->EventManager);
     check(GameInstance = Cast<UPOdimhGameInstance>(UGameplayStatics::GetGameInstance(GetWorld())));
     check(GameMode = UGameplayStatics::GetGameMode(GetWorld()));
+}
+
+const bool UBaseEvent::Is(const FName EventId) const
+{
+    return GetFName() == EventId;
 }
 
 void UBaseEvent::Start()

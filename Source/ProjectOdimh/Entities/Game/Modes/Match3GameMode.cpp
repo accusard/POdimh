@@ -311,7 +311,7 @@ void AMatch3GameMode::StartGame()
         }
         PlayerMove = NewTurn("Player Move", true);
         GetWorldTimerManager().ClearTimer(GameStartTimerHandler);
-        GameState->StartState = NewObject<UGameEvent>(ActiveGame->GetController(), GAME_HAS_STARTED_EVENT);
+        GameState->StartState = NewObject<UGameEvent>(ActiveGame->GetController(), F_GAME_HAS_STARTED_EVENT);
         GameState->StartState->Init();
     }
     
@@ -360,7 +360,7 @@ void AMatch3GameMode::HandleTierThreshold(AActor* TierPtr, UBaseEvent* Evt)
 {
     if(ATier* TierProgress = Cast<ATier>(TierPtr))
     {
-        if(Evt->GetFName() == THRESHOLD_EVENT)
+        if(Evt->GetFName() == F_THRESHOLD_EVENT)
         {
             const uint32 Reset = 0;
             TierProgress->LevelUp(Reset, ATier::DEFAULT_NEXT_TIER);
