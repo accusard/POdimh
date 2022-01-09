@@ -10,6 +10,7 @@ void APoints::NotifyPointsUp(const uint32 Value)
 {
     UEventManager* EvtMgr = Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager;
     EvtMgr->OnScoreUp.Broadcast(this, Value);
+    UE_LOG(LogTemp,Warning,TEXT("PointsUp"));
 }
 
 void APoints::NotifyPointsThreshold()
@@ -17,6 +18,12 @@ void APoints::NotifyPointsThreshold()
     UEventManager* EvtMgr = Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager;
     UGameEvent* GameEvt = EvtMgr->NewEvent<UGameEvent>(this, F_THRESHOLD_EVENT, true);
     EvtMgr->OnActorEvent.Broadcast(this, GameEvt);
+    UE_LOG(LogTemp,Warning,TEXT("ThresholdUp"));
+}
+
+void APoints::Set(const uint32 Value)
+{
+    Points.Value = Value;
 }
 
 void APoints::Add(const uint32 Val)

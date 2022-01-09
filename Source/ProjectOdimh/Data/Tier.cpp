@@ -36,6 +36,6 @@ void ATier::SetLevel(const uint32 NewLevel)
 void ATier::SetLevel(const uint32 NewLevel, const uint32 PointValue, const uint32 Threshold)
 {
     SetLevel(NewLevel);
-    Points.Value = PointValue;
+    Set(PointValue);
     SetThreshold(Threshold);
 }

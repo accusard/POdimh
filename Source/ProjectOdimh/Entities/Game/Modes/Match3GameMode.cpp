@@ -87,7 +87,7 @@ const bool AMatch3GameMode::Load(USaveGame* DataPtr)
 {
     if(UPOdimhSaveGame* Data = Cast<UPOdimhSaveGame>(DataPtr))
     {
-        GameState->Score->Add((Data->CustomInt["GameScore"]));
+        GameState->Score->Set((Data->CustomInt["GameScore"]));
         GameState->AwarenessCounter = Data->CustomInt["POdimhAwareness"];
         GameState->TurnCounter = Data->CustomInt["TurnCounter"];
         GameState->LifetimeMatchedTiles = Data->CustomInt["LifetimeMatchedTiles"];

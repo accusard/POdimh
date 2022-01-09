@@ -24,7 +24,9 @@ public:
     UFUNCTION()
     void NotifyPointsThreshold();
     
-    void Add(const uint32 Value);
+    void Add(const uint32 Points);
+    
+    void Set(const uint32 Points);
     
     UFUNCTION(BlueprintPure)
     const int32 GetTotalPoints() const;
