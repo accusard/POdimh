@@ -6,7 +6,7 @@
 
 APOdimhGameState::APOdimhGameState() : bGameHasStarted(false)
 {
-    Score = CreateDefaultSubobject<APointTracker>("Score");
+    Score = CreateDefaultSubobject<APoints>("Score");
     TierProgression = CreateDefaultSubobject<ATier>("TierProgression");
     
     Score->SetThreshold(DEFAULT_HIGH_SCORE);

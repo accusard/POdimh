@@ -8,7 +8,7 @@
 #include "POdimhGameState.generated.h"
 
 
-class APointTracker;
+class APoints;
 class ATier;
 
 /**
@@ -43,7 +43,7 @@ public:
     class UGameEvent* StartState;
 
     UPROPERTY(BlueprintReadOnly)
-    APointTracker* Score;
+    APoints* Score;
     
     UPROPERTY(BlueprintReadOnly)
     ATier* TierProgression;
