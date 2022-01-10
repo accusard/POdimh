@@ -74,7 +74,7 @@ void AMatch3GameMode::Save(USaveGame* DataPtr)
         Data->CustomInt.Add("LifetimeMatchedTiles", GameState->LifetimeMatchedTiles);
         
         Data->CustomInt.Add("TierLevel", GameState->TierProgression->GetLevel());
-        Data->CustomInt.Add("TierThresholdCurVal", GameState->Score->GetTotalPoints());
+        Data->CustomInt.Add("TierThresholdCurVal", GameState->TierProgression->GetTotalPoints());
         Data->CustomInt.Add("TierThresholdNeeded", GameState->TierProgression->GetThreshold());
     }
     
@@ -87,7 +87,7 @@ const bool AMatch3GameMode::Load(USaveGame* DataPtr)
 {
     if(UPOdimhSaveGame* Data = Cast<UPOdimhSaveGame>(DataPtr))
     {
-        GameState->Score->Add((Data->CustomInt["GameScore"]));
+        GameState->Score->Set((Data->CustomInt["GameScore"]));
         GameState->AwarenessCounter = Data->CustomInt["POdimhAwareness"];
         GameState->TurnCounter = Data->CustomInt["TurnCounter"];
         GameState->LifetimeMatchedTiles = Data->CustomInt["LifetimeMatchedTiles"];
@@ -375,7 +375,7 @@ void AMatch3GameMode::TryEndTurn()
     
     UPOdimhGameInstance* Instance = GetGameInstance<UPOdimhGameInstance>();
     GameState->TurnCounter++;
-    
+    GameState->ScoreMultiplier = 0;
     GameState->LifetimeMatchedTiles += GetGrid()->GetTotalMatchedThisTurn();
     
     SaveCurrentGameState(Instance, false);

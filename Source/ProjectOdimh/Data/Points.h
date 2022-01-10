@@ -1,19 +1,19 @@
-// Copyright 2017-2021 Vanny Sou. All Rights Reserved.
+// Copyright 2022 Vanny Sou. All Rights Reserved.
 
 #pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Info.h"
 #include "Data/FGameStats.h"
-#include "PointTracker.generated.h"
+#include "Points.generated.h"
 
 const uint32 DEFAULT_MAX_POINTS = 75000;
 
 /**
- *  Track the game's scoring and points threshold. Mostly used for game progression.
+ *  Game progression using points threshold
  */
 UCLASS()
-class PROJECTODIMH_API APointTracker : public AInfo
+class PROJECTODIMH_API APoints : public AInfo
 {
 	GENERATED_BODY()
 	
@@ -24,7 +24,9 @@ public:
     UFUNCTION()
     void NotifyPointsThreshold();
     
-    void Add(const uint32 Value);
+    void Add(const uint32 Points);
+    
+    void Set(const uint32 Points);
     
     UFUNCTION(BlueprintPure)
     const int32 GetTotalPoints() const;

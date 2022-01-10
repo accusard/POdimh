@@ -14,7 +14,7 @@ const uint8     DEFAULT_SCORE_MULTIPLIER = 1;
 static const FName SWAP_POSITIONS(TEXT("Swap Tile Positions"));
 
 /** An enum for player ID */
-UENUM(BlueprintType)
+UENUM(BlueprintType, meta=(ScriptName="M3Player"))
 enum class EPlayer : uint8
 {
     One = 0,

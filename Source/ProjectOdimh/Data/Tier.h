@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Data/PointTracker.h"
+#include "Data/Points.h"
 #include "Tier.generated.h"
 
 /**
  *  A basic level up progression system.
  */
 UCLASS()
-class PROJECTODIMH_API ATier : public APointTracker
+class PROJECTODIMH_API ATier : public APoints
 {
 	GENERATED_BODY()
     
