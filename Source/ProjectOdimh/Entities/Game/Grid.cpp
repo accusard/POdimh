@@ -277,7 +277,7 @@ void AGrid::NotifyBoardStateChanged_Implementation(uint8 OldState, const TArray<
 
 void AGrid::OnEventEnd()
 {
-    WaitBeforeSwitchBoardState = 0;
+    
 }
 
 void AGrid::SpawnTileToEmptyGrid_Implementation(ATile* Tile, const bool bNotifyStateChange)

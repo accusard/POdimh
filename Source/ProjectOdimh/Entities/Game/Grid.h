@@ -198,9 +198,6 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int32 SizeY;
     
-    UPROPERTY(BlueprintReadWrite)
-    float WaitBeforeSwitchBoardState = 0;
-    
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Tiles")
     uint8 bSaveTerminalCoords : 1;
     
