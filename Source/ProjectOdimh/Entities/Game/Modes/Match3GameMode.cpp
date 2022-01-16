@@ -183,14 +183,14 @@ void AMatch3GameMode::NotifyGameplayOptionsTurnEnding(const int OnTick)
 
 void AMatch3GameMode::SaveAndQuit(const int32 PlayerIndex)
 {
-    const bool bIgnorePlatformSpecificRestrictions = true;
+    const bool bIgnorePlatformSpecificRestrictions = false;
     
     GetGameInstance<UPOdimhGameInstance>()->SaveGame(CONTINUE_GAME_SLOT, PlayerIndex);
     
-    UKismetSystemLibrary::QuitGame(GetWorld(),
-                                   UGameplayStatics::GetPlayerController(GetWorld(),PlayerIndex),
-                                   EQuitPreference::Quit,
-                                   bIgnorePlatformSpecificRestrictions);
+//    UKismetSystemLibrary::QuitGame(GetWorld(),
+//                                   UGameplayStatics::GetPlayerController(GetWorld(),PlayerIndex),
+//                                   EQuitPreference::Background,
+//                                   bIgnorePlatformSpecificRestrictions);
 }
 
 const bool AMatch3GameMode::ParticipantsBlueprintIsValid()
