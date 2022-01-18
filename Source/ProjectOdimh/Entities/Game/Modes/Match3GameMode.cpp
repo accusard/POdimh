@@ -434,8 +434,11 @@ const bool AMatch3GameMode::PendingGameplayFinish() const
 {
     for(AActor* Option : Gameplays)
     {
-        if(Cast<IGameplayOptionsInterface>(Option)->Execute_IsRunning(Option))
-            return true;
+        if(IGameplayOptionsInterface* Gameplay = Cast<IGameplayOptionsInterface>(Option))
+        {
+            if(Gameplay->Execute_IsRunning(Option))
+                return true;
+        }
     }
     return false;
 }
