@@ -82,8 +82,9 @@ const bool AGrid::Load(USaveGame* LoadData)
         
         InitTiles(Params);
         
-        if(GetTiles().Num() == Data->SavedGrid.GetNumberOfTiles())
-            bSuccess = true;
+        check(GetTiles().Num() == Data->SavedGrid.GetNumberOfTiles());
+        
+        bSuccess = true;
     }
     
     return bSuccess;
