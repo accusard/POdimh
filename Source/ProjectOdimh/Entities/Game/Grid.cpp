@@ -274,6 +274,12 @@ void AGrid::NewGrid()
 void AGrid::NotifyBoardStateChanged_Implementation(uint8 OldState, const TArray<ATile*>& CustomUserTiles, UGridEvent* EvtPtr)
 {
     EvtPtr->Manager->OnActorEvent.Broadcast(this, EvtPtr);
+    if(AMatch3GameMode* Mode = Cast<AMatch3GameMode>(EvtPtr->GameMode))
+    {
+        uint8 PickState = 0;
+        if(EvtPtr->NewState == PickState)
+            Mode->SaveCurrentGameState(EvtPtr->GameInstance, false);
+    }
 }
 
 void AGrid::OnEventEnd()
