@@ -24,7 +24,8 @@ public:
     UFUNCTION()
     void NotifyPointsThreshold();
     
-    void Add(const uint32 Points);
+    UFUNCTION(BlueprintCallable)
+    void Add(const int32 Points, const bool bNotifyPointsUp = true);
     
     void Set(const uint32 Points);
     

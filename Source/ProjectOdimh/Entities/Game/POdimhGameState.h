@@ -42,7 +42,7 @@ public:
     UPROPERTY()
     class UGameEvent* StartState;
 
-    UPROPERTY(BlueprintReadOnly)
+    UPROPERTY(BlueprintReadWrite)
     APoints* Score;
     
     UPROPERTY(BlueprintReadOnly)

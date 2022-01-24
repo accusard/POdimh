@@ -26,13 +26,16 @@ void APoints::Set(const uint32 Value)
     Points.Value = Value;
 }
 
-void APoints::Add(const uint32 Val)
+void APoints::Add(const int32 Val, const bool bNotePointsUp)
 {
     Points.Value += Val;
-    NotifyPointsUp(Val);
+    if(bNotePointsUp)
+    {
+        NotifyPointsUp(Val);
     
-    if(Points.Value >= GetThreshold())
-        NotifyPointsThreshold();
+        if(Points.Value >= GetThreshold())
+            NotifyPointsThreshold();
+    }
 }
 
 const int32 APoints::GetTotalPoints() const
