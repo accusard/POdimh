@@ -11,6 +11,7 @@
 #include "Engine/World.h"
 #include "Events/EventManager.h"
 #include "Events/BaseEvent.h"
+#include "Entities/Game/Modes/Match3GameMode.h"
 
 
 
@@ -39,6 +40,7 @@ void UPOdimhGameInstance::SaveGameToSlot(USaveGame* Data, const FString& SlotNam
 void UPOdimhGameInstance::ResetGame(const int32 PlayerIndex)
 {
     UGameplayStatics::SetGamePaused(this, false);
+    UGameplayStatics::GetGameMode(GetWorld())->ResetLevel();
     LoadGame(RESET_GAME_SLOT,PlayerIndex);
     SaveGame(CONTINUE_GAME_SLOT,PlayerIndex);
     SaveGame(LAST_SUCCESSFUL_SLOT,PlayerIndex);

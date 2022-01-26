@@ -58,6 +58,8 @@ public:
 	// Sets default values for this actor's properties
 	AGrid();
     
+    virtual void Reset() override;
+    
     // DataSave interface
     virtual void Save(USaveGame* Data) override;
     virtual const bool Load(USaveGame* Data) override;

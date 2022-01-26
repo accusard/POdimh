@@ -2,6 +2,7 @@
 
 #include "Match3GameMode.h"
 #include "POdimhGameInstance.h"
+#include "EngineUtils.h"
 #include "Entities/Game/POdimhGameState.h"
 #include "Entities/Game/Modes/GameplayOptions/Gameplay.h"
 #include "Entities/Game/Modes/GameplayOptions/GameplayRunModeBase.h"
@@ -98,6 +99,21 @@ const bool AMatch3GameMode::Load(USaveGame* DataPtr)
         Data->CustomInt["TierThresholdNeeded"]);
     }
     return true;
+}
+
+void AMatch3GameMode::ResetLevel()
+{
+    // at the moment, AGameModeBase::ResetLevel will reset controller actors which
+    // result in undesired behaviors with the game's puzzle grid.
+    // instead only use a snippet of its code until a solution is found
+    for (FActorIterator It(GetWorld()); It; ++It)
+    {
+        AActor* A = *It;
+        if (A && !A->IsPendingKill() && A != this && !A->IsA<AController>() && ShouldReset(A))
+        {
+            A->Reset();
+        }
+    }
 }
 
 const bool AMatch3GameMode::LoadParticipants(USaveGame* Data)

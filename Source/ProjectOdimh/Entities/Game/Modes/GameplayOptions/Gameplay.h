@@ -17,6 +17,8 @@ public:
 	// Sets default values for this actor's properties
 	AGameplay();
     
+    virtual void Reset() override;
+    
     UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
     void Init(AActor* Actor, UBaseEvent* Evt);
     

@@ -42,6 +42,11 @@ AGrid::AGrid()
     
 }
 
+void AGrid::Reset()
+{
+    Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager->OnActorEvent.AddDynamic(this, &AGrid::StartMatch3);
+}
+
 // Called when the game starts or when spawned
 void AGrid::BeginPlay()
 {

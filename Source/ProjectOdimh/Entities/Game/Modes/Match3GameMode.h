@@ -32,6 +32,7 @@ public:
     virtual void Save(USaveGame* Data) override;
     virtual const bool Load(USaveGame* Data) override;
     virtual void StartMatch() override;
+    virtual void ResetLevel() override;
     
     void NotifyGameplayOptionsTurnEnding(const int TurnNum);
     
