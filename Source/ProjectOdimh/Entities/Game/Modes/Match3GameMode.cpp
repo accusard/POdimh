@@ -103,6 +103,8 @@ const bool AMatch3GameMode::Load(USaveGame* DataPtr)
 
 void AMatch3GameMode::ResetLevel()
 {
+    Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager->ClearEventQueue();
+    
     // at the moment, AGameModeBase::ResetLevel will reset controller actors which
     // result in undesired behaviors with the game's puzzle grid.
     // instead only use a snippet of its code until a solution is found

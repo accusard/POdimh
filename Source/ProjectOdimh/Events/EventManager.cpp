@@ -93,7 +93,7 @@ void UEventManager::ClearEventQueue()
     for(int i = 0; i < EventQueue->GetNumObjects(); ++i)
     {
         UObject* Obj = EventQueue->GetIndex(i);
-        if(!Obj->IsPendingKill())
+        if(Obj && !Obj->IsPendingKill())
            Obj->MarkPendingKill();
     }
 #if !UE_BUILD_SHIPPING
