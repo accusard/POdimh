@@ -394,6 +394,7 @@ void AMatch3GameMode::TryEndTurn()
     UPOdimhGameInstance* Instance = GetGameInstance<UPOdimhGameInstance>();
     GameState->TurnCounter++;
     GameState->ScoreMultiplier = 0;
+    GameState->BonusPoints = 0;
     GameState->LifetimeMatchedTiles += GetGrid()->GetTotalMatchedThisTurn();
     
     SaveCurrentGameState(Instance, false);

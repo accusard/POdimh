@@ -34,6 +34,9 @@ public:
     UPROPERTY(BlueprintReadOnly)
     int32 LifetimeMatchedTiles;
     
+    UPROPERTY(BlueprintReadWrite)
+    int32 BonusPoints;
+    
     uint32 ParticipantIndex = 1;
     
     UPROPERTY(BlueprintReadOnly)
