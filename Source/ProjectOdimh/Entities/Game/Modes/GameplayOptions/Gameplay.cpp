@@ -1,8 +1,9 @@
 // Copyright 2017-2021 Vanny Sou. All Rights Reserved.
 
+#include "Gameplay.h"
 #include "POdimhGameInstance.h"
 #include "Events/EventManager.h"
-#include "Entities/Game/Modes/GameplayOptions/Gameplay.h"
+
 
 
 // Sets default values
