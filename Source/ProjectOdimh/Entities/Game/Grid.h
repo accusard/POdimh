@@ -112,6 +112,14 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     USoundCue* TileMatchCue;
     
+    void NewGrid();
+    
+    void OnEventEnd();
+    
+    const int32 GetTotalMatchedThisTurn() { return TotalNumTilesMatchedThisTurn; }
+    
+    void ResetAccumulatedMatchedTiles();
+    
     /** Blueprint Events */
 public:
     /** Get the value of GridSize that was assigned in blueprint */
@@ -130,19 +138,14 @@ public:
     UFUNCTION(BlueprintImplementableEvent)
     TArray<ATile*> GetTiles();
     
-    void NewGrid();
-    
     UFUNCTION(BlueprintImplementableEvent)
     void InitTiles(const FGridSpawningParameters& Param);
     
     UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
     void NotifyBoardStateChanged(uint8 OldState, const TArray<ATile*>& CustomUserTiles, UGridEvent* EvtRef);
     
-    void OnEventEnd();
-    
-    const int32 GetTotalMatchedThisTurn() { return TotalNumTilesMatchedThisTurn; }
-    
-    void ResetAccumulatedMatchedTiles();
+    UFUNCTION(BlueprintImplementableEvent)
+    void RegisterBoardState(const int NewState) const;
     
 protected:
 	// Called when the game starts or when spawned
