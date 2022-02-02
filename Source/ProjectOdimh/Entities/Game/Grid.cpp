@@ -238,11 +238,15 @@ void AGrid::OnInitialTilesSpawned(TArray<ATile*> SpecialTiles)
     EvtMgr->OnActorEvent.Broadcast(this, Event);
 }
 
-void AGrid::OnEventBurstEnd_Implementation(AMatch3GameMode* Mode)
+void AGrid::OnTurnEnd_Implementation(AActor* EvtCaller, class UGameEvent* Event)
 {
     bTilesHaveSwapped = false;
-    if(Mode->HasGameStarted())
-        Mode->ReceiveRequestToEndTurn();
+    if(AMatch3GameMode* Mode = Cast<AMatch3GameMode>(Event->GameMode))
+    {
+        if(Mode->HasGameStarted())
+            Mode->ReceiveRequestToEndTurn();
+        UE_LOG(LogTemp,Warning,TEXT("--> Calling OnTurnEnd_Implementation"));
+    }
 }
 
 void AGrid::HandleTilesSwapped(AController* GridController, ATile* DynamicTile, ATile* StaticTile)

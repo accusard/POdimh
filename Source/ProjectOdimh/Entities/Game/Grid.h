@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "ClassInterface/DataSaveInterface.h"
-
+#include "ClassInterface/TurnEventInterface.h"
 #include "Grid.generated.h"
 
 class ATile;
@@ -48,7 +48,7 @@ struct FGridSpawningParameters
  * trigger when certain conditions are met.
  */
 UCLASS()
-class PROJECTODIMH_API AGrid : public APawn, public IDataSaveInterface
+class PROJECTODIMH_API AGrid : public APawn, public IDataSaveInterface, public ITurnEventInterface
 {
 	GENERATED_BODY()
 
@@ -171,8 +171,8 @@ protected:
     UFUNCTION(BlueprintNativeEvent)
     void SpawnTileToEmptyGrid(ATile* Tile, const bool bNotifyStateChange);
     
-    UFUNCTION(BlueprintNativeEvent, BlueprintCallable, DisplayName="BurstEnd")
-    void OnEventBurstEnd(AMatch3GameMode* Mode);
+    UFUNCTION(BlueprintNativeEvent, BlueprintCallable, DisplayName="OnTurnEnd")
+    void OnTurnEnd(AActor* EvtCaller, class UGameEvent* Event);
     
     UFUNCTION(BlueprintCallable)
     void HandleTilesSwapped(AController* GridController, ATile* DynamicTile, ATile* StaticTile);
