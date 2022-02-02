@@ -51,7 +51,11 @@ UCLASS()
 class PROJECTODIMH_API AGrid : public APawn, public IDataSaveInterface
 {
 	GENERATED_BODY()
-	
+
+public:
+    UPROPERTY(BlueprintReadOnly)
+    float DELAY_BETWEEN_TILE_BURSTS = 0.08f;
+    
 public:
     friend class UGridEvent;
     

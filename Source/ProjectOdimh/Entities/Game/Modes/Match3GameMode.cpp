@@ -365,8 +365,10 @@ void AMatch3GameMode::ReceiveRequestToEndTurn()
     
     const int EndedOnTurnNum = GameState->TurnCounter;
     
+    const float Delay = GetGrid()->DELAY_BETWEEN_TILE_BURSTS;
+    
     NotifyGameplayOptionsTurnEnding(EndedOnTurnNum);
-    GetWorldTimerManager().SetTimer(TurnTickTimerHandler, this, &AMatch3GameMode::TryEndTurn, 1.f, true, 0.f);
+    GetWorldTimerManager().SetTimer(TurnTickTimerHandler, this, &AMatch3GameMode::TryEndTurn, Delay, true, 0.f);
 }
 
 void AMatch3GameMode::ReceiveRequestToEndTurn(ATile* LastTileGrabbed)
@@ -402,7 +404,7 @@ void AMatch3GameMode::TryEndTurn()
     Instance->EventManager->ClearEventQueue();
     
     GetGrid()->ResetAccumulatedMatchedTiles();
-    GetGrid()->RegisterBoardState(0);
+//    GetGrid()->RegisterBoardState(0);
     
     PlayerMove->Reset();
     PlayerMove->Start();
