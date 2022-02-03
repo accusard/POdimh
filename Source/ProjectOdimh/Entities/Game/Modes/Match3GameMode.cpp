@@ -403,8 +403,10 @@ void AMatch3GameMode::TryEndTurn()
     
     Instance->EventManager->ClearEventQueue();
     
+    UBaseEvent* Event = Instance->EventManager->NewEvent<UGameEvent>(this, F_TURN_ENDING_EVENT, true);
+    Instance->EventManager->OnActorEvent.Broadcast(this, Event);
+    
     GetGrid()->ResetAccumulatedMatchedTiles();
-//    GetGrid()->RegisterBoardState(0);
     
     PlayerMove->Reset();
     PlayerMove->Start();

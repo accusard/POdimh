@@ -66,7 +66,9 @@ public:
     UFUNCTION(BlueprintImplementableEvent)
     void OnTurnStart(const FString& ParticipantName);
     
+    UFUNCTION(BlueprintCallable)
     void ReceiveRequestToEndTurn();
+    
     void ReceiveRequestToEndTurn(ATile* LastTileGrabbed);
     
     UFUNCTION()

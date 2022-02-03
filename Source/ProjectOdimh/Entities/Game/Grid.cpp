@@ -47,6 +47,7 @@ void AGrid::BeginPlay()
     UEventManager* EvtMgr = Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager;
     EvtMgr->OnActorPicked.AddDynamic(this, &AGrid::SetOldLocation);
     EvtMgr->OnActorReleased.AddDynamic(this, &AGrid::CheckState);
+    EvtMgr->OnActorEvent.AddDynamic(this, &AGrid::OnTurnEnd);
     
 }
 
@@ -225,7 +226,7 @@ void AGrid::OnInitialTilesSpawned(TArray<ATile*> SpecialTiles)
     EvtMgr->OnActorEvent.Broadcast(this, Event);
 }
 
-void AGrid::OnTurnEnd_Implementation(AActor* EvtCaller, class UGameEvent* Event)
+void AGrid::OnTurnEnd_Implementation(AActor* EvtCaller, UBaseEvent* Event)
 {
     bTilesHaveSwapped = false;
     if(AMatch3GameMode* TurnEnding = Cast<AMatch3GameMode>(EvtCaller))

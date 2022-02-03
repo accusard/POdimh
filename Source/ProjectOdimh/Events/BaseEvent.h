@@ -11,6 +11,7 @@ static const FName F_THRESHOLD_EVENT(TEXT("Threshold Event"));
 static const FName F_INIT_TILE_SPAWN_EVENT(TEXT("Initial Spawn"));
 static const FName F_GRID_STATE_CHANGE_EVENT(TEXT("Grid State Change"));
 static const FName F_GAME_HAS_STARTED_EVENT(TEXT("Game Has Started"));
+static const FName F_TURN_ENDING_EVENT(TEXT("Turn Ending"));
 
 class UEventManager;
 class UPOdimhGameInstance;
@@ -38,6 +39,9 @@ public:
     
     UPROPERTY(BlueprintReadOnly, Category="Event Identifier")
     FName GAME_HAS_STARTED_EVENT;
+    
+    UPROPERTY(BlueprintReadOnly, Category="Event Identifier")
+    FName TURN_ENDING_EVENT;
     
 public:
     UBaseEvent();

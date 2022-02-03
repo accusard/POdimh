@@ -168,7 +168,7 @@ protected:
     void SpawnTileToEmptyGrid(ATile* Tile, const bool bNotifyStateChange);
     
     UFUNCTION(BlueprintNativeEvent, BlueprintCallable, DisplayName="OnTurnEnd")
-    void OnTurnEnd(AActor* EvtCaller, class UGameEvent* Event);
+    void OnTurnEnd(AActor* EvtCaller, class UBaseEvent* Event);
     
     UFUNCTION(BlueprintCallable)
     void HandleTilesSwapped(AController* GridController, ATile* DynamicTile, ATile* StaticTile);
