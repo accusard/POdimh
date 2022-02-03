@@ -1,16 +1,14 @@
-// Copyright 2017-2019 Vanny Sou. All Rights Reserved.
+// Copyright 2022 Vanny Sou. All Rights Reserved.
 
 #include "Grid.h"
 #include "Engine/World.h"
 #include "UObject/ConstructorHelpers.h"
-#include "Events/BaseEvent.h"
 #include "ProjectOdimh.h"
 #include "Entities/Game/Modes/Match3GameMode.h"
 #include "Entities/Game/Tile.h"
 #include "ClassInterface/PickHandlerInterface.h"
 #include "Components/ActionTurnBasedComponent.h"
 #include "Components/ActorPickHandlerComponent.h"
-#include "POdimhGameInstance.h"
 #include "Entities/Game/POdimhGameState.h"
 #include "Data/POdimhSaveGame.h"
 #include "Events/GameEvent.h"
@@ -28,14 +26,8 @@ AGrid::AGrid()
     bTilesHaveSwapped = false;
     bNoMatchingTiles = false;
     bGridStateChanged = false;
-
-    
-//    static ConstructorHelpers::FObjectFinder<USoundCue> DefaultStateChangeCue(TEXT("undefined"));
     
     static ConstructorHelpers::FObjectFinder<USoundCue> DefaultTileMatchCue(TEXT("SoundCue'/Game/The_Future_Is_Now/cues/1_Neutral/UI_Neutral_226_Cue.UI_Neutral_226_Cue'"));
-    
-//    if(DefaultStateChangeCue.Object)
-//        StateChangeCue = DefaultStateChangeCue.Object;
     
     if(DefaultTileMatchCue.Object)
         TileMatchCue = DefaultTileMatchCue.Object;
@@ -44,7 +36,7 @@ AGrid::AGrid()
 
 void AGrid::Reset()
 {
-    Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager->OnActorEvent.AddDynamic(this, &AGrid::StartMatch3);
+    
 }
 
 // Called when the game starts or when spawned
@@ -55,7 +47,7 @@ void AGrid::BeginPlay()
     UEventManager* EvtMgr = Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager;
     EvtMgr->OnActorPicked.AddDynamic(this, &AGrid::SetOldLocation);
     EvtMgr->OnActorReleased.AddDynamic(this, &AGrid::CheckState);
-    EvtMgr->OnActorEvent.AddDynamic(this, &AGrid::StartMatch3);
+    
 }
 
 void AGrid::Save(USaveGame* SaveData)
@@ -93,11 +85,6 @@ const bool AGrid::Load(USaveGame* LoadData)
     }
     
     return bSuccess;
-}
-
-void AGrid::StartMatch3_Implementation(AActor* Actor, UBaseEvent* Evt)
-{
-    Evt->Manager->OnActorEvent.RemoveDynamic(this, &AGrid::StartMatch3);
 }
 
 const FVector2D& AGrid::GetTileCoords(const FVector& Location)
@@ -241,11 +228,10 @@ void AGrid::OnInitialTilesSpawned(TArray<ATile*> SpecialTiles)
 void AGrid::OnTurnEnd_Implementation(AActor* EvtCaller, class UGameEvent* Event)
 {
     bTilesHaveSwapped = false;
-    if(AMatch3GameMode* Mode = Cast<AMatch3GameMode>(Event->GameMode))
+    if(AMatch3GameMode* TurnEnding = Cast<AMatch3GameMode>(EvtCaller))
     {
-        if(Mode->HasGameStarted())
-            Mode->ReceiveRequestToEndTurn();
-        UE_LOG(LogTemp,Warning,TEXT("--> Calling OnTurnEnd_Implementation"));
+        RegisterBoardState(FName(TEXT("Pick")));
+        UE_LOG(LogTemp,Warning,TEXT("--> Grid::OnTurnEnd_Implementation"));
     }
 }
 

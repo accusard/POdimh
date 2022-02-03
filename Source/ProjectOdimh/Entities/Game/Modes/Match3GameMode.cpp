@@ -348,7 +348,7 @@ void AMatch3GameMode::OnStartGame_Implementation(const bool bSaveGame)
         Instance->SaveGame(CONTINUE_GAME_SLOT, Player1);
         Instance->SaveGame(LAST_SUCCESSFUL_SLOT, Player1);
     }
-    GetGrid()->RegisterBoardState(0);
+    GetGrid()->RegisterBoardState(FName(TEXT("Pick")));
     GameState->StartState->Start();
     Instance->EventManager->OnActorEvent.Broadcast(this, GameState->StartState);
 }

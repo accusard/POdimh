@@ -44,8 +44,7 @@ struct FGridSpawningParameters
     }
 };
 /**
- * The grid contain information that determines the spawning position of each Tile objects, and events that
- * trigger when certain conditions are met.
+ * A single grid handles events that  pertain to and contain grid coordinations of each Tile objects
  */
 UCLASS()
 class PROJECTODIMH_API AGrid : public APawn, public IDataSaveInterface, public ITurnEventInterface
@@ -67,9 +66,6 @@ public:
     // DataSave interface
     virtual void Save(USaveGame* Data) override;
     virtual const bool Load(USaveGame* Data) override;
-    
-    UFUNCTION(BlueprintNativeEvent)
-    void StartMatch3(AActor* Actor, UBaseEvent* Evt);
     
     // Called every frame
     virtual void Tick(float DeltaTime) override;
@@ -149,7 +145,7 @@ public:
     void NotifyBoardStateChanged(uint8 OldState, const TArray<ATile*>& CustomUserTiles, UGridEvent* EvtRef);
     
     UFUNCTION(BlueprintImplementableEvent)
-    void RegisterBoardState(const int NewState) const;
+    void RegisterBoardState(const FName& NewState) const;
     
 protected:
 	// Called when the game starts or when spawned
