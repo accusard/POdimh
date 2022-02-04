@@ -197,6 +197,8 @@ void AMatch3GameMode::NotifyGameplayOptionsTurnEnding(const int OnTick)
     // call to whoever is concerned with the turn ending on this tick
     for(AActor* It : Gameplays)
         Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager->OnTurn.Broadcast(It, OnTick);
+    
+    UE_LOG(LogTemp, Warning, TEXT("--> NotifyGameplayOptionsTurnEnding"));
 }
 
 void AMatch3GameMode::SaveAndQuit(const int32 PlayerIndex)
@@ -321,16 +323,16 @@ void AMatch3GameMode::StartGame()
     if(AGrid* ActiveGame = GetGrid())
     {
         const int32 Player1 = (int32)EPlayer::One;
+        PlayerMove = NewTurn("Player Move", true);
+        GetWorldTimerManager().ClearTimer(GameStartTimerHandler);
+        GameState->StartState = NewObject<UGameEvent>(ActiveGame->GetController(), F_GAME_HAS_STARTED_EVENT);
+        GameState->StartState->Init();
         
         if(!TryLoadGame(CONTINUE_GAME_SLOT, Player1))
         {
             if(!TryLoadGame(LAST_SUCCESSFUL_SLOT, Player1))
                 ActiveGame->NewGrid();
         }
-        PlayerMove = NewTurn("Player Move", true);
-        GetWorldTimerManager().ClearTimer(GameStartTimerHandler);
-        GameState->StartState = NewObject<UGameEvent>(ActiveGame->GetController(), F_GAME_HAS_STARTED_EVENT);
-        GameState->StartState->Init();
     }
     
 }
@@ -392,7 +394,7 @@ void AMatch3GameMode::TryEndTurn()
 {
     if(PendingGameplayFinish())
         return;
-    
+    UE_LOG(LogTemp, Warning, TEXT("--> TryEndTurn"));
     UPOdimhGameInstance* Instance = GetGameInstance<UPOdimhGameInstance>();
     GameState->TurnCounter++;
     GameState->ScoreMultiplier = 0;
