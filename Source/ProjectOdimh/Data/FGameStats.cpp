@@ -1,4 +1,4 @@
-// Copyright 2017-2018 Vanny Sou. All Rights Reserved.
+// Copyright 2022 Vanny Sou. All Rights Reserved.
 
 #include "FGameStats.h"
 #include "Data/Gametypes.h"
@@ -17,3 +17,7 @@ FGameStats::FGameStats(const uint32 Remaining, const uint32 Max)
     Value = Remaining;
 }
 
+void FGameStats::Reset()
+{
+    Value = Default;
+}

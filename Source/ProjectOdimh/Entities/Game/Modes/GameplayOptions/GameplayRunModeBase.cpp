@@ -1,4 +1,4 @@
-// Copyright 2017-2021 Vanny Sou. All Rights Reserved.
+// Copyright 2022 Vanny Sou. All Rights Reserved.
 
 
 #include "GameplayRunModeBase.h"
@@ -18,11 +18,14 @@ void AGameplayRunModeBase::Save(USaveGame* Data)
 {
     if(UPOdimhSaveGame* POdimhData = Cast<UPOdimhSaveGame>(Data))
     {
+        FString CurrValStr("RunCount");
+        POdimhData->AddGameStatsInfo(CurrValStr, RunCount);
+        
         for(auto* It : TickingGameplays)
         {
             if(AGameplay* ImplementsGameplay = Cast<AGameplay>(It))
             {
-                const FString& CurrValStr = It->GetName() + FString("TickValue");
+                CurrValStr = It->GetName() + FString("TickValue");
                 POdimhData->CustomInt.Add(CurrValStr, ImplementsGameplay->GetNumOfTicksBeforeRun());
             }
         }
@@ -33,11 +36,14 @@ const bool AGameplayRunModeBase::Load(USaveGame* Data)
 {
     if(UPOdimhSaveGame* POdimhData = Cast<UPOdimhSaveGame>(Data))
     {
+        FString CurrValStr("RunCount");
+        POdimhData->GetGameStatsInfo(CurrValStr, RunCount);
+        
         for(auto* It: TickingGameplays)
         {
             if(AGameplay* ImplementsGameplay = Cast<AGameplay>(It))
             {
-                const FString& CurrValStr = It->GetName() + FString("TickValue");
+                CurrValStr = It->GetName() + FString("TickValue");
                 ImplementsGameplay->SetNumTicksBeforeRun(*POdimhData->CustomInt.Find(CurrValStr));
             }
         }
@@ -48,6 +54,14 @@ const bool AGameplayRunModeBase::Load(USaveGame* Data)
     return false;
 }
 
+void AGameplayRunModeBase::OnTurnEnd_Implementation(AActor* EvtCaller, UBaseEvent* Event)
+{
+    const FName& Active = Event->TURN_ENDING_EVENT;
+    
+    if(Event->Is(Active))
+        RunCount.Reset();
+}
+
 // Called when the game starts or when spawned
 void AGameplayRunModeBase::BeginPlay()
 {
@@ -55,6 +69,7 @@ void AGameplayRunModeBase::BeginPlay()
     
     UEventManager* EvtMgr = Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager;
     EvtMgr->OnTurn.AddDynamic(this, &AGameplayRunModeBase::StepTick);
+    EvtMgr->OnActorEvent.AddDynamic(this, &AGameplayRunModeBase::OnTurnEnd);
 }
 
 const int AGameplayRunModeBase::GetOnTickFrom(AActor* Gameplay)
@@ -86,12 +101,15 @@ void AGameplayRunModeBase::SetGameplayToTickOn(AActor* Gameplay, const FGameStat
 
 void AGameplayRunModeBase::StepTick(AActor* ActPtr, const int OnTick)
 {
-    if(TickingGameplays.Num() > 0)
+    if(TickingGameplays.Num() > 0 && RunCount.Value > 0)
     {
         if(ShouldTick(ActPtr, OnTick))
         {
             if(IGameplayOptionsInterface* TickGameplay = Cast<IGameplayOptionsInterface>(ActPtr))
+            {
+                RunCount.Value--;
                 TickGameplay->Execute_Run(ActPtr);
+            }
         }
     }
 }

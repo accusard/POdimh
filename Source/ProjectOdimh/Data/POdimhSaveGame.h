@@ -1,4 +1,4 @@
-// Copyright 2017-2018 Vanny Sou. All Rights Reserved.
+// Copyright 2022 Vanny Sou. All Rights Reserved.
 
 #pragma once
 
@@ -79,6 +79,8 @@ public:
     UPOdimhSaveGame();
     
     void AddTile(int Type);
+    void AddGameStatsInfo(const FString& SaveStr, const FGameStats& Stats);
+    void GetGameStatsInfo(const FString& LoadStr, FGameStats& Out);
     
     /** The name of the save slot */
     UPROPERTY()

@@ -1,15 +1,16 @@
-// Copyright 2017-2021 Vanny Sou. All Rights Reserved.
+// Copyright 2022 Vanny Sou. All Rights Reserved.
 
 #pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "ClassInterface/DataSaveInterface.h"
+#include "ClassInterface/TurnEventInterface.h"
 #include "Data/FGameStats.h"
 #include "GameplayRunModeBase.generated.h"
 
 UCLASS()
-class PROJECTODIMH_API AGameplayRunModeBase : public AActor, public IDataSaveInterface 
+class PROJECTODIMH_API AGameplayRunModeBase : public AActor, public IDataSaveInterface, public ITurnEventInterface
 {
 	GENERATED_BODY()
 	
@@ -17,8 +18,11 @@ public:
 	// Sets default values for this actor's properties
 	AGameplayRunModeBase();
 
+    // interfaces
     virtual void Save(USaveGame* Data) override;
     virtual const bool Load(USaveGame* Data) override;
+    UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+    void OnTurnEnd(AActor* EvtCaller, UBaseEvent* Event);
     
     const int GetOnTickFrom(AActor* Gameplay);
     
@@ -40,5 +44,8 @@ protected:
 
     UPROPERTY()
     TArray<AActor*> TickingGameplays;
+    
+    UPROPERTY(BlueprintReadOnly)
+    FGameStats RunCount = FGameStats(1,1);
 
 };

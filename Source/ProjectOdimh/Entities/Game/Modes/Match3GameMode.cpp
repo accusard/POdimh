@@ -1,4 +1,4 @@
-// Copyright 2017-2019 Vanny Sou. All Rights Reserved.
+// Copyright 2022 Vanny Sou. All Rights Reserved.
 
 #include "Match3GameMode.h"
 #include "POdimhGameInstance.h"
@@ -33,6 +33,7 @@ void AMatch3GameMode::BeginPlay()
     EvtManager->OnActorPicked.AddUniqueDynamic(this, &AMatch3GameMode::ReceiveActorPickedNotification);
     EvtManager->OnActorReleased.AddUniqueDynamic(this, &AMatch3GameMode::ReceiveActorReleasedNotification);
     EvtManager->OnActorEvent.AddUniqueDynamic(this, &AMatch3GameMode::HandleTierThreshold);
+    EvtManager->OnActorEvent.AddUniqueDynamic(this, &AMatch3GameMode::OnTurnEnd);
     
     if(RunMode)
         Mode = GetWorld()->SpawnActor<AGameplayRunModeBase>(RunMode);
@@ -394,25 +395,39 @@ void AMatch3GameMode::TryEndTurn()
 {
     if(PendingGameplayFinish())
         return;
+    
     UE_LOG(LogTemp, Warning, TEXT("--> TryEndTurn"));
+    
     UPOdimhGameInstance* Instance = GetGameInstance<UPOdimhGameInstance>();
-    GameState->TurnCounter++;
-    GameState->ScoreMultiplier = 0;
-    GameState->BonusPoints = 0;
-    GameState->LifetimeMatchedTiles += GetGrid()->GetTotalMatchedThisTurn();
-    
-    SaveCurrentGameState(Instance, false);
-    
-    Instance->EventManager->ClearEventQueue();
     
     UBaseEvent* Event = Instance->EventManager->NewEvent<UGameEvent>(this, F_TURN_ENDING_EVENT, true);
     Instance->EventManager->OnActorEvent.Broadcast(this, Event);
     
-    GetGrid()->ResetAccumulatedMatchedTiles();
     
-    PlayerMove->Reset();
-    PlayerMove->Start();
     GetWorldTimerManager().ClearTimer(TurnTickTimerHandler);
+}
+
+void AMatch3GameMode::OnTurnEnd_Implementation(AActor* EvtCaller, UBaseEvent* Event)
+{
+    const FName& Active = Event->TURN_ENDING_EVENT;
+    
+    if(Event->Is(Active))
+    {
+        UPOdimhGameInstance* Instance = GetGameInstance<UPOdimhGameInstance>();
+        
+        GameState->TurnCounter++;
+        GameState->ScoreMultiplier = 0;
+        GameState->BonusPoints = 0;
+        GameState->LifetimeMatchedTiles += GetGrid()->GetTotalMatchedThisTurn();
+        
+        SaveCurrentGameState(Instance, false);
+        Instance->EventManager->ClearEventQueue();
+        
+        GetGrid()->ResetAccumulatedMatchedTiles();
+
+        PlayerMove->Reset();
+        PlayerMove->Start();
+    }
 }
 
 void AMatch3GameMode::SaveCurrentGameState(UPOdimhGameInstance* Instance, const bool bIsNewGame)

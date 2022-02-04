@@ -1,4 +1,4 @@
-// Copyright 2017-2019 Vanny Sou. All Rights Reserved.
+// Copyright 2022 Vanny Sou. All Rights Reserved.
 
 #pragma once
 
@@ -75,6 +75,9 @@ public:
     void HandleTierThreshold(AActor* TierPtr, UBaseEvent* Evt);
     
     void TryEndTurn();
+    
+    UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+    void OnTurnEnd(AActor* EvtCaller, UBaseEvent* Event);
     
     UFUNCTION(BlueprintCallable)
     void SaveCurrentGameState(UPOdimhGameInstance* Instance, const bool bIsNewGame);

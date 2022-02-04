@@ -1,4 +1,4 @@
-// Copyright 2017-2018 Vanny Sou. All Rights Reserved.
+// Copyright 2022 Vanny Sou. All Rights Reserved.
 
 #pragma once
 
@@ -27,4 +27,6 @@ struct FGameStats
     FGameStats();
     FGameStats(const uint32 SetMax);
     FGameStats(const uint32 SetRemaining, const uint32 SetMax);
+    
+    void Reset();
 };
