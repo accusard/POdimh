@@ -79,6 +79,8 @@ public:
     UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
     void OnTurnEnd(AActor* EvtCaller, UBaseEvent* Event);
     
+    const bool IsPlayerTurn(AController* InCon) const;
+    
     UFUNCTION(BlueprintCallable)
     void SaveCurrentGameState(UPOdimhGameInstance* Instance, const bool bIsNewGame);
     

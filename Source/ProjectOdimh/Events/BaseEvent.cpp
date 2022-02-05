@@ -10,7 +10,7 @@
 
 UBaseEvent::UBaseEvent()
 {
-    bPendingFinish = true;
+    bPendingFinish = false;
     bStarted = false;
     UE_LOG(LogTemp,Warning,TEXT("Creating Event (%s)"), *GetName());
     
@@ -40,6 +40,7 @@ const bool UBaseEvent::Is(const FName EventId) const
 
 void UBaseEvent::Start()
 {
+    bPendingFinish = true;
     bStarted = true;
     OnEventStart();
 }

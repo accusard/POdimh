@@ -229,11 +229,9 @@ void AGrid::OnInitialTilesSpawned(TArray<ATile*> SpecialTiles)
 void AGrid::OnTurnEnd_Implementation(AActor* EvtCaller, UBaseEvent* Event)
 {
     bTilesHaveSwapped = false;
-    if(AMatch3GameMode* TurnEnding = Cast<AMatch3GameMode>(EvtCaller))
-    {
-        RegisterBoardState(FName(TEXT("Pick")));
-        UE_LOG(LogTemp,Warning,TEXT("--> Grid::OnTurnEnd_Implementation"));
-    }
+    RegisterBoardState(FName(TEXT("Pick")));
+    UE_LOG(LogTemp,Warning,TEXT("--> Grid::OnTurnEnd_Implementation"));
+    
 }
 
 void AGrid::HandleTilesSwapped(AController* GridController, ATile* DynamicTile, ATile* StaticTile)

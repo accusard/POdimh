@@ -46,6 +46,6 @@ protected:
     TArray<AActor*> TickingGameplays;
     
     UPROPERTY(BlueprintReadOnly)
-    FGameStats RunCount = FGameStats(1,1);
+    FGameStats RunCount = FGameStats(0,1);
 
 };

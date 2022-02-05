@@ -199,7 +199,7 @@ void AMatch3GameMode::NotifyGameplayOptionsTurnEnding(const int OnTick)
     for(AActor* It : Gameplays)
         Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager->OnTurn.Broadcast(It, OnTick);
     
-    UE_LOG(LogTemp, Warning, TEXT("--> NotifyGameplayOptionsTurnEnding"));
+    UE_LOG(LogTemp, Warning, TEXT("--> NotifyGameplayOptionsTurnEnding on TURN: %i"), OnTick);
 }
 
 void AMatch3GameMode::SaveAndQuit(const int32 PlayerIndex)
@@ -324,7 +324,7 @@ void AMatch3GameMode::StartGame()
     if(AGrid* ActiveGame = GetGrid())
     {
         const int32 Player1 = (int32)EPlayer::One;
-        PlayerMove = NewTurn("Player Move", true);
+        PlayerMove = NewTurn("Player Move", false);
         GetWorldTimerManager().ClearTimer(GameStartTimerHandler);
         GameState->StartState = NewObject<UGameEvent>(ActiveGame->GetController(), F_GAME_HAS_STARTED_EVENT);
         GameState->StartState->Init();
@@ -351,7 +351,7 @@ void AMatch3GameMode::OnStartGame_Implementation(const bool bSaveGame)
         Instance->SaveGame(CONTINUE_GAME_SLOT, Player1);
         Instance->SaveGame(LAST_SUCCESSFUL_SLOT, Player1);
     }
-    GetGrid()->RegisterBoardState(FName(TEXT("Pick")));
+//    GetGrid()->RegisterBoardState(FName(TEXT("Pick")));
     GameState->StartState->Start();
     Instance->EventManager->OnActorEvent.Broadcast(this, GameState->StartState);
 }
@@ -370,6 +370,7 @@ void AMatch3GameMode::ReceiveRequestToEndTurn()
     
     const float Delay = GetGrid()->DELAY_BETWEEN_TILE_BURSTS;
     
+    // don't notify if game hasn't started
     NotifyGameplayOptionsTurnEnding(EndedOnTurnNum);
     GetWorldTimerManager().SetTimer(TurnTickTimerHandler, this, &AMatch3GameMode::TryEndTurn, Delay, true, 0.f);
 }
@@ -407,24 +408,28 @@ void AMatch3GameMode::TryEndTurn()
     GetWorldTimerManager().ClearTimer(TurnTickTimerHandler);
 }
 
+const bool AMatch3GameMode::IsPlayerTurn(AController* InCon) const
+{
+    return Cast<AGridPlayerController>(InCon);
+}
+
 void AMatch3GameMode::OnTurnEnd_Implementation(AActor* EvtCaller, UBaseEvent* Event)
 {
-    const FName& Active = Event->TURN_ENDING_EVENT;
+    UE_LOG(LogTemp, Warning, TEXT("--> AMatch3GameMode::OnTurnEnd_Implementation"));
+    UPOdimhGameInstance* Instance = GetGameInstance<UPOdimhGameInstance>();
     
-    if(Event->Is(Active))
+    GameState->TurnCounter++;
+    GameState->ScoreMultiplier = 0;
+    GameState->BonusPoints = 0;
+    GameState->LifetimeMatchedTiles += GetGrid()->GetTotalMatchedThisTurn();
+    
+    SaveCurrentGameState(Instance, false);
+//    Instance->EventManager->ClearEventQueue();
+    
+    GetGrid()->ResetAccumulatedMatchedTiles();
+    
+    if(IsPlayerTurn(GetGrid()->GetController()))
     {
-        UPOdimhGameInstance* Instance = GetGameInstance<UPOdimhGameInstance>();
-        
-        GameState->TurnCounter++;
-        GameState->ScoreMultiplier = 0;
-        GameState->BonusPoints = 0;
-        GameState->LifetimeMatchedTiles += GetGrid()->GetTotalMatchedThisTurn();
-        
-        SaveCurrentGameState(Instance, false);
-        Instance->EventManager->ClearEventQueue();
-        
-        GetGrid()->ResetAccumulatedMatchedTiles();
-
         PlayerMove->Reset();
         PlayerMove->Start();
     }
