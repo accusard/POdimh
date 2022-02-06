@@ -15,7 +15,7 @@
 #include "Events/GameEvent.h"
 #include "Events/EventManager.h"
 #include "Data/Tier.h"
-
+#include "Entities/Controllers/Player/GridPlayerController.h"
 
 AMatch3GameMode::AMatch3GameMode()
 {
@@ -34,6 +34,8 @@ void AMatch3GameMode::BeginPlay()
     EvtManager->OnActorReleased.AddUniqueDynamic(this, &AMatch3GameMode::ReceiveActorReleasedNotification);
     EvtManager->OnActorEvent.AddUniqueDynamic(this, &AMatch3GameMode::HandleTierThreshold);
     EvtManager->OnActorEvent.AddUniqueDynamic(this, &AMatch3GameMode::OnTurnEnd);
+    
+    LastMove = nullptr;
     
     if(RunMode)
         Mode = GetWorld()->SpawnActor<AGameplayRunModeBase>(RunMode);
@@ -100,6 +102,24 @@ const bool AMatch3GameMode::Load(USaveGame* DataPtr)
         Data->CustomInt["TierThresholdNeeded"]);
     }
     return true;
+}
+
+void AMatch3GameMode::StartMove(UGameEvent* PrevMove)
+{
+    if(LastMove == nullptr)
+        LastMove = NewTurn("Begin", false);
+    else if(PrevMove)
+    {
+        LastMove = PrevMove;
+        LastMove->End();
+    }
+    
+    if(IsPlayerTurn(GetGrid()->GetController()))
+    {
+        PlayerMove->Reset();
+        PlayerMove->Start();
+        GetGrid()->RegisterBoardState(TEXT("Pick"));
+    }
 }
 
 void AMatch3GameMode::ResetLevel()
@@ -427,12 +447,6 @@ void AMatch3GameMode::OnTurnEnd_Implementation(AActor* EvtCaller, UBaseEvent* Ev
 //    Instance->EventManager->ClearEventQueue();
     
     GetGrid()->ResetAccumulatedMatchedTiles();
-    
-    if(IsPlayerTurn(GetGrid()->GetController()))
-    {
-        PlayerMove->Reset();
-        PlayerMove->Start();
-    }
 }
 
 void AMatch3GameMode::SaveCurrentGameState(UPOdimhGameInstance* Instance, const bool bIsNewGame)

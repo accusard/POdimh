@@ -33,6 +33,8 @@ public:
     virtual const bool Load(USaveGame* Data) override;
     virtual void StartMatch() override;
     virtual void ResetLevel() override;
+    UFUNCTION(BlueprintCallable)
+    void StartMove(UGameEvent* PrevMove);
     
     void NotifyGameplayOptionsTurnEnding(const int TurnNum);
     
@@ -89,6 +91,8 @@ public:
     UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
     AGrid* GetGrid() const;
     
+    UGameEvent* GetLastMove() const { return LastMove; }
+    
     UFUNCTION()
     void ReceiveActorReleasedNotification(AActor* Actor);
     
@@ -115,6 +119,9 @@ protected:
     
     class APOdimhGameState* GameState;
     
+    UPROPERTY(BlueprintReadOnly)
+    UGameEvent* LastMove;
+    
 private:
     UPROPERTY(EditDefaultsOnly)
     int32 TileValue = INIT_TILE_VALUE;
@@ -124,6 +131,7 @@ private:
     
     FTimerHandle TurnTickTimerHandler;
     FTimerHandle GameStartTimerHandler;
+    
     // deprecate
     AParticipantTurn* NewParticipant(const FActorSpawnParameters& Params);
     const bool ParticipantsBlueprintIsValid();
