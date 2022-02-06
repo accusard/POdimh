@@ -104,7 +104,7 @@ const bool AMatch3GameMode::Load(USaveGame* DataPtr)
     return true;
 }
 
-void AMatch3GameMode::StartMove(UGameEvent* PrevMove)
+void AMatch3GameMode::StartMove(UBaseEvent* PrevMove)
 {
     UE_LOG(LogTemp, Warning, TEXT("--> AMatch3GameMode::StartMove"));
     if(LastMove == nullptr)
@@ -125,7 +125,7 @@ void AMatch3GameMode::StartMove(UGameEvent* PrevMove)
 
 void AMatch3GameMode::ResetLevel()
 {
-    Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager->ClearEventQueue();
+    Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager->ClearEventQueue(true);
     
     // at the moment, AGameModeBase::ResetLevel will reset controller actors which
     // result in undesired behaviors with the game's puzzle grid.
@@ -171,6 +171,24 @@ const bool AMatch3GameMode::LoadParticipants(USaveGame* Data)
         }
     }
     return false;
+}
+
+void AMatch3GameMode::ClearEventQueue(const bool bForceClear, const FName SetEventPending, const float DelaySeconds)
+{
+    if(SetEventPending != NAME_None)
+    {
+        FTimerDelegate EventTimerDelegate;
+        
+        EventTimerDelegate.BindUFunction(this, FName("EndPendingEvents"), SetEventPending);
+        GetWorldTimerManager().SetTimer(EventTimerHandle, EventTimerDelegate, 0.1f, true, DelaySeconds);
+    }
+    GetGameInstance<UPOdimhGameInstance>()->EventManager->ClearEventQueue(bForceClear);
+}
+
+void AMatch3GameMode::EndPendingEvents(const FName EventId)
+{
+    GetGameInstance<UPOdimhGameInstance>()->EventManager->EndEvents(EventId);
+    GetWorldTimerManager().ClearTimer(EventTimerHandle);
 }
 
 AParticipantTurn* AMatch3GameMode::NewParticipant(const FActorSpawnParameters& Params)
@@ -372,7 +390,7 @@ void AMatch3GameMode::OnStartGame_Implementation(const bool bSaveGame)
         Instance->SaveGame(CONTINUE_GAME_SLOT, Player1);
         Instance->SaveGame(LAST_SUCCESSFUL_SLOT, Player1);
     }
-//    GetGrid()->RegisterBoardState(FName(TEXT("Pick")));
+
     GameState->StartState->Start();
     Instance->EventManager->OnActorEvent.Broadcast(this, GameState->StartState);
 }
@@ -425,7 +443,6 @@ void AMatch3GameMode::TryEndTurn()
     UBaseEvent* Event = Instance->EventManager->NewEvent<UGameEvent>(this, F_TURN_ENDING_EVENT, true);
     Instance->EventManager->OnActorEvent.Broadcast(this, Event);
     
-    
     GetWorldTimerManager().ClearTimer(TurnTickTimerHandler);
 }
 
@@ -445,9 +462,10 @@ void AMatch3GameMode::OnTurnEnd_Implementation(AActor* EvtCaller, UBaseEvent* Ev
     GameState->LifetimeMatchedTiles += GetGrid()->GetTotalMatchedThisTurn();
     
     SaveCurrentGameState(Instance, false);
-//    Instance->EventManager->ClearEventQueue();
     
     GetGrid()->ResetAccumulatedMatchedTiles();
+    
+    ClearEventQueue();
 }
 
 void AMatch3GameMode::SaveCurrentGameState(UPOdimhGameInstance* Instance, const bool bIsNewGame)

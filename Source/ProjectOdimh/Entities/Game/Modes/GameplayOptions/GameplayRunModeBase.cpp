@@ -59,7 +59,9 @@ void AGameplayRunModeBase::OnTurnEnd_Implementation(AActor* EvtCaller, UBaseEven
     const FName& Active = Event->TURN_ENDING_EVENT;
     
     if(Event->Is(Active))
+    {
         RunCount.Reset();
+    }
 }
 
 // Called when the game starts or when spawned

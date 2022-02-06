@@ -1,4 +1,4 @@
-// Copyright 2017-2021 Vanny Sou. All Rights Reserved.
+// Copyright 2022 Vanny Sou. All Rights Reserved.
 
 #include "Gameplay.h"
 #include "POdimhGameInstance.h"
@@ -29,4 +29,6 @@ void AGameplay::Init_Implementation(AActor* Actor, UBaseEvent* EvtPtr)
     // unbind the Init event
     // blueprint must call to parent after it finishes initialization
     EvtPtr->Manager->OnActorEvent.RemoveDynamic(this, &AGameplay::Init);
+    // don't end event yet
+    // EvtPtr->End();
 }

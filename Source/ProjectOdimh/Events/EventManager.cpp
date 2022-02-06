@@ -1,4 +1,4 @@
-// Copyright 2017-2018 Vanny Sou. All Rights Reserved.
+// Copyright 2022 Vanny Sou. All Rights Reserved.
 
 #include "EventManager.h"
 #include "EngineUtils.h"
@@ -88,16 +88,39 @@ void UEventManager::AddEvent(UBaseEvent* Event)
     }
 }
 
-void UEventManager::ClearEventQueue()
+void UEventManager::EndEvents(const FName EventId)
+{
+    UE_LOG(LogTemp,Warning,TEXT("EndEvents object contain - %i"), EventQueue->GetNumObjects());
+    int size = EventQueue->GetNumObjects();
+    for(int i = 0; i < size; ++i)
+    {
+        if(UBaseEvent* EvtPending = Cast<UBaseEvent>(EventQueue->GetIndex(i)))
+        {
+            if(EvtPending->Is(EventId))
+            {
+                UE_LOG(LogTemp,Warning,TEXT("Ending Event (%s)"), *EvtPending->GetName());
+                EvtPending->End();
+            }
+        }
+    }
+}
+
+void UEventManager::ClearEventQueue(const bool bForceClear)
 {
     for(int i = 0; i < EventQueue->GetNumObjects(); ++i)
     {
         UObject* Obj = EventQueue->GetIndex(i);
         if(Obj && !Obj->IsPendingKill())
-           Obj->MarkPendingKill();
+        {
+            if(UBaseEvent* Evt = Cast<UBaseEvent>(Obj))
+                if(!bForceClear && Evt->IsPendingFinish())
+                    continue;
+            Obj->MarkPendingKill();
+        }
+        
     }
 #if !UE_BUILD_SHIPPING
-    UE_LOG(LogTemp,Warning,TEXT("Clearing event queue, total: %i"), EventQueue->GetNumObjects());
+    UE_LOG(LogTemp,Warning,TEXT("Clearing event queue: %i"), EventQueue->GetNumObjects());
 #endif
     EventQueue->EmptyList();
 }
