@@ -106,6 +106,7 @@ const bool AMatch3GameMode::Load(USaveGame* DataPtr)
 
 void AMatch3GameMode::StartMove(UGameEvent* PrevMove)
 {
+    UE_LOG(LogTemp, Warning, TEXT("--> AMatch3GameMode::StartMove"));
     if(LastMove == nullptr)
         LastMove = NewTurn("Begin", false);
     else if(PrevMove)
@@ -392,7 +393,7 @@ void AMatch3GameMode::ReceiveRequestToEndTurn()
     
     // don't notify if game hasn't started
     NotifyGameplayOptionsTurnEnding(EndedOnTurnNum);
-    GetWorldTimerManager().SetTimer(TurnTickTimerHandler, this, &AMatch3GameMode::TryEndTurn, Delay, true, 0.f);
+    GetWorldTimerManager().SetTimer(TurnTickTimerHandler, this, &AMatch3GameMode::TryEndTurn, 0.1f, true, Delay);
 }
 
 void AMatch3GameMode::ReceiveRequestToEndTurn(ATile* LastTileGrabbed)
