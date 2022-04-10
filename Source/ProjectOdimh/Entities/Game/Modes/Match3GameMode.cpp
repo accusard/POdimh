@@ -77,7 +77,7 @@ void AMatch3GameMode::Save(USaveGame* DataPtr)
         Data->CustomInt.Add("TurnCounter", GameState->TurnCounter);
         Data->CustomInt.Add("LifetimeMatchedTiles", GameState->LifetimeMatchedTiles);
         
-        Data->CustomInt.Add("TierLevel", GameState->TierProgression->GetLevel());
+        Data->CustomInt.Add("TierLevel", GameState->TierProgression->GetTierLevel());
         Data->CustomInt.Add("TierThresholdCurVal", GameState->TierProgression->GetTotalPoints());
         Data->CustomInt.Add("TierThresholdNeeded", GameState->TierProgression->GetThreshold());
     }

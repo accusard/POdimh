@@ -12,7 +12,7 @@ void ATier::LevelUp(const uint32 PointValue, const uint32 Threshold)
     SetThreshold(Threshold);
 }
 
-const int32 ATier::GetLevel() const
+const int32 ATier::GetTierLevel() const
 {
     return Level;
 }
