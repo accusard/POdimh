@@ -46,7 +46,7 @@ void AGrid::BeginPlay()
     
     UEventManager* EvtMgr = Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager;
     EvtMgr->OnActorPicked.AddDynamic(this, &AGrid::SetOldLocation);
-    EvtMgr->OnActorReleased.AddDynamic(this, &AGrid::CheckState);
+    EvtMgr->OnActorReleased.AddDynamic(this, &AGrid::TilesChangedPosition);
     EvtMgr->OnActorEvent.AddDynamic(this, &AGrid::OnTurnEnd);
     
 }
@@ -192,7 +192,7 @@ void AGrid::NotifyGridStateChanged()
     bGridStateChanged = false;
 }
 
-void AGrid::CheckState(AActor* Actor)
+void AGrid::TilesChangedPosition(AActor* Actor)
 {
     if(bGridStateChanged || HasTilePositionChanged(Cast<ATile>(Actor)))
         NotifyGridStateChanged();

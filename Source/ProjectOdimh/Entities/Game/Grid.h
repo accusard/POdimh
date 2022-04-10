@@ -92,7 +92,7 @@ public:
     void NotifyGridStateChanged();
     
     UFUNCTION()
-    void CheckState(AActor* Tile);
+    void TilesChangedPosition(AActor* Tile);
     
     UFUNCTION()
     void SetOldLocation(AActor* Tile);
