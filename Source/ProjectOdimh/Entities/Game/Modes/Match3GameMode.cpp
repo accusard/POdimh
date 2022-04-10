@@ -133,7 +133,7 @@ void AMatch3GameMode::ResetLevel()
     for (FActorIterator It(GetWorld()); It; ++It)
     {
         AActor* A = *It;
-        if (A && !A->IsPendingKill() && A != this && !A->IsA<AController>() && ShouldReset(A))
+        if (IsValid(A) && A != this && !A->IsA<AController>() && ShouldReset(A))
         {
             A->Reset();
         }

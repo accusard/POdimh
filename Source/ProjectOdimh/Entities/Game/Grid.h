@@ -1,4 +1,4 @@
-// Copyright 2017-2018 Vanny Sou. All Rights Reserved.
+// Copyright 2022 Vanny Sou. All Rights Reserved.
 
 #pragma once
 
@@ -38,7 +38,7 @@ struct FGridSpawningParameters
     FString SaveSlotName;
     
     FGridSpawningParameters();
-    FGridSpawningParameters(const bool bRandomizeTiles, const bool bLoadDefaultSprites);
+    FGridSpawningParameters(const bool bRandomizeTiles, const bool bLoadDefaultSprites, const FString& SlotName);
 };
 /**
  * A single grid handles events that  pertain to and contain grid coordinations of each Tile objects
@@ -46,7 +46,7 @@ struct FGridSpawningParameters
 UCLASS()
 class PROJECTODIMH_API AGrid : public APawn, public IDataSaveInterface, public ITurnEventInterface
 {
-	GENERATED_BODY()
+    GENERATED_BODY()
 
 public:
     UPROPERTY(BlueprintReadOnly)
@@ -55,8 +55,8 @@ public:
 public:
     friend class UGridEvent;
     
-	// Sets default values for this actor's properties
-	AGrid();
+    // Sets default values for this actor's properties
+    AGrid();
     
     virtual void Reset() override;
     
@@ -145,8 +145,8 @@ public:
     void RegisterBoardState(const FName& NewState) const;
     
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+    // Called when the game starts or when spawned
+    virtual void BeginPlay() override;
     
     /** Call the blueprint library function GetGridFromLocation to get the grid coordinates by using a Vector location
      * and set it to this object's member data - GridLocation */

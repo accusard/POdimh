@@ -87,10 +87,10 @@ AActor* AGridPlayerController::GetLastTouched()
 
 void AGridPlayerController::NewInput(const FName& Name, const bool bStartNow, ETouchIndex::Type FIndex, FVector Loc)
 {
-    if(InputEvent && !InputEvent->IsPendingKill())
+    if(IsValid(InputEvent))
     {
         InputEvent->End();
-        InputEvent->MarkPendingKill();
+        InputEvent->MarkAsGarbage();
     }
     InputEvent = Cast<UPOdimhGameInstance>(GetGameInstance())->EventManager->NewEvent<UPlayerInputEvent>(this, Name, bStartNow);
     InputEvent->FingerIndex = FIndex;

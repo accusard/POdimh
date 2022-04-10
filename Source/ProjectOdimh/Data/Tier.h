@@ -19,7 +19,7 @@ public:
     
     void LevelUp(const uint32 SetPointValue, const uint32 SetPointThreshold);
     
-    UFUNCTION(BlueprintPure)
+//    UFUNCTION(BlueprintPure)
     const int32 GetLevel() const;
     
     void SetLevel(const uint32 SetLevel);

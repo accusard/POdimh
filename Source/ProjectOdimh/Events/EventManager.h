@@ -47,7 +47,7 @@ public:
         }
         else
         {
-            Cast<UObject>(NewEvent)->MarkPendingKill();
+            Cast<UObject>(NewEvent)->MarkAsGarbage();
 #if !UE_BUILD_SHIPPING
             UE_LOG(LogTemp,Warning,TEXT("- Event Manager is attempting to add to event list but object %s is an invalid event so calling kill immediately."), *NewEvent->GetName());
 #endif

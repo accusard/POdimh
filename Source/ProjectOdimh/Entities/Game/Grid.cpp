@@ -20,19 +20,21 @@ FGridSpawningParameters::FGridSpawningParameters()
 {
     bRandomTileType = true;
     bLoadSprites = true;
+    SaveSlotName = "";
 }
 
-FGridSpawningParameters::FGridSpawningParameters(const bool bRandomizeTiles, const bool bInitSprites)
+FGridSpawningParameters::FGridSpawningParameters(const bool bRandomizeTiles, const bool bInitSprites, const FString& SlotName)
 {
     bRandomTileType = bRandomizeTiles;
     bLoadSprites = bInitSprites;
+    SaveSlotName = SlotName;
 }
 
 // Sets default values
 AGrid::AGrid()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+     // Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+    PrimaryActorTick.bCanEverTick = true;
     
     TilesNeededForMatch = 3;
     bTilesHaveSwapped = false;
@@ -83,8 +85,7 @@ const bool AGrid::Load(USaveGame* LoadData)
 {
     if(UPOdimhSaveGame* Data = Cast<UPOdimhSaveGame>(LoadData))
     {
-        FGridSpawningParameters Params(false,true);
-        Params.SaveSlotName = Data->SaveSlotName;
+        FGridSpawningParameters Params(false, true, Data->SaveSlotName);
         InitTiles(Params);
         check(GetTiles().Num() == Data->SavedGrid.GetNumberOfTiles());
         
@@ -319,7 +320,7 @@ ATile* AGrid::SpawnTile(TSubclassOf<ATile> BlueprintClass, const FTransform& Tra
 // Called every frame
 void AGrid::Tick(float DeltaTime)
 {
-	Super::Tick(DeltaTime);
+    Super::Tick(DeltaTime);
     
 }
 

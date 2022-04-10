@@ -81,7 +81,7 @@ void UEventManager::AddEvent(UBaseEvent* Event)
     else
     {
         Event->End();
-        Event->MarkPendingKill();
+        Event->MarkAsGarbage();
 #if !UE_BUILD_SHIPPING
         UE_LOG(LogTemp,Warning,TEXT("- Couldn't add event %s, so calling End() and kill immediately."), *Event->GetName());
 #endif
@@ -110,12 +110,12 @@ void UEventManager::ClearEventQueue(const bool bForceClear)
     for(int i = 0; i < EventQueue->GetNumObjects(); ++i)
     {
         UObject* Obj = EventQueue->GetIndex(i);
-        if(Obj && !Obj->IsPendingKill())
+        if(IsValid(Obj))
         {
             if(UBaseEvent* Evt = Cast<UBaseEvent>(Obj))
                 if(!bForceClear && Evt->IsPendingFinish())
                     continue;
-            Obj->MarkPendingKill();
+            Obj->MarkAsGarbage();
         }
         
     }
