@@ -37,11 +37,8 @@ struct FGridSpawningParameters
     UPROPERTY(BlueprintReadOnly)
     FString SaveSlotName;
     
-    FGridSpawningParameters()
-    {
-        bRandomTileType = true;
-        bLoadSprites = true;
-    }
+    FGridSpawningParameters();
+    FGridSpawningParameters(const bool bRandomizeTiles, const bool bLoadDefaultSprites);
 };
 /**
  * A single grid handles events that  pertain to and contain grid coordinations of each Tile objects

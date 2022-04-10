@@ -16,6 +16,18 @@
 #include "Sound/SoundCue.h"
 
 
+FGridSpawningParameters::FGridSpawningParameters()
+{
+    bRandomTileType = true;
+    bLoadSprites = true;
+}
+
+FGridSpawningParameters::FGridSpawningParameters(const bool bRandomizeTiles, const bool bInitSprites)
+{
+    bRandomTileType = bRandomizeTiles;
+    bLoadSprites = bInitSprites;
+}
+
 // Sets default values
 AGrid::AGrid()
 {
@@ -69,23 +81,17 @@ void AGrid::Save(USaveGame* SaveData)
 
 const bool AGrid::Load(USaveGame* LoadData)
 {
-    bool bSuccess = false;
-    
     if(UPOdimhSaveGame* Data = Cast<UPOdimhSaveGame>(LoadData))
     {
-        FGridSpawningParameters Params;
-        Params.bRandomTileType = false;
-        Params.bLoadSprites = true;
+        FGridSpawningParameters Params(false,true);
         Params.SaveSlotName = Data->SaveSlotName;
-        
         InitTiles(Params);
-        
         check(GetTiles().Num() == Data->SavedGrid.GetNumberOfTiles());
         
-        bSuccess = true;
+        return true;
     }
     
-    return bSuccess;
+    return false;
 }
 
 const FVector2D& AGrid::GetTileCoords(const FVector& Location)
